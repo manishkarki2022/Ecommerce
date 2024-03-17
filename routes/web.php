@@ -48,6 +48,10 @@ Route::group(['prefix'=>'admin'], function () {
         Route::get('/sub-categories/create', [SubCategoryController::class, 'create'])->name('sub-categories.create');
         Route::post('/sub-/store', [SubCategoryController::class, 'store'])->name('sub-categories.store');
         Route::get('/sub-categories/search', [SubCategoryController::class, 'search'])->name('sub-categories.search');
+        Route::get('/sub-categories/{subCategories}/edit', [SubCategoryController::class, 'edit'])->name('sub-categories.edit');
+        Route::put('/sub-categories/{subCategory}', [SubCategoryController::class, 'update'])->name('sub-categories.update');
+        Route::delete('/sub-categories/{subCategories}', [SubCategoryController::class, 'destroy'])->name('sub-categories.destroy');
+
 
 
 

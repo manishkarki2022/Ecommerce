@@ -52,7 +52,50 @@ class SubCategoryController extends Controller
         $subCategory->save();
         $request->session()->flash('success','Sub Category Created Successfully');
         return redirect()->route('sub-categories.index');
+    }
+    public function edit($subCategory){
+        $subCategory = SubCategory::find($subCategory);
+        $categories = Category::orderBy('name')->get(); // No need for 'asc', it's the default
+        if(empty($subCategory)){
+            return redirect()->route('sub-categories.index');
+        }
+        return view('admin.sub-category.edit', compact('subCategory', 'categories'));
+    }
+    public function update($id, Request $request) {
+        $subCategory = SubCategory::find($id);
 
+        if (!$subCategory) {
+            $request->session()->flash('error', 'Sub Category Not Found');
+            return redirect()->route('sub-categories.index');
+        }
 
+        $request->validate([
+            'name' => 'required',
+            'slug' => 'required|unique:sub_categories,slug,'.$subCategory->id,
+            'status' => 'required',
+            'category_id' => 'required',
+        ]);
+
+        $subCategory->name = $request->name;
+        $subCategory->slug = $request->slug;
+        $subCategory->status = $request->status;
+        $subCategory->category_id = $request->category_id; // Make sure field name matches with the form
+        $subCategory->save();
+
+        $request->session()->flash('success', 'Sub Category Updated Successfully');
+        return redirect()->route('sub-categories.index');
+    }
+    public function destroy($id, Request $request) {
+        $subCategory = SubCategory::find($id);
+
+        if (!$subCategory) {
+            $request->session()->flash('error', 'Sub Category Not Found');
+            return redirect()->route('sub-categories.index');
+        }
+
+        $subCategory->delete();
+
+        $request->session()->flash('success', 'Sub Category Deleted Successfully');
+        return redirect()->route('sub-categories.index');
     }
 }
