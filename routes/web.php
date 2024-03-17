@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImagesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,20 @@ Route::group(['prefix'=>'admin'], function () {
         Route::get('/categories/{categories}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
         Route::put('/categories/{categories}', [CategoryController::class, 'update'])->name('categories.update');
         Route::delete('/categories/{categories}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+
+        //SubCategory Route
+        Route::get('/sub-categories', [SubCategoryController::class, 'index'])->name('sub-categories.index');
+        Route::get('/sub-categories/create', [SubCategoryController::class, 'create'])->name('sub-categories.create');
+        Route::post('/sub-/store', [SubCategoryController::class, 'store'])->name('sub-categories.store');
+        Route::get('/sub-categories/search', [SubCategoryController::class, 'search'])->name('sub-categories.search');
+
+
+
+
+
+
+
         //temp-images.create
         Route::post('/upload-temp-image', [TempImagesController::class, 'create'])->name('temp-images.create');
 
