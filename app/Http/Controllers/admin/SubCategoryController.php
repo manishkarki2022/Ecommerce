@@ -16,10 +16,15 @@ class SubCategoryController extends Controller
 
     public function search(Request $request)
     {
+        // Get the keyword from the request
         $keyword = $request->input('keyword');
 
         // Perform the search query
-        $subCategories = SubCategory::where('name', 'like', '%' . $keyword . '%')->paginate(10);
+        $subCategories = SubCategory::where('name', 'like', '%' . $keyword . '%')
+            ->orWhereHas('category', function ($query) use ($keyword) {
+                $query->where('name', 'like', '%' . $keyword . '%');
+            })
+            ->paginate(10);
 
         // Pass the search results to your view
         return view('admin.sub-category.index', compact('subCategories'));
