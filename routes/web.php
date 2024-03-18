@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\admin\ProductController;
+use App\Http\Controllers\admin\ProductSubCategoryController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImagesController;
 use Illuminate\Http\Request;
@@ -51,6 +53,20 @@ Route::group(['prefix'=>'admin'], function () {
         Route::get('/sub-categories/{subCategories}/edit', [SubCategoryController::class, 'edit'])->name('sub-categories.edit');
         Route::put('/sub-categories/{subCategory}', [SubCategoryController::class, 'update'])->name('sub-categories.update');
         Route::delete('/sub-categories/{subCategories}', [SubCategoryController::class, 'destroy'])->name('sub-categories.destroy');
+
+        //Product Route
+        Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+        Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+        Route::post('/products/store', [ProductController::class, 'store'])->name('products.store');
+        Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
+        Route::get('/products/{products}/edit', [ProductController::class, 'edit'])->name('products.edit');
+        Route::put('/products/{products}', [ProductController::class, 'update'])->name('products.update');
+        Route::delete('/delete-image', [ProductController::class, 'deleteImage'])->name('delete-image');
+        Route::delete('/sub-products/{products}', [ProductController::class, 'destroy'])->name('products.destroy');
+
+
+        //Product Category get SubCategory Route
+        Route::get('/get-sub-categories', [ProductSubCategoryController::class, 'index'])->name('get-sub-categories');
 
 
 
