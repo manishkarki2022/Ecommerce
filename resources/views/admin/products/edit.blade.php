@@ -58,7 +58,7 @@
                                 <h2 class="h4 mb-3">Media</h2>
                                 <div class="form-group">
                                     <label for="images">Product Images</label>
-                                    <input type="file" name="images[]" id="images" class="form-control-file" multiple required>
+                                    <input type="file" name="images[]" id="images" class="form-control-file" multiple >
                                 </div>
 
                                 <!-- Image Previews Container -->

@@ -45,6 +45,7 @@ return view('admin.category.create');
             $category->name = $request->name;
             $category->slug = $request->slug;
             $category->status = $request->status;
+            $category->showHome = $request->showHome;
             $category->save();
             //Save Image
 //            if(!empty($request->image_id)){
@@ -111,6 +112,7 @@ return view('admin.category.create');
             $category->name = $request->name;
             $category->slug = $request->slug;
             $category->status = $request->status;
+            $category->showHome = $request->showHome;
             $category->save();
         }
         $request->session()->flash('success','Category Updated Successfully');
