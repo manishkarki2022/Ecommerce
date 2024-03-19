@@ -194,11 +194,16 @@ class ProductController extends Controller
             return redirect()->route('products.index');
         }
         $productImages = ProductImage::where('product_id', $id)->get();
-        if(!$productImages->isEmpty()){
-            foreach ($productImages as $productImage){
+        if (!$productImages->isEmpty()) {
+            foreach ($productImages as $productImage) {
+                // Delete the image file
                 $imagePath = public_path('products/' . $productImage->image);
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+                // Delete the product image record
+                $productImage->delete();
             }
-            ProductImage::where('product_id', $id)->delete();
         }
         $product->delete();
         $request->session()->flash('success', 'Product deleted successfully.');
