@@ -53,28 +53,26 @@ class ProductController extends Controller
             'barcode' => 'nullable',
             'status' => 'required|in:0,1',
             'sub_category_id' => 'nullable|numeric'
-
-
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $product = new Product($validator->validated());;
+        $product = new Product($validator->validated());
         $product->save();
 
-        //Save product images
+        // Save product images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 // Validate the image
-                $validator = Validator::make(['image' => $image], [
+                $imageValidator = Validator::make(['image' => $image], [
                     'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust maximum file size as needed
                 ]);
 
-                if ($validator->fails()) {
+                if ($imageValidator->fails()) {
                     // Handle validation failure
-                    return redirect()->back()->withErrors($validator)->withInput();
+                    return redirect()->back()->withErrors($imageValidator)->withInput();
                 }
 
                 // Generate a unique file name
@@ -84,7 +82,10 @@ class ProductController extends Controller
                 $image->move(public_path('products'), $newName);
 
                 // Create a new record in the product_images table
-                $product->images()->create(['image' => $newName]);
+                $productImage = new ProductImage();
+                $productImage->product_id = $product->id;
+                $productImage->image = $newName;
+                $productImage->save();
             }
         }
 
@@ -108,20 +109,14 @@ class ProductController extends Controller
         $subCategories = SubCategory::where('category_id', $product->category_id)->orderBy('name', 'asc')->get();
         return view('admin.products.edit',compact('product','categories','subCategories','productImages') );
     }
-    public function update(Request $request, $productId)
+    public function update(Request $request, $id)
     {
-        $product = Product::find($productId);
-        if (empty($product)) {
-            $request->session()->flash('error', 'Product not found.');
-            return redirect()->route('products.index');
-        }
-
         $validator = Validator::make($request->all(), [
             'title' => 'required',
-            'slug' => 'required|unique:products,slug,' . $product->id,
+            'slug' => 'required|unique:products,slug,'.$id,
             'compare_price' => 'nullable',
             'price' => 'required|numeric',
-            'sku' => 'required|unique:products,sku,' . $product->id,
+            'sku' => 'required|unique:products,sku,'.$id,
             'track_qty' => 'required|in:Yes,No',
             'qty' => $request->filled('track_qty') ? 'required|numeric' : '',
             'category_id' => 'required|numeric',
@@ -136,20 +131,21 @@ class ProductController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $product->update($validator->validated());
+        $product = Product::findOrFail($id);
+        $product->fill($validator->validated());
+        $product->save();
 
-        // Handle image uploads
+        // Save product images
         if ($request->hasFile('images')) {
-//            dd('here');
             foreach ($request->file('images') as $image) {
                 // Validate the image
-                $validator = Validator::make(['image' => $image], [
+                $imageValidator = Validator::make(['image' => $image], [
                     'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust maximum file size as needed
                 ]);
 
-                if ($validator->fails()) {
+                if ($imageValidator->fails()) {
                     // Handle validation failure
-                    return redirect()->back()->withErrors($validator)->withInput();
+                    return redirect()->back()->withErrors($imageValidator)->withInput();
                 }
 
                 // Generate a unique file name
@@ -158,17 +154,18 @@ class ProductController extends Controller
                 // Move the uploaded image to the storage directory
                 $image->move(public_path('products'), $newName);
 
-                // Delete existing product images
-                $product->images()->delete();
-
                 // Create a new record in the product_images table
-                $product->images()->create(['image' => $newName]);
+                $productImage = new ProductImage();
+                $productImage->product_id = $product->id;
+                $productImage->image = $newName;
+                $productImage->save();
             }
         }
 
         $request->session()->flash('success', 'Product updated successfully.');
         return redirect()->route('products.index');
     }
+
     public function deleteImage(Request $request)
     {
         $imageId = $request->input('image_id');
