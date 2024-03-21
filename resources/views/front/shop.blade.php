@@ -134,7 +134,9 @@
 
                                         </div>
                                         <div class="card-body mt-2 p-1">
-                                            <a class="h6 link mt-0" href="product.php">{{$product->title}}</a>
+                                            <a class="h6 link mt-0" href="product.php">
+                                                {{ strlen($product->title) > 20 ? substr($product->title, 0, 20) . ' ...' : $product->title }}
+                                            </a>
                                             <p class="text-muted text-left">Ram Bahadur</p>
                                             <div class="d-flex justify-content-between px-1">
                                                 <div>
@@ -163,7 +165,7 @@
 
                         <div class="col-md-12 pt-5">
                             <nav aria-label="Page navigation example">
-                                    {{$products->links()}}
+                                    {{$products->withQueryString()->links()}}
 
                             </nav>
                         </div>

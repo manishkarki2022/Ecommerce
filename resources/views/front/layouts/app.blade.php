@@ -52,7 +52,7 @@
     <div class="container">
         <div class="row align-items-center py-3 d-none d-lg-flex justify-content-between">
             <div class="col-lg-4 logo">
-                <a href="index.php" class="text-decoration-none">
+                <a href="{{route('front.home')}}" class="text-decoration-none">
                     <span class="h1 text-uppercase text-primary bg-dark px-2">INDIGO</span>
                     <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">BOOK</span>
                 </a>
@@ -126,7 +126,7 @@
                                 <ul class="dropdown-menu dropdown-menu-dark">
                                     @if($category->subCategories->isNotEmpty())
                                         @foreach($category->subCategories as $sub_category)
-                                            <li><a class="dropdown-item nav-link" href="#">{{$sub_category->name}}</a></li>
+                                            <li><a class="dropdown-item nav-link" href="{{route('front.shop',[$category->slug,$sub_category->slug])}}">{{$sub_category->name}}</a></li>
                                         @endforeach
                                     @endif
                                 </ul>
