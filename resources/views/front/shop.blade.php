@@ -5,14 +5,14 @@
             <div class="light-font">
                 <ol class="breadcrumb primary-color mb-0">
                     <li class="breadcrumb-item"><a class="white-text" href="{{route('front.home')}}">Home</a></li>
-                    <li class="breadcrumb-item active">Shop</li>
+                    <li class="breadcrumb-item active"><a class="white-text" href="{{route('front.shop')}}">Shop</a></li>
                 </ol>
             </div>
         </div>
     </section>
 
     <section class="section-6 pt-5">
-        <div class="container">
+        <div class="container px-5 ">
             <div class="row">
                 <div class="col-md-3 sidebar">
                     <div class="sub-title">
@@ -100,14 +100,6 @@
                         <div class="col-12 pb-1">
                             <div class="d-flex align-items-center justify-content-end mb-4">
                                 <div class="ml-2">
-{{--                                    <div class="btn-group">--}}
-{{--                                        <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-bs-toggle="dropdown">Sorting</button>--}}
-{{--                                        <div class="dropdown-menu dropdown-menu-right">--}}
-{{--                                            <a class="dropdown-item" href="#">Latest</a>--}}
-{{--                                            <a class="dropdown-item" href="#">Price High</a>--}}
-{{--                                            <a class="dropdown-item" href="#">Price Low</a>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
                                     <label for="sort"></label>
                                     <select name="sort" id="sort" class="form-control">
                                         <option value="latest" {{ ($sortOption == 'latest') ? 'selected' : '' }}>Latest</option>
@@ -123,18 +115,18 @@
                                     <div class="card product-card">
                                         <div class="product-image position-relative" style="height: 300px !important; overflow: hidden">
                                             @if($product->images !== null && $product->images->isNotEmpty() && $product->images->first() !== null)
-                                                <a href="" class="product-img ">
+                                                <a href="{{route('front.product',$product->slug)}}" class="product-img " alt="{{$product->title}}" title="{{$product->title}}">
                                                     <img class="card-img-top img-fluid h-100" src="{{ asset('products/' . $product->images->first()->image) }}" alt="">
-
+                                                </a>
                                             @else
-                                                <a href="" class="product-img ">
-                                                <img class="card-img-top img-fluid" src="{{ asset('products/di.jpg') }}" alt="">
+                                                <a href="{{route('front.product',$product->slug)}}" class="product-img ">
+                                                <img class="card-img-top img-fluid" src="{{ asset('products/di.jpg') }}" alt="{{$product->title}}" title="{{$product->title}}">
                                                 </a>
                                             @endif
 
                                         </div>
                                         <div class="card-body mt-2 p-1">
-                                            <a class="h6 link mt-0" href="product.php">
+                                            <a class="h6 link mt-0" href="product.php" alt="{{$product->title}}" title="{{$product->title}}">
                                                 {{ strlen($product->title) > 20 ? substr($product->title, 0, 20) . ' ...' : $product->title }}
                                             </a>
                                             <p class="text-muted text-left">Ram Bahadur</p>
@@ -155,14 +147,8 @@
                                             </div>
                                     </div>
                                 </div>
-
                             @endforeach
-
-
                         @endif
-
-
-
                         <div class="col-md-12 pt-5">
                             <nav aria-label="Page navigation example">
                                     {{$products->withQueryString()->links()}}

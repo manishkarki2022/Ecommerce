@@ -52,7 +52,10 @@ class ProductController extends Controller
             'description' => 'nullable',
             'barcode' => 'nullable',
             'status' => 'required|in:0,1',
-            'sub_category_id' => 'nullable|numeric'
+            'sub_category_id' => 'nullable|numeric',
+            'short_description' => 'nullable',
+            'shipping_returns' => 'nullable',
+            'related_products' => 'nullable'
         ]);
 
         if ($validator->fails()) {
@@ -60,6 +63,7 @@ class ProductController extends Controller
         }
 
         $product = new Product($validator->validated());
+        $product->related_products=(!empty($request->related_products)) ? implode(',',$request->related_products) : '';
         $product->save();
 
         // Save product images
@@ -107,7 +111,16 @@ class ProductController extends Controller
 
         $categories = Category::orderBy('name', 'asc')->get();
         $subCategories = SubCategory::where('category_id', $product->category_id)->orderBy('name', 'asc')->get();
-        return view('admin.products.edit',compact('product','categories','subCategories','productImages') );
+
+        // Fetch Related Products
+        $relatedProducts=[];
+        if($product->related_products !=''){
+           $productArray = explode(',',$product->related_products);
+           $relatedProducts = Product::whereIn('id',$productArray)->get();
+        }
+
+
+        return view('admin.products.edit',compact('product','categories','subCategories','productImages','relatedProducts') );
     }
     public function update(Request $request, $id)
     {
@@ -124,7 +137,10 @@ class ProductController extends Controller
             'description' => 'nullable',
             'barcode' => 'nullable',
             'status' => 'required|in:0,1',
-            'sub_category_id' => 'nullable|numeric'
+            'sub_category_id' => 'nullable|numeric',
+            'short_description' => 'nullable',
+            'shipping_returns' => 'nullable',
+            'related_products' => 'nullable'
         ]);
 
         if ($validator->fails()) {
@@ -133,6 +149,7 @@ class ProductController extends Controller
 
         $product = Product::findOrFail($id);
         $product->fill($validator->validated());
+        $product->related_products=(!empty($request->related_products)) ? implode(',',$request->related_products) : '';
         $product->save();
 
         // Save product images
@@ -205,6 +222,22 @@ class ProductController extends Controller
         $product->delete();
         $request->session()->flash('success', 'Product deleted successfully.');
         return redirect()->route('products.index');
+
+    }
+    public function getProducts(Request $request){
+        $tempProduct=[];
+        if($request->term != ''){
+            $products = Product::where('title', 'like', '%' . $request->term . '%')->get();
+            if($products != null){
+                foreach ($products as $product){
+                    $tempProduct[] = array('id'=>$product->id,'text'=>$product->title);
+                }
+            }
+        }
+        return response()->json([
+            'tags' => $tempProduct,
+            'status' => true,
+        ]);
 
     }
 

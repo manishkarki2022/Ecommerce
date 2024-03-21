@@ -7,32 +7,33 @@
                     <!-- <img src="images/carousel-1.jpg" class="d-block w-100" alt=""> -->
 
                     <picture>
-                        <source media="(max-width: 799px)" srcset="{{asset('front-assets/images/carousel-1-m.jpg')}}" />
-                        <source media="(min-width: 800px)" srcset="{{asset('front-assets/images/carousel-1.jpg')}}" />
-                        <img src="{{asset('front-assets/images/carousel-1.jpg')}}" alt="" />
+                        <source media="(max-width: 799px)" srcset="{{ asset('cp.png') }}" />
+                        <source media="(min-width: 800px)" srcset="{{ asset('cp.png') }}" />
+                        <div class="cover-image">
+                            <img src="{{ asset('cp.jpg') }}" alt="" />
+                        </div>
                     </picture>
-
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                        <div class="p-3">
-                            <h1 class="display-4 text-white mb-3">Kids Fashion</h1>
-                            <p class="mx-md-5 px-5">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo stet amet amet ndiam elitr ipsum diam</p>
-                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="#">Shop Now</a>
+                        <div class="p-2 my-3">
+                            <h1 class="display-4 text-white mb-2">Discover Captivating Reads at Our Bookstore</h1>
+                            <p class="mx-md-5 px-3 fs-md-4 fs-lg-3"><strong>Welcome to our bookstore, where every page holds a new adventure.</strong></p>
+                            <a class="btn btn-outline-light py-1 px-3 mt-2" href="{{route('front.shop')}}">Shop Now</a>
                         </div>
                     </div>
                 </div>
                 <div class="carousel-item">
 
                     <picture>
-                        <source media="(max-width: 799px)" srcset="{{asset('front-assets/images/carousel-2-m.jpg')}}" />
-                        <source media="(min-width: 800px)" srcset="{{asset('front-assets/images/carousel-2.jpg')}}" />
-                        <img src="images/carousel-2.jpg" alt="" />
+                        <source media="(max-width: 799px)" srcset="{{asset('cp2.jpg')}}" />
+                        <source media="(min-width: 800px)" srcset="{{asset('cp2.jpg')}}" />
+                        <img src="{{asset('cp2.jpg')}}" alt="" />
                     </picture>
 
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                        <div class="p-3">
-                            <h1 class="display-4 text-white mb-3">Womens Fashion</h1>
-                            <p class="mx-md-5 px-5">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo stet amet amet ndiam elitr ipsum diam</p>
-                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="#">Shop Now</a>
+                        <div class="p-1 my-3">
+                            <h1 class="display-4 text-white mb-2">Unveil Worlds of Wonder</h1>
+                            <p class="mx-md-5 px-3 fs-md-4 fs-lg-3"><strong>Step into a realm where imagination knows no bounds. Our bookstore is a sanctuary for bibliophiles.</strong></p>
+                            <a class="btn btn-outline-light py-1 px-3 mt-2" href="{{route('front.shop')}}">Shop Now</a>
                         </div>
                     </div>
                 </div>
@@ -40,16 +41,16 @@
                     <!-- <img src="images/carousel-3.jpg" class="d-block w-100" alt=""> -->
 
                     <picture>
-                        <source media="(max-width: 799px)" srcset="{{asset('front-assets/images/carousel-2.jpg')}}" />
-                        <source media="(min-width: 800px)" srcset="{{asset('front-assets/images/carousel-3.jpg')}}" />
-                        <img src="{{asset('front-assets/images/carousel-2.jpg')}}" alt="" />
+                        <source media="(max-width: 799px)" srcset="{{asset('cp3.png')}}" />
+                        <source media="(min-width: 800px)" srcset="{{asset('cp3.png')}}" />
+                        <img src="{{asset('cp3.png')}}" alt="" />
                     </picture>
 
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                        <div class="p-3">
-                            <h1 class="display-4 text-white mb-3">Shop Online at Flat 70% off on Branded Clothes</h1>
-                            <p class="mx-md-5 px-5">Lorem rebum magna amet lorem magna erat diam stet. Sadips duo stet amet amet ndiam elitr ipsum diam</p>
-                            <a class="btn btn-outline-light py-2 px-4 mt-3" href="#">Shop Now</a>
+                        <div class="p-2 my-3">
+                            <h1 class="display-4 text-white mb-2">Journey Through Time and Space</h1>
+                            <p class="mx-md-5 px-3 fs-md-4 fs-lg-3"><strong>Embark on an odyssey through the ages and beyond as you traverse the pages of our bookstore.</strong></p>
+                            <a class="btn btn-outline-light py-1 px-3 mt-1" href="{{route('front.shop')}}">Shop Now</a>
                         </div>
                     </div>
                 </div>
@@ -135,18 +136,18 @@
                             <div class="card product-card">
                                 <div class="product-image position-relative" style="height: 300px !important; overflow: hidden">
                                     @if($featuredItem->images !== null && $featuredItem->images->isNotEmpty() && $featuredItem->images->first() !== null)
-                                        <a href="" class="product-img ">
-                                            <img class="card-img-top img-fluid h-100" src="{{ asset('products/' . $featuredItem->images->first()->image) }}" alt="">
-
-                                            @else
-                                                <a href="" class="product-img ">
-                                                    <img class="card-img-top img-fluid" src="{{ asset('products/di.jpg') }}" alt="">
-                                                </a>
+                                        <a href="{{route('front.product',$featuredItem->slug)}}" class="product-img ">
+                                            <img class="card-img-top img-fluid h-100" src="{{ asset('products/' . $featuredItem->images->first()->image) }}" alt="{{$featuredItem->litle}}">
+                                        </a>
+                                    @else
+                                        <a href="{{route('front.product',$featuredItem->slug)}}" class="product-img " alt="{{$featuredItem->litle}}">
+                                                    <img class="card-img-top img-fluid" src="{{ asset('products/di.jpg') }}" alt="{{$featuredItem->litle}}">
+                                        </a>
                                     @endif
 
                                 </div>
                                 <div class="card-body mt-2 p-1">
-                                    <a class="h4 link mt-0" href="product.php">{{$featuredItem->title}}</a>
+                                    <a class="h4 link mt-0" href="product.php" title="{{$featuredItem->title}}">{{ strlen($featuredItem->title) > 15 ? substr($featuredItem->title, 0, 15) . ' ...' : $featuredItem->title }}</a>
                                     <p class="text-muted text-left">Ram Bahadur</p>
                                     <div class="d-flex justify-content-between px-1">
                                         <div>
@@ -182,18 +183,18 @@
                             <div class="card product-card">
                                 <div class="product-image position-relative" style="height: 300px !important; overflow: hidden">
                                     @if($latestItem->images !== null && $latestItem->images->isNotEmpty() && $latestItem->images->first() !== null)
-                                        <a href="" class="product-img ">
+                                        <a href="{{route('front.product',$latestItem->slug)}}" class="product-img " title="{{$latestItem->title}}">
                                             <img class="card-img-top img-fluid h-100" src="{{ asset('products/' . $latestItem->images->first()->image) }}" alt="">
-
+                                        </a>
                                             @else
-                                                <a href="" class="product-img ">
+                                                <a href="{{route('front.product',$latestItem->slug)}}" class="product-img " title="{{$latestItem->title}}">
                                                     <img class="card-img-top img-fluid" src="{{ asset('products/di.jpg') }}" alt="">
                                                 </a>
                                     @endif
 
                                 </div>
                                 <div class="card-body mt-2 p-1">
-                                    <a class="h4 link mt-0" href="product.php">{{$latestItem->title}}</a>
+                                    <a class="h4 link mt-0" href="product.php" title="{{$latestItem->title}}">{{ strlen($latestItem->title) > 15 ? substr($latestItem->title, 0, 15) . ' ...' : $latestItem->title }}</a>
                                     <p class="text-muted text-left">Ram Bahadur</p>
                                     <div class="d-flex justify-content-between px-1">
                                         <div>

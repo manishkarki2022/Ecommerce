@@ -71,6 +71,23 @@ class ShopController extends Controller
     }
 
 
+    public function product($slug){
+        $product = Product::where('slug', $slug)->with('images')->first();
+           if (!$product) {
+                abort(404);
+            }
+        $relatedProducts=[];
+        if($product->related_products !=''){
+            $productArray = explode(',',$product->related_products);
+            $relatedProducts = Product::whereIn('id',$productArray)->with('images')->get();
+        }
+           return view('front.product', compact('product','relatedProducts'));
+
+
+
+    }
+
+
 
 
 }

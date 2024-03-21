@@ -28,6 +28,8 @@ use App\Http\Controllers\admin\HomeController;
 //});
 Route::get('/', [FrontController::class, 'index'])->name('front.home');
 Route::get('/shop/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
+Route::get('/product/{slug}', [ShopController::class, 'product'])->name('front.product');
+
 
 Route::group(['prefix'=>'admin'], function () {
     Route::group(['middleware'=>'admin.guest'], function () {
@@ -67,6 +69,7 @@ Route::group(['prefix'=>'admin'], function () {
         Route::put('/products/{products}', [ProductController::class, 'update'])->name('products.update');
         Route::delete('/delete-image', [ProductController::class, 'deleteImage'])->name('delete-image');
         Route::delete('/sub-products/{products}', [ProductController::class, 'destroy'])->name('products.destroy');
+        Route::get('/get-products', [ProductController::class, 'getProducts'])->name('products.getProducts');
 
 
         //Product Category get SubCategory Route
