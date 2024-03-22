@@ -14,13 +14,20 @@
     <section class=" section-10">
         <div class="container">
             <div class="login-form">
-                <form action="/examples/actions/confirmation.php" method="post">
+                <form action="{{route('account.authenticate')}}" method="post">
+                    @csrf
                     <h4 class="modal-title">Login to Your Account</h4>
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Email" required="required">
+                        <input type="text" class="form-control" placeholder="Email"  name="email" value="{{old('email')}}">
+                        @error('email')
+                        <span class="text-danger">{{$message}}</span>
+                        @enderror
                     </div>
                     <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Password" required="required">
+                        <input type="password" class="form-control" placeholder="Password"  name="password">
+                        @error('password')
+                        <span class="text-danger">{{$message}}</span>
+                        @enderror
                     </div>
                     <div class="form-group small">
                         <a href="#" class="forgot-link">Forgot Password?</a>

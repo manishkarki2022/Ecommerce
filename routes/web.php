@@ -41,11 +41,16 @@ Route::delete('/deleteItem-cart', [CartController::class, 'deleteItem'])->name('
 Route::group(['prefix'=>'account'], function () {
     Route::group(['middleware'=>'guest'], function () {
         Route::get('/login', [AuthController::class, 'login'])->name('account.login');
+        Route::post('/login', [AuthController::class, 'authenticate'])->name('account.authenticate');
         Route::get('/register', [AuthController::class, 'register'])->name('account.register');
         Route::post('/register', [AuthController::class, 'postRegister'])->name('account.postRegister');
 
+
     });
     Route::group(['middleware'=>'auth'], function () {
+        Route::get('/profile', [AuthController::class, 'profile'])->name('account.profile');
+        Route::get('/logout', [AuthController::class, 'logout'])->name('account.logout');
+
 
     });
 
