@@ -166,14 +166,7 @@
             })
 
         }
-        $(document).ready(function() {
-            // Check for flashed session message and show Toastr notification
-            @if(session()->has('success'))
-            toastr.success('{{ session('success') }}');
-            @elseif(session()->has('error'))
-            toastr.error('{{ session('error') }}');
-            @endif
-        });
+
         function deleteItem(rowId) {
             if(confirm('Are you sure to delete this item?')){
                 $.ajax({

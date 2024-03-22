@@ -4,6 +4,7 @@ use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ProductSubCategoryController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImagesController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\ShopController;
@@ -34,6 +35,22 @@ Route::get('/cart', [CartController::class, 'cart'])->name('front.cart');
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('front.addToCart');
 Route::post('/update-cart', [CartController::class, 'updateCart'])->name('front.updateCart');
 Route::delete('/deleteItem-cart', [CartController::class, 'deleteItem'])->name('front.deleteItemCart');
+
+
+
+Route::group(['prefix'=>'account'], function () {
+    Route::group(['middleware'=>'guest'], function () {
+        Route::get('/login', [AuthController::class, 'login'])->name('account.login');
+        Route::get('/register', [AuthController::class, 'register'])->name('account.register');
+        Route::post('/register', [AuthController::class, 'postRegister'])->name('account.postRegister');
+
+    });
+    Route::group(['middleware'=>'auth'], function () {
+
+    });
+
+
+});
 
 Route::group(['prefix'=>'admin'], function () {
     Route::group(['middleware'=>'admin.guest'], function () {
