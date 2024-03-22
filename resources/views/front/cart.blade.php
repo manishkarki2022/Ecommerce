@@ -15,69 +15,84 @@
     <section class=" section-9 pt-4">
         <div class="container">
             <div class="row">
+                @if($cartItems->isEmpty())
+                    <div class="col-md-12 mb-2">
+                        <div class="card">
+                            <div class="card-body d-flex justify-content-center align-middle ">
+
+                                    <h2>Your Cart is Empty!!</h2>
+
+                            </div>
+                        </div>
+                    </div>
+                @else
                 <div class="col-md-8">
                     <div class="table-responsive">
-                        <table class="table" id="cart">
-                            <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Total</th>
-                                <th>Remove</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+
+                            <table class="table" id="cart">
+                                <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Remove</th>
+                                </tr>
+                                </thead>
+                                <tbody>
 
                                 @if(!empty($cartItems))
 
                                     @foreach($cartItems as $cartItem)
                                         <tr>
 
-                                        <td>
-                                            <div class="d-flex align-items-center ">
-                                                @if ($cartItem->options->images !==null)
-                                                    <img src="{{ asset('products/' . $cartItem->options->images->image) }}" width="" height="">
-                                                @else
-                                                    <img src="{{ asset('products/di.jpg') }}" width="" height="">
-                                                @endif
-                                                <h2>{{$cartItem->name}}</h2>
-                                            </div>
-                                        </td>
-                                        <td>${{$cartItem->price}}</td>
-                                        <td>
-                                            <div class="input-group quantity mx-auto" style="width: 100px;">
-                                                <div class="input-group-btn">
-                                                    <button class="btn btn-sm btn-dark btn-minus p-2 pt-1 pb-1">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
+                                            <td>
+                                                <div class="d-flex align-items-center ">
+                                                    @if ($cartItem->options->images !==null)
+                                                        <img src="{{ asset('products/' . $cartItem->options->images->image) }}" width="" height="">
+                                                    @else
+                                                        <img src="{{ asset('products/di.jpg') }}" width="" height="">
+                                                    @endif
+                                                    <h2>{{$cartItem->name}}</h2>
                                                 </div>
-                                                <input type="text" class="form-control form-control-sm  border-0 text-center" value="{{$cartItem->qty}}">
-                                                <div class="input-group-btn">
-                                                    <button class="btn btn-sm btn-dark btn-plus p-2 pt-1 pb-1">
-                                                        <i class="fa fa-plus"></i>
-                                                    </button>
+                                            </td>
+                                            <td>${{$cartItem->price}}</td>
+                                            <td>
+                                                <div class="input-group quantity mx-auto" style="width: 100px;">
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-sm btn-dark btn-minus p-2 pt-1 pb-1 sub" data-id="{{$cartItem->rowId}}">
+                                                            <i class="fa fa-minus"></i>
+                                                        </button>
+                                                    </div>
+                                                    <input type="text" class="form-control form-control-sm  border-0 text-center" value="{{$cartItem->qty}}">
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-sm btn-dark btn-plus p-2 pt-1 pb-1 add" data-id="{{$cartItem->rowId}}">
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            ${{$cartItem->price*$cartItem->qty}}
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>
-                                        </td>
-                            </tr>
+                                            </td>
+                                            <td>
+                                                ${{$cartItem->price*$cartItem->qty}}
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger" onclick="deleteItem('{{ $cartItem->rowId }}');"><i class="fa fa-times"></i></button>
+
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 @endif
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+
+
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card cart-summery">
                         <div class="sub-title">
-                            <h2 class="bg-white">Cart Summery</h3>
+                            <h3 class="bg-white">Cart Summery</h3>
                         </div>
                         <div class="card-body">
                             <div class="d-flex justify-content-between pb-2">
@@ -102,7 +117,77 @@
 {{--                        <button class="btn btn-dark" type="button" id="button-addon2">Apply Coupon</button>--}}
 {{--                    </div>--}}
                 </div>
+                @endif
             </div>
         </div>
     </section>
+@endsection
+@section('customJs')
+    <script>
+        $('.add').click(function(){
+            var qtyElement = $(this).parent().prev(); // Qty Input
+            var qtyValue = parseInt(qtyElement.val());
+            if (qtyValue < 10) {
+                qtyElement.val(qtyValue+1);
+                var rowId = $(this).data('id');
+                var newQty=qtyElement.val();
+                updateCart(rowId, newQty);
+            }
+        });
+
+        $('.sub').click(function(){
+            var qtyElement = $(this).parent().next();
+            var qtyValue = parseInt(qtyElement.val());
+            if (qtyValue > 1) {
+                qtyElement.val(qtyValue-1);
+                var rowId = $(this).data('id');
+                var newQty=qtyElement.val();
+                updateCart(rowId, newQty);
+            }
+        });
+        function updateCart(rowId, qty){
+            $.ajax({
+                url:'{{route("front.updateCart")}}',
+                type:'POST',
+                data:{
+                    rowId:rowId,
+                    qty:qty
+                },
+                dataType:'json',
+                success:function(response){
+                  if(response.status==true){
+                     window.location.href = "{{route('front.cart')}}";
+                  }
+                    if(response.status==false){
+                        window.location.href = "{{route('front.cart')}}";
+                    }
+                }
+
+            })
+
+        }
+        $(document).ready(function() {
+            // Check for flashed session message and show Toastr notification
+            @if(session()->has('success'))
+            toastr.success('{{ session('success') }}');
+            @elseif(session()->has('error'))
+            toastr.error('{{ session('error') }}');
+            @endif
+        });
+        function deleteItem(rowId) {
+            if(confirm('Are you sure to delete this item?')){
+                $.ajax({
+                    url: '{{route("front.deleteItemCart")}}',
+                    type: 'Delete',
+                    data: {
+                        rowId: rowId,
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                            window.location.href = "{{route('front.cart')}}";
+                    }
+                });
+            }
+        }
+    </script>
 @endsection
