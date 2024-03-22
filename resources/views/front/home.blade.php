@@ -160,7 +160,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="#">
+                                    <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$featuredItem->id}})">
                                         <i class="fa fa-shopping-cart"></i> Add To Cart
                                     </a>
                                 </div>
@@ -207,7 +207,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="#">
+                                    <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$latestItem->id}})">
                                         <i class="fa fa-shopping-cart"></i> Add To Cart
                                     </a>
                                 </div>

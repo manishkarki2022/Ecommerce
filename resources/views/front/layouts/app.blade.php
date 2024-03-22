@@ -35,6 +35,7 @@
     <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/slick-theme.css')}}" />
     <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/style.css')}}" />
     <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/ion.rangeSlider.min.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('admin-assets/plugins/toastr/toastr.min.css') }}">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
@@ -45,6 +46,7 @@
 
     <!-- Fav Icon -->
     <link rel="shortcut icon" type="image/x-icon" href="#" />
+    <meta name="csrf-token" content="{{csrf_token()}}">
 </head>
 <body data-instant-intensity="mousedown" class="bg-white">
 
@@ -136,8 +138,13 @@
                 </ul>
             </div>
             <div class="right-nav py-0">
-                <a href="cart.php" class="ml-3 d-flex pt-2">
-                    <i class="fas fa-shopping-cart text-primary"></i>
+                <a href="{{route('front.cart')}}" class="ml-3 d-flex pt-2">
+                     <span class="position-relative">
+                         <i class="fas fa-shopping-cart text-primary"></i>
+                         @if(Cart::count() > 0)
+                             <span class="badge badge-pill badge-danger position-absolute top-0 start-100 translate-middle">{{ Cart::count() }}</span>
+                         @endif
+                    </span>
                 </a>
             </div>
         </nav>
@@ -207,6 +214,7 @@
 <script src="{{asset('front-assets/js/slick.min.js')}}"></script>
 <script src="{{asset('front-assets/js/custom.js')}}"></script>
 <script src="{{asset('front-assets/js/ion.rangeSlider.min.js')}}"></script>
+<script src="{{ asset('admin-assets/plugins/toastr/toastr.min.js') }}"></script>
 <script>
     window.onscroll = function() {myFunction()};
 
@@ -267,6 +275,11 @@
     });
 </script>
 <script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
     document.addEventListener('DOMContentLoaded', function () {
         var slider;
 
@@ -310,7 +323,25 @@
             initSlider();
         });
     });
+    function addToCart(id){
+        $.ajax({
+            url: "{{ route('front.addToCart') }}",
+            type: "post",
+            data: {id: id},
+            dataType: "json",
+            success: function (response) {
+                if(response.status == true){
+                  toastr.success(response.message);
+                }else{
+                    toastr.error(response.message);
+                }
+            }
+        });
+    }
+
 </script>
+
+
 @yield('customJs')
 </body>
 </html>
