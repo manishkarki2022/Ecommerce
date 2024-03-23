@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -108,6 +110,24 @@ class CartController extends Controller
             'status'=>$status,
             'message'=>$message
         ]);
+
+    }
+    public function checkout(){
+        //If cart is empty redirect to cart page
+        if(Cart::count()==0){
+            return redirect()->route('front.cart');
+        }
+        //IF user is not logged in then redirect to login page
+        if(!Auth::check()){
+            if(!session()->has('url.intended')){
+                session(['url.intended' => url()->current()]);
+            }
+
+            return redirect()->route('account.login');
+
+        }
+            $cities = City::orderBy('name','asc')->get();
+            return view('front.checkout',compact('cities'));
 
     }
 
