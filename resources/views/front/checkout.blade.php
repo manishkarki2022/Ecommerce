@@ -4,8 +4,8 @@
         <div class="container">
             <div class="light-font">
                 <ol class="breadcrumb primary-color mb-0">
-                    <li class="breadcrumb-item"><a class="white-text" href="#">Home</a></li>
-                    <li class="breadcrumb-item"><a class="white-text" href="#">Shop</a></li>
+                    <li class="breadcrumb-item"><a class="white-text" href="{{route('front.home')}}">Home</a></li>
+                    <li class="breadcrumb-item"><a class="white-text" href="{{route('front.shop')}}">Shop</a></li>
                     <li class="breadcrumb-item">Checkout</li>
                 </ol>
             </div>
@@ -14,7 +14,9 @@
 
     <section class="section-9 pt-4">
         <div class="container">
-            <div class="row">
+            <form action="{{route('front.processCheckout')}}" method="post">
+                @csrf
+                <div class="row">
                 <div class="col-md-8">
                     <div class="sub-title">
                         <h2>Shipping Address</h2>
@@ -25,74 +27,84 @@
 
                                 <div class="col-md-12">
                                     <div class="mb-3">
-                                        <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name">
+                                        <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name" value="{{ !empty($user_info->first_name) ? $user_info->first_name : '' }}">
+                                        @error('first_name')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="mb-3">
-                                        <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Last Name">
+                                        <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Last Name" value="{{ !empty($user_info->last_name) ? $user_info->last_name : '' }}" >
+                                        @error('last_name')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
                                     <div class="mb-3">
-                                        <input type="text" name="email" id="email" class="form-control" placeholder="Email">
+                                        <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="{{ !empty($user_info->email) ? $user_info->email : '' }}">
+                                        @error('email')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
                                     <div class="mb-3">
-                                        <select name="city" id="city" class="form-control">
+                                        <select name="city_id" id="city" class="form-control">
                                             <option value="">Select a City</option>
-                                            @if(!empty($cities))
                                             @foreach($cities as $city)
-                                                <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                                <option value="{{ $city->id }}" {{ $city->id == $user_info->city_id ? 'selected' : '' }}>{{ $city->name }}</option>
                                             @endforeach
-                                            @endif
                                         </select>
+                                        @error('city_id')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
 
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <textarea name="address" id="address" cols="30" rows="3" placeholder="Address" class="form-control"></textarea>
-                                    </div>
-                                </div>
 
                                 <div class="col-md-12">
                                     <div class="mb-3">
-                                        <input type="text" name="appartment" id="appartment" class="form-control" placeholder="Apartment, suite, unit, etc. (optional)">
+                                        <textarea name="address" id="address" cols="30" rows="3" placeholder="Address" class="form-control">{{ !empty($user_info->address) ? $user_info->address : '' }}</textarea>
+                                        @error('address')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <input type="text" name="state" id="state" class="form-control" placeholder="State" value="{{ !empty($user_info->state) ? $user_info->state : '' }}" >
+                                        @error('state')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
-                                        <input type="text" name="city" id="city" class="form-control" placeholder="City">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <input type="text" name="state" id="state" class="form-control" placeholder="State">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <input type="text" name="zip" id="zip" class="form-control" placeholder="Zip">
+                                        <input type="text" name="zip" id="zip" class="form-control" placeholder="Zip" value="{{ !empty($user_info->zip) ? $user_info->zip : '' }}" >
+                                        @error('zip')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
                                     <div class="mb-3">
-                                        <input type="text" name="mobile" id="mobile" class="form-control" placeholder="Mobile No.">
+                                        <input type="text" name="mobile" id="mobile" class="form-control" placeholder="Mobile No." value="{{ !empty($user_info->mobile) ? $user_info->mobile : '' }}" >
+                                        @error('mobile')
+                                        <span class="text-danger">{{$message}}</span>
+                                        @enderror
                                     </div>
                                 </div>
 
 
                                 <div class="col-md-12">
                                     <div class="mb-3">
-                                        <textarea name="order_notes" id="order_notes" cols="30" rows="2" placeholder="Order Notes (optional)" class="form-control"></textarea>
+                                        <textarea name="notes" id="order_notes" cols="30" rows="2" placeholder="Order Notes (optional)" class="form-control"></textarea>
                                     </div>
                                 </div>
 
@@ -137,7 +149,7 @@
                         </div>
                         <div class="">
                             <input type="radio" name="payment_method" value="cod" id="payment_method_two">
-                            <label for="payment_method_two" class="form-check-label">Stripe</label>
+                            <label for="payment_method_two" class="form-check-label">Esewa</label>
                         </div>
 
                         <div class="card-body p-0 d-none mt-3" id="card-payment-form">
@@ -157,8 +169,10 @@
                             </div>
                         </div>
                         <div class="pt-4">
-                            <a href="#" class="btn-dark btn btn-block w-100">Pay Now</a>
+{{--                            <a href="#" >Pay Now</a>--}}
+                            <button type="submit" class="btn-dark btn btn-block w-100">Pay Now</button>
                         </div>
+
                     </div>
 
 
@@ -166,6 +180,7 @@
 
                 </div>
             </div>
+            </form>
         </div>
     </section>
 @endsection

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
+use App\Models\CustomerAddress;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Gloudemans\Shoppingcart\Facades\Cart;
@@ -126,9 +129,91 @@ class CartController extends Controller
             return redirect()->route('account.login');
 
         }
-            $cities = City::orderBy('name','asc')->get();
-            return view('front.checkout',compact('cities'));
+            $user_info = CustomerAddress::where('user_id',Auth::id())->first();
 
+
+            $cities = City::orderBy('name','asc')->get();
+            return view('front.checkout',compact('cities','user_info',));
+
+    }
+    public function processCheckout(Request $request){
+
+        $validator= $request->validate([
+            'first_name'=>'required',
+            'last_name'=>'required',
+            'email'=>'required|email',
+            'mobile'=>'required',
+            'city_id'=>'required',
+            'address'=>'required',
+            'zip'=>'required',
+            'state'=>'required',
+
+        ]);
+        if($validator){
+            CustomerAddress::updateOrCreate(
+
+                ['user_id'=>Auth::id()],
+                [
+                    'first_name'=>$request->first_name,
+                    'last_name'=>$request->last_name,
+                    'email'=>$request->email,
+                    'mobile'=>$request->mobile,
+                    'city_id'=>$request->city_id,
+                    'address'=>$request->address,
+                    'zip'=>$request->zip,
+                    'state'=>$request->state,
+                    'user_id'=>Auth::id(),
+                ]
+            );
+            //If payment method is cod then create order
+            if($request->payment_method == 'cod'){
+                $oder= new Order();
+                $oder->user_id = Auth::id();
+                $oder->shipping = 0;
+                $oder->discount = 0;
+                $oder->subtotal = Cart::subtotal(2,'.','');
+                $oder->grand_total = $oder->subtotal + $oder->shipping-$oder->discount;
+                $oder->coupon_code = null;
+
+
+                $oder->first_name = $request->first_name;
+                $oder->last_name = $request->last_name;
+                $oder->email = $request->email;
+                $oder->mobile = $request->mobile;
+                $oder->city_id = $request->city_id;
+                $oder->address = $request->address;
+                $oder->zip = $request->zip;
+                $oder->state = $request->state;
+                $oder->notes = $request->notes;
+                $oder->save();
+
+                //Save order items
+                foreach (Cart::content() as $item){
+                    $orderItem = new OrderItem();
+                    $orderItem->order_id = $oder->id;
+                    $orderItem->product_id = $item->id;
+                    $orderItem->name = $item->name;
+                    $orderItem->qty = $item->qty;
+                    $orderItem->price = $item->price;
+                    $orderItem->total = $item->price * $item->qty;
+                    $orderItem->save();
+                }
+                $type = 'success';
+                $message = 'Order placed successfully';
+                Cart::destroy();
+                session()->flash($type, $message);
+                $order = $oder->id;
+                return redirect()->route('front.thanks', ['orderId' => $order]);
+
+
+
+            }else{
+            }
+
+        }
+    }
+    public function thankYou($orderId){
+        return view('front.thanks', compact('orderId'));
     }
 
 }
