@@ -7,6 +7,7 @@ use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Shipping;
 use Illuminate\Http\Request;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
@@ -133,7 +134,30 @@ class CartController extends Controller
 
 
             $cities = City::orderBy('name','asc')->get();
-            return view('front.checkout',compact('cities','user_info',));
+
+            //Calculate shipping charges
+            if($user_info){
+
+            $userCity = $user_info->city_id;
+
+            $shippingInfo = Shipping::where('city_id', $userCity)->first();
+            if($shippingInfo == null){
+                $shippingInfo = Shipping::where('city_id','rest_of_city')->first();
+            }
+            $totalQty = 0;
+            $totalShippingCharge = 0;
+            $grandTotal = 0;
+
+            foreach (Cart::content() as $item) {
+                $totalQty += $item->qty;
+            }
+            $totalShippingCharge = $totalQty * $shippingInfo->amount;
+            $grandTotal = Cart::subtotal(2, '.', '') + $totalShippingCharge;
+        }else{
+            $totalShippingCharge = 0;
+            $grandTotal = Cart::subtotal(2, '.', '');
+        }
+        return view('front.checkout', compact('cities', 'user_info', 'totalShippingCharge', 'grandTotal'));
 
     }
     public function processCheckout(Request $request){
@@ -167,15 +191,35 @@ class CartController extends Controller
             );
             //If payment method is cod then create order
             if($request->payment_method == 'cod'){
+                // calculate shipping charges
+                $subTotal = Cart::subtotal(2,'.','');
+                $shipping = 0;
+                $discount = 0;
+
+
+                $shippingInfo = Shipping::where('city_id',$request->city_id)->first();
+                $totalQty = 0;
+                foreach (Cart::content() as $item){
+                    $totalQty += $item->qty;
+                }
+                if($shippingInfo != null){
+                    $shipping = $totalQty * $shippingInfo->amount;
+                    $grandTotal = $subTotal + $shipping;
+
+                }else{
+                    $shippingInfo = Shipping::where('city_id','rest_of_city')->first();
+                    $shipping = $totalQty * $shippingInfo->amount;
+                    $grandTotal = $subTotal + $shipping;
+                }
+
+
                 $oder= new Order();
                 $oder->user_id = Auth::id();
-                $oder->shipping = 0;
-                $oder->discount = 0;
-                $oder->subtotal = Cart::subtotal(2,'.','');
-                $oder->grand_total = $oder->subtotal + $oder->shipping-$oder->discount;
                 $oder->coupon_code = null;
-
-
+                $oder->shipping = $shipping;
+                $oder->subtotal = $subTotal;
+                $oder->discount = $discount;
+                $oder->grand_total = $grandTotal;
                 $oder->first_name = $request->first_name;
                 $oder->last_name = $request->last_name;
                 $oder->email = $request->email;
@@ -214,6 +258,44 @@ class CartController extends Controller
     }
     public function thankYou($orderId){
         return view('front.thanks', compact('orderId'));
+    }
+
+    public function getOrderSummary(Request $request){
+        $subTotal = Cart::subtotal(2,'.','');
+        if($request->city_id>0){
+
+            $shippingInfo = Shipping::where('city_id',$request->city_id)->first();
+            $totalQty = 0;
+            foreach (Cart::content() as $item){
+                $totalQty += $item->qty;
+            }
+
+            if($shippingInfo != null){
+                $shippingCharge = $shippingInfo->amount;
+                $grandTotal = $subTotal + $shippingCharge;
+                return response()->json([
+                    'status'=>true,
+                    'shippingCharge'=>number_format($shippingCharge,2),
+                    'grandTotal'=>number_format($grandTotal,2)
+                ]);
+            }else{
+                $shippingInfo = Shipping::where('city_id','rest_of_city')->first();
+                $shippingCharge = $shippingInfo->amount;
+                $grandTotal = $subTotal + $shippingCharge;
+                return response()->json([
+                    'status'=>true,
+                    'shippingCharge'=>number_format($shippingCharge,2),
+                    'grandTotal'=>number_format($grandTotal,2)
+                ]);
+
+            }
+        }else{
+            return response()->json([
+                'status'=>true,
+                'shippingCharge'=>number_format(0,2),
+                'grandTotal'=>number_format($subTotal,2)
+            ]);
+        }
     }
 
 }

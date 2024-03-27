@@ -56,7 +56,9 @@
                                         <select name="city_id" id="city" class="form-control">
                                             <option value="">Select a City</option>
                                             @foreach($cities as $city)
-                                                <option value="{{ $city->id }}" {{ $city->id == $user_info->city_id ? 'selected' : '' }}>{{ $city->name }}</option>
+                                                <option value="{{ $city->id }}" {{ $user_info && $city->id == $user_info->city_id ? 'selected' : '' }}>
+                                                    {{ $city->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                         @error('city_id')
@@ -132,11 +134,11 @@
                             </div>
                             <div class="d-flex justify-content-between mt-2">
                                 <div class="h6"><strong>Shipping</strong></div>
-                                <div class="h6"><strong>0</strong></div>
+                                <div class="h6"><strong id="shippingAmount">${{number_format($totalShippingCharge,2)}}</strong></div>
                             </div>
                             <div class="d-flex justify-content-between mt-2 summery-end">
                                 <div class="h5"><strong>Total</strong></div>
-                                <div class="h5"><strong>${{Cart::subtotal()}}</strong></div>
+                                <div class="h5"><strong id="grandTotal">${{number_format($grandTotal,2)}}</strong></div>
                             </div>
                         </div>
                     </div>
@@ -192,6 +194,26 @@
             });
             $('#payment_method_one').click(function () {
                 $('#card-payment-form').addClass('d-none');
+            });
+        });
+        $("#city").change(function () {
+            $.ajax({
+                url: "{{route('front.getOrderSummary')}}",
+                type: "POST",
+                data: {
+                    city_id: $(this).val(),
+                    _token: "{{csrf_token()}}"
+                },
+                dataType: "json",
+                success: function (response) {
+                    if (response.status ==true) {
+                        $('#shippingAmount').text('$'+ response.shippingCharge);
+                        $('#grandTotal').text('$'+ response.grandTotal);
+
+
+
+                    }
+                }
             });
         });
     </script>
