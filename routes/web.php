@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\DiscountCodeController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ProductSubCategoryController;
 use App\Http\Controllers\admin\ShippingController;
@@ -111,6 +112,11 @@ Route::group(['prefix'=>'admin'], function () {
         Route::get('/shipping/edit/{id}', [ShippingController::class, 'edit'])->name('shipping.edit');
         Route::put('/shipping/update/{id}', [ShippingController::class, 'update'])->name('shipping.update');
         Route::delete('/shipping/delete/{id}', [ShippingController::class, 'destroy'])->name('shipping.destroy');
+
+
+        //Coupon Route
+        Route::get('coupons/create',[DiscountCodeController::class,'create'])->name('coupons.create');
+        Route::post('coupons/store',[DiscountCodeController::class,'store'])->name('coupons.store');
 
 
 
