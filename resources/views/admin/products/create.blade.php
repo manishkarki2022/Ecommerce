@@ -175,6 +175,29 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h2 class="h4 mb-3">Book Type</h2>
+                                <div class="mb-3">
+                                    <select name="book_type_id" id="book_type_id" class="form-control">
+                                        <option value="">Select Book Type</option>
+                                        @foreach ($bookTypes as $bookType)
+                                            <option value="{{ $bookType->id }}">{{ $bookType->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-3" id="ebook_upload_container" style="display: none;">
+                            <div class="card-body">
+                                <h2 class="h4 mb-3">
+                                    <i class="fas fa-book"></i> Ebook Upload
+                                </h2>
+                                <div class="mb-3">
+                                    <input type="file" name="ebook" id="ebook" class="form-control-file">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -226,6 +249,16 @@
                     console.log("Something went wrong")
                 }
             });
+        });
+        document.getElementById('book_type_id').addEventListener('change', function() {
+            var bookTypeId = this.value;
+            var ebookUploadContainer = document.getElementById('ebook_upload_container');
+
+            if (bookTypeId === '1' || bookTypeId === '3') { // Digital or Both
+                ebookUploadContainer.style.display = 'block';
+            } else {
+                ebookUploadContainer.style.display = 'none';
+            }
         });
     </script>
 @endsection

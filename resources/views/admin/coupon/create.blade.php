@@ -106,7 +106,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="name">Starts At</label>
-                                    <input type="text"  name="start_at" id="start_at" class="form-control" placeholder="Start At " value="{{old('start_at')}}">
+                                    <input type="text" autocomplete="off"  name="start_at" id="start_at" class="form-control" placeholder="Start At " value="{{old('start_at')}}">
                                     @error('start_at')
                                     <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -115,7 +115,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="name">Expires At</label>
-                                    <input type="text"  name="expire_at" id="expire_at" class="form-control" placeholder="Expire At " value="{{old('expire_at')}}">
+                                    <input type="text" autocomplete="off"  name="expire_at" id="expire_at" class="form-control" placeholder="Expire At " value="{{old('expire_at')}}">
                                     @error('expire_at')
                                     <span class="text-danger">{{ $message }}</span>
                                     @enderror

@@ -12,7 +12,21 @@ class DiscountCodeController extends Controller
 {
     public function index()
     {
+        $discounts = CouponCode::latest()->paginate(10);
+        return view('admin.coupon.index', compact('discounts'));
+    }
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
 
+        // Perform the search query
+        $discounts = CouponCode::where(function ($query) use ($keyword) {
+            $query->where('code', 'like', '%' . $keyword . '%')
+                ->orWhere('name', 'like', '%' . $keyword . '%');
+        })->paginate(10);
+
+        // Pass the search results to your view
+        return view('admin.coupon.index', ['discounts' => $discounts]);
     }
     public function create()
     {
@@ -44,7 +58,7 @@ class DiscountCodeController extends Controller
         $discount = new CouponCode();
         $discount->fill($request->all());
         $discount->save();
-        return redirect()->route('coupons.create')->with('success', 'Discount code created successfully');
+        return redirect()->route('coupons.index')->with('success', 'Discount code created successfully');
     }
 
     public function edit($id)
