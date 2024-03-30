@@ -211,6 +211,7 @@ class CartController extends Controller
                 $shipping = 0;
                 $discount = 0;
                 $discount_code ='';
+                $discountCodeId = null;
 
                 if(session()->has('code')){
                     $code = session()->get('code');
@@ -219,6 +220,7 @@ class CartController extends Controller
                     }else{
                         $discount = $code->discount_amount;
                     }
+                    $discountCodeId = $code->id;
                     $discount_code = $code->code;
                 }
 
@@ -247,6 +249,7 @@ class CartController extends Controller
                 $oder->shipping = $shipping;
                 $oder->subtotal = $subTotal;
                 $oder->discount = $discount;
+                $oder->coupon_code_id = $discountCodeId;
                 $oder->grand_total = $grandTotal;
                 $oder->first_name = $request->first_name;
                 $oder->last_name = $request->last_name;
@@ -379,6 +382,48 @@ class CartController extends Controller
                 ]);
             }
         }
+        //Max uses Check
+        if($code->max_uses> 0){
+            $couponUsed = Order::where('coupon_code_id',$code->id)->count();
+            if($couponUsed >= $code->max_uses){
+                return response()->json([
+                    'status'=>false,
+                    'message'=>'Coupon code limit exceeded'
+                ]);
+            }
+        }
+
+
+        // Max uses user check
+        if($code->max_uses_user > 0){
+            $couponUsedByUser = Order::where(['coupon_code_id'=>$code->id,'user_id'=>Auth::user()->id])->count();
+            if($couponUsedByUser >= $code->max_uses_user){
+                return response()->json([
+                    'status'=>false,
+                    'message'=>'You already used this coupon code'
+                ]);
+            }
+        }
+        //Min amount condition check
+        $subTotal =Cart::subtotal(2, '.', '');
+        if($code->min_amount > 0){
+            if($subTotal < $code->min_amount){
+                return response()->json([
+                    'status'=>false,
+                    'message'=>'Minimum amount required to apply this coupon code '.$code->min_amount,
+                ]);
+            }
+        }
+
+        //
+
+
+
+
+
+
+
+
         session()->put('code',$code);
         return $this->getOrderSummary($request);
     }

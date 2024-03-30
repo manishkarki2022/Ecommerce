@@ -250,7 +250,8 @@
                         $('#grandTotal').text('$'+ response.grandTotal);
                         $('#discount_amount').text('$'+ response.discount);
                         $('#discount-wrapper').html(response.discountString);
-
+                    }else{
+                        $('#discount-wrapper').html("<span class='text-danger'>"+response.message+"</span>");
                     }
 
                 }
