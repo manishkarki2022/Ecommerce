@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\BookType;
 use App\Models\Category;
+use App\Models\Ebook;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\SubCategory;
@@ -34,11 +36,13 @@ class ProductController extends Controller
 
     public function create(){
         $categories = Category::orderBy('name', 'asc')->get();
-        return view('admin.products.create',compact('categories') );
+        $bookTypes = BookType::orderBy('name', 'asc')->get();
+        return view('admin.products.create',compact('categories','bookTypes') );
 
     }
     public function store(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'slug' => 'required|unique:products',
@@ -51,11 +55,13 @@ class ProductController extends Controller
             'is_featured' => 'required|in:Yes,No',
             'description' => 'nullable',
             'barcode' => 'nullable',
+            'book_type_id' => 'required',
             'status' => 'required|in:0,1',
             'sub_category_id' => 'nullable|numeric',
             'short_description' => 'nullable',
             'shipping_returns' => 'nullable',
-            'related_products' => 'nullable'
+            'related_products' => 'nullable',
+             'ebook' => 'nullable|file|mimes:pdf,epub|mimetypes:application/pdf,application/epub+zip|max:30048',
         ]);
 
         if ($validator->fails()) {
@@ -92,6 +98,18 @@ class ProductController extends Controller
                 $productImage->save();
             }
         }
+        if($request->hasFile('ebook')){
+               $ebook = $request->file('ebook');
+                $ebookName = uniqid() . '_' . time() . '.' . $ebook->getClientOriginalExtension();
+                $directory = 'ebooks/' . $product->id;
+                $ebook->move(public_path($directory), $ebookName);
+                $productEbook= new Ebook();
+                $productEbook->product_id = $product->id;
+                $productEbook->file_location = $directory . '/' . $ebookName;
+                $productEbook->save();
+
+
+        }
 
         $request->session()->flash('success', 'Product created successfully.');
         return redirect()->route('products.index');
@@ -124,6 +142,7 @@ class ProductController extends Controller
     }
     public function update(Request $request, $id)
     {
+
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'slug' => 'required|unique:products,slug,'.$id,
@@ -178,6 +197,8 @@ class ProductController extends Controller
                 $productImage->save();
             }
         }
+
+
 
         $request->session()->flash('success', 'Product updated successfully.');
         return redirect()->route('products.index');

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CouponCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 
 class DiscountCodeController extends Controller
@@ -63,14 +64,43 @@ class DiscountCodeController extends Controller
 
     public function edit($id)
     {
+        $discount = CouponCode::findOrFail($id);
+        return view('admin.coupon.edit', compact('discount'));
 
     }
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'code' => ['required', 'string', Rule::unique('discount_coupons')->ignore($id)],
+            'name' => 'required|string',
+            'max_uses' => 'nullable|integer',
+            'max_uses_user' => 'nullable|integer',
+            'discount_amount' => 'required|numeric|min:0',
+            'min_amount' => 'nullable|numeric|min:0',
+            'status' => 'required',
+            'start_at' => ['nullable', 'date', function ($attribute, $value, $fail) use ($request) {
+                if ($value) {
+                    $now = now();
+                    $startAt = Carbon::createFromFormat('Y-m-d H:i:s', $value);
+                    if ($startAt->lessThan($now)) {
+                        $fail('Starting date must be greater than the current date');
+                    }
+                }
+            }],
+            'expire_at' => 'nullable|date|after:start_at',
+            'description' => 'nullable|string',
+        ]);
 
+        $discount = CouponCode::findOrFail($id);
+        $discount->update($request->all());
+
+        return redirect()->route('coupons.index')->with('success', 'Discount code updated successfully');
     }
+
     public function destroy($id)
     {
-
+        $discount = CouponCode::findOrFail($id);
+        $discount->delete();
+        return redirect()->route('coupons.index')->with('success', 'Discount code deleted successfully');
     }
 }
