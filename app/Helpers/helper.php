@@ -1,5 +1,6 @@
 <?php
 use App\Models\Category;
+use App\Models\ProductImage;
 
 function getCategories()
 {
@@ -8,8 +9,7 @@ function getCategories()
         ->where('status',1)
         ->get();
 }
-
-
-
-
+function getProductImage($id){
+    return ProductImage::where('product_id',$id)->first();
+}
 ?>

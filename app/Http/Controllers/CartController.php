@@ -249,6 +249,8 @@ class CartController extends Controller
                 $oder->shipping = $shipping;
                 $oder->subtotal = $subTotal;
                 $oder->discount = $discount;
+                $oder->payment_status='not paid';
+                $oder->status='pending';
                 $oder->coupon_code_id = $discountCodeId;
                 $oder->grand_total = $grandTotal;
                 $oder->first_name = $request->first_name;
