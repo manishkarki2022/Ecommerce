@@ -11,4 +11,8 @@ class City extends Model
     use HasFactory;
     protected $fillable = ['name', 'code'];
     protected $table = 'cities';
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\DiscountCodeController;
+use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ProductSubCategoryController;
 use App\Http\Controllers\admin\ShippingController;
@@ -129,6 +130,14 @@ Route::group(['prefix'=>'admin'], function () {
         Route::get('/coupons/{coupons}/edit', [DiscountCodeController::class, 'edit'])->name('coupons.edit');
         Route::put('/coupons/update/{id}', [DiscountCodeController::class, 'update'])->name('coupons.update');
         Route::delete('/coupons/delete/{id}', [DiscountCodeController::class, 'destroy'])->name('coupons.destroy');
+
+
+        //Order Route
+        Route::get('orders',[OrderController::class,'index'])->name('orders.index');
+        Route::get('orders/show/{id}',[OrderController::class,'show'])->name('orders.show');
+        Route::get('/orders/search', [OrderController::class, 'search'])->name('orders.search');
+
+
 
 
 
