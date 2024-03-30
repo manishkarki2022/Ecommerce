@@ -14,5 +14,13 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class);
     }
+    public function bookType()
+    {
+        return $this->belongsTo(BookType::class);
+    }
+    public function ebook()
+    {
+        return $this->hasOne(Ebook::class);
+    }
 
 }

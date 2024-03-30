@@ -26,7 +26,6 @@ return new class extends Migration
             $table->enum('track_qty', ['Yes', 'No'])->default('Yes');
             $table->integer('qty')->nullable();
             $table->integer('status')->default('1');
-
             $table->timestamps();
         });
     }
