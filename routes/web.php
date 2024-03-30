@@ -43,6 +43,11 @@ Route::get('/thanks/{orderId}', [CartController::class, 'thankYou'])->name('fron
 Route::post('get-order-summary', [CartController::class, 'getOrderSummary'])->name('front.getOrderSummary');
 
 
+//apply Discount
+Route::post('/apply-discount', [CartController::class, 'applyDiscount'])->name('front.applyDiscount');
+Route::post('/remove-discount', [CartController::class, 'removeDiscount'])->name('front.removeDiscount');
+
+
 Route::group(['prefix'=>'account'], function () {
     Route::group(['middleware'=>'guest'], function () {
         Route::get('/login', [AuthController::class, 'login'])->name('account.login');

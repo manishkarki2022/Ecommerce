@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
+use App\Models\CouponCode;
 use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -10,7 +11,9 @@ use App\Models\Product;
 use App\Models\Shipping;
 use Illuminate\Http\Request;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
@@ -118,6 +121,7 @@ class CartController extends Controller
     }
     public function checkout(){
         //If cart is empty redirect to cart page
+        $discount = 0;
         if(Cart::count()==0){
             return redirect()->route('front.cart');
         }
@@ -134,6 +138,17 @@ class CartController extends Controller
 
 
             $cities = City::orderBy('name','asc')->get();
+            $subTotal =Cart::subtotal(2, '.', '');
+        //Apply discount Here
+        if(session()->has('code')){
+            $code = session()->get('code');
+            if($code->type == 'percentage'){
+                $discount = ($code->discount_amount/100)*$subTotal;
+            }else{
+                $discount = $code->discount_amount;
+
+            }
+        }
 
             //Calculate shipping charges
             if($user_info){
@@ -152,12 +167,12 @@ class CartController extends Controller
                 $totalQty += $item->qty;
             }
             $totalShippingCharge = $totalQty * $shippingInfo->amount;
-            $grandTotal = Cart::subtotal(2, '.', '') + $totalShippingCharge;
+            $grandTotal = ($subTotal-$discount) + $totalShippingCharge;
         }else{
             $totalShippingCharge = 0;
-            $grandTotal = Cart::subtotal(2, '.', '');
+            $grandTotal = ($subTotal-$discount) ;
         }
-        return view('front.checkout', compact('cities', 'user_info', 'totalShippingCharge', 'grandTotal'));
+        return view('front.checkout', compact('cities', 'user_info', 'totalShippingCharge', 'grandTotal','discount'));
 
     }
     public function processCheckout(Request $request){
@@ -195,6 +210,17 @@ class CartController extends Controller
                 $subTotal = Cart::subtotal(2,'.','');
                 $shipping = 0;
                 $discount = 0;
+                $discount_code ='';
+
+                if(session()->has('code')){
+                    $code = session()->get('code');
+                    if($code->type == 'percentage'){
+                        $discount = ($code->discount_amount/100)*$subTotal;
+                    }else{
+                        $discount = $code->discount_amount;
+                    }
+                    $discount_code = $code->code;
+                }
 
 
                 $shippingInfo = Shipping::where('city_id',$request->city_id)->first();
@@ -204,18 +230,20 @@ class CartController extends Controller
                 }
                 if($shippingInfo != null){
                     $shipping = $totalQty * $shippingInfo->amount;
-                    $grandTotal = $subTotal + $shipping;
+                    $grandTotal = ($subTotal-$discount) + $shipping;
 
                 }else{
                     $shippingInfo = Shipping::where('city_id','rest_of_city')->first();
                     $shipping = $totalQty * $shippingInfo->amount;
-                    $grandTotal = $subTotal + $shipping;
+                    $grandTotal = ($subTotal-$discount) + $shipping;
                 }
+                //Apply discount Here
+
 
 
                 $oder= new Order();
                 $oder->user_id = Auth::id();
-                $oder->coupon_code = null;
+                $oder->coupon_code = $discount_code;
                 $oder->shipping = $shipping;
                 $oder->subtotal = $subTotal;
                 $oder->discount = $discount;
@@ -245,6 +273,7 @@ class CartController extends Controller
                 $type = 'success';
                 $message = 'Order placed successfully';
                 Cart::destroy();
+                session()->forget('code');
                 session()->flash($type, $message);
                 $order = $oder->id;
                 return redirect()->route('front.thanks', ['orderId' => $order]);
@@ -262,6 +291,23 @@ class CartController extends Controller
 
     public function getOrderSummary(Request $request){
         $subTotal = Cart::subtotal(2,'.','');
+        $discount = 0;
+        $discountString = '';
+        //Apply discount Here
+         if(session()->has('code')){
+             $code = session()->get('code');
+             if($code->type == 'percentage'){
+                 $discount = ($code->discount_amount/100)*$subTotal;
+             }else{
+                 $discount = $code->discount_amount;
+             }
+             $discountString = '<div class="apply-coupan mt-4" id="discount-row">
+                        <strong>' . session('code')->code . '</strong>
+                        <a href="#" class="btn btn-sm btn-danger ml-2" id="remove-discount"><i class="fa fa-times"></i></a>
+                    </div>';
+         }
+
+
         if($request->city_id>0){
 
             $shippingInfo = Shipping::where('city_id',$request->city_id)->first();
@@ -272,19 +318,23 @@ class CartController extends Controller
 
             if($shippingInfo != null){
                 $shippingCharge = $shippingInfo->amount;
-                $grandTotal = $subTotal + $shippingCharge;
+                $grandTotal = ($subTotal-$discount) + $shippingCharge;
                 return response()->json([
                     'status'=>true,
                     'shippingCharge'=>number_format($shippingCharge,2),
+                    'discount' => $discount,
+                    'discountString'=>$discountString,
                     'grandTotal'=>number_format($grandTotal,2)
                 ]);
             }else{
                 $shippingInfo = Shipping::where('city_id','rest_of_city')->first();
                 $shippingCharge = $shippingInfo->amount;
-                $grandTotal = $subTotal + $shippingCharge;
+                $grandTotal = ($subTotal-$discount) + $shippingCharge;
                 return response()->json([
                     'status'=>true,
                     'shippingCharge'=>number_format($shippingCharge,2),
+                    'discount' => $discount,
+                    'discountString'=>$discountString,
                     'grandTotal'=>number_format($grandTotal,2)
                 ]);
 
@@ -293,9 +343,50 @@ class CartController extends Controller
             return response()->json([
                 'status'=>true,
                 'shippingCharge'=>number_format(0,2),
-                'grandTotal'=>number_format($subTotal,2)
+                'discount' => $discount,
+                'discountString'=>$discountString,
+                'grandTotal'=>number_format(($subTotal-$discount),2)
             ]);
         }
+    }
+    public function applyDiscount(Request $request){
+        $code = CouponCode::where('code',$request->code)->where('status','1')->first();
+        if($code == null){
+            return response()->json([
+                'status'=>false,
+                'message'=>'Invalid coupon code'
+            ]);
+        }
+        //Check if coupon start date is valid or not
+        $now = Carbon::now();
+        if($code->starts_at !=""){
+            $startDate = Carbon::create('Y-m-d H:i:s',$code->starts_at);
+
+            if($now->lessThan($startDate)){
+                return response()->json([
+                    'status'=>false,
+                    'message'=>'Coupon code is not valid yet'
+                ]);
+            }
+        }
+        if($code->expires_at !=""){
+            $endDate = Carbon::create('Y-m-d H:i:s',$code->expires_at);
+
+            if($now->greaterThan($endDate)){
+                return response()->json([
+                    'status'=>false,
+                    'message'=>'Coupon code is not valid yet'
+                ]);
+            }
+        }
+        session()->put('code',$code);
+        return $this->getOrderSummary($request);
+    }
+
+    public function removeDiscount(Request $request){
+        session()->forget('code');
+        return $this->getOrderSummary($request);
+
     }
 
 }

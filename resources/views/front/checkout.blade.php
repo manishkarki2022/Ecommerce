@@ -132,16 +132,34 @@
                                 <div class="h6"><strong>Subtotal</strong></div>
                                 <div class="h6"><strong>${{Cart::subtotal()}}</strong></div>
                             </div>
+                                <div class="d-flex justify-content-between summery-end">
+                                    <div class="h6"><strong>Discount</strong></div>
+                                    <div class="h6"><strong id="discount_amount">- ${{number_format($discount,2)}}</strong></div>
+                                </div>
                             <div class="d-flex justify-content-between mt-2">
                                 <div class="h6"><strong>Shipping</strong></div>
                                 <div class="h6"><strong id="shippingAmount">${{number_format($totalShippingCharge,2)}}</strong></div>
                             </div>
+
                             <div class="d-flex justify-content-between mt-2 summery-end">
                                 <div class="h5"><strong>Total</strong></div>
                                 <div class="h5"><strong id="grandTotal">${{number_format($grandTotal,2)}}</strong></div>
                             </div>
                         </div>
                     </div>
+                    <div class="input-group apply-coupan mt-4">
+                        <input type="text" placeholder="Coupon Code" class="form-control" name="discount_code" id="discount_code">
+                        <button class="btn btn-success" type="button" id="apply-discount">Apply Coupon</button>
+                    </div >
+                    <div id="discount-wrapper">
+                        @if(\Illuminate\Support\Facades\Session::has('code'))
+                            <div class="apply-coupan mt-4" id="discount-row">
+                                <strong>{{\Illuminate\Support\Facades\Session::get('code')->code}}</strong>
+                                <a  class="btn btn-sm btn-danger ml-2" id="remove-discount"><i class="fa fa-times"></i> </a>
+                            </div>
+                        @endif
+                    </div>
+
 
                     <div class="card payment-form ">
                         <h3 class="card-title h5 mb-3">Payment Method</h3>
@@ -172,7 +190,7 @@
                         </div>
                         <div class="pt-4">
 {{--                            <a href="#" >Pay Now</a>--}}
-                            <button type="submit" class="btn-dark btn btn-block w-100">Pay Now</button>
+                            <button type="submit" class="btn-primary btn btn-block w-100">Pay Now</button>
                         </div>
 
                     </div>
@@ -216,5 +234,50 @@
                 }
             });
         });
+        $('#apply-discount').click(function () {
+            $.ajax({
+                url: "{{route('front.applyDiscount')}}",
+                type: "POST",
+                data: {
+                    code: $('#discount_code').val(),
+                    city_id: $('#city').val(),
+                    _token: "{{csrf_token()}}"
+                },
+                dataType: "json",
+                success: function (response) {
+                    if(response.status == true){
+                        $('#shippingAmount').text('$'+ response.shippingCharge);
+                        $('#grandTotal').text('$'+ response.grandTotal);
+                        $('#discount_amount').text('$'+ response.discount);
+                        $('#discount-wrapper').html(response.discountString);
+
+                    }
+
+                }
+            });
+        });
+        $('body').on('click',"#remove-discount",function (){
+            $.ajax({
+                url: "{{route('front.removeDiscount')}}",
+                type: "POST",
+                data: {
+                    city_id: $('#city').val(),
+                    _token: "{{csrf_token()}}"
+                },
+                dataType: "json",
+                success: function (response) {
+                    if(response.status == true){
+                        $('#shippingAmount').text('$'+ response.shippingCharge);
+                        $('#grandTotal').text('$'+ response.grandTotal);
+                        $('#discount_amount').text('$'+ response.discount);
+                        $('#discount-row').html('');
+                        $('#discount_code').val('');
+
+                    }
+
+                }
+            });
+        });
+
     </script>
 @endsection
