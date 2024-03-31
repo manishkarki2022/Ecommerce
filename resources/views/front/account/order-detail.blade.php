@@ -40,9 +40,11 @@
                                             <h6 class="heading-xxxs text-muted">Shipped date:</h6>
                                             <!-- Text -->
                                             <p class="mb-lg-0 fs-sm fw-bold">
-                                                <time datetime="2019-10-01">
-                                                    01 Oct, 2019
-                                                </time>
+                                                @if(!empty($order->shipped_date))
+                                                    {{\Carbon\Carbon::parse($order->shipped_date)->format('d M, Y')}}
+                                                @else
+                                                    Not Shipped Yet
+                                                @endif
                                             </p>
                                         </div>
                                         <div class="col-6 col-lg-3">
@@ -56,7 +58,7 @@
                                                     <span class="badge bg-info "><i class="fas fa-truck mr-1"></i> Shipped</span>
                                                 @elseif($order->status == 'delivered')
                                                     <span class="badge bg-success"><i class="fas fa-check-circle mr-1"></i> Delivered</span>
-                                                @else
+                                                @elseif($order->status=='canceled')
                                                     <span class="badge bg-danger"> <i class="fas fa-times-circle mr-1"></i> Cancelled</span>
                                                 @endif
                                             </p>

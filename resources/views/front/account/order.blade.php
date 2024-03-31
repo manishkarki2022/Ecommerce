@@ -50,7 +50,7 @@
                                                     <span class="badge bg-info "><i class="fas fa-truck mr-1"></i> Shipped</span>
                                                 @elseif($order->status == 'delivered')
                                                     <span class="badge bg-success"><i class="fas fa-check-circle mr-1"></i> Delivered</span>
-                                                @elseif(empty($order->status))
+                                                @elseif(($order->status=='canceled'))
                                                     <span class="badge bg-danger"> <i class="fas fa-times-circle mr-1"></i> Cancelled</span>
                                                 @endif
                                             </td>
