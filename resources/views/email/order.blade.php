@@ -8,8 +8,14 @@
     <title>Order Email</title>
 </head>
 <body style="font-family: Arial,Helvetica,sans-serif;font-size: 16px">
+    @if($mailData['order'] == 'customer')
+        <h2>Thanks for your order!!</h2>
+        <h2>Your order ID is: #{{$mailData['order']->id}}</h2>
+        @else
+        <h2>You have received an order:</h2>
+       <h2>Order ID: #{{$mailData['order']->id}}</h2>
+    @endif
 
-     <h2>Thanks for your order!!</h2>
      <address>
          <strong>{{$mailData['order']->first_name.' '.$mailData['order']->last_name}}</strong><br>
          {{$mailData['order']->address}}<br>
@@ -17,7 +23,7 @@
          Phone: {{$mailData['order']->mobile}}<br>
          Email: {{$mailData['order']->user->email}}
      </address>
-<h2>Your order ID is: #{{$mailData['order']->id}}</h2>
+<
 <h2>Products </h2>
      <table cellpadding="3" cellspacing="3" border="0" width="700">
          <thead>

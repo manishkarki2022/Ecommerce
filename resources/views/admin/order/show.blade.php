@@ -131,18 +131,21 @@
                         </form>
                     </div>
                     <div class="card">
-                        <div class="card-body">
-                            <h2 class="h4 mb-3">Send Inovice Email</h2>
-                            <div class="mb-3">
-                                <select name="status" id="status" class="form-control">
-                                    <option value="">Customer</option>
-                                    <option value="">Admin</option>
-                                </select>
+                        <form action="" method="post" name="sendInvoiceEmail" id="sendInvoiceEmail">
+                            <div class="card-body">
+                                <h2 class="h4 mb-3">Send Inovice Email</h2>
+                                <div class="mb-3">
+                                    <select name="userType" id="userType" class="form-control">
+                                        <option value="">Select User</option>
+                                        <option value="customer">Customer</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <button class="btn btn-primary" onclick="confirmAndSendEmail()">Send</button>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <button class="btn btn-primary">Send</button>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -178,6 +181,37 @@
                         toastr.error(response['message']);
                     }
                 }
+            });
+        });
+        $(document).ready(function() {
+            $('#sendInvoiceEmail').submit(function(e){
+                e.preventDefault();
+                var formData = $(this).serialize();
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Do you want to send the email?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, send it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // If confirmed, proceed with the form submission
+                        $.ajax({
+                            url: "{{ route('order.sendInvoiceEmail', $order->id) }}",
+                            type: "post",
+                            data: formData,
+                            dataType: "json",
+                            success: function(response){
+                                if(response['status'] === 'success'){
+                                    toastr.success(response['message']);
+                                } else {
+                                    toastr.error(response['message']);
+                                }
+                            }
+                        });
+                    }
+                });
             });
         });
     </script>
