@@ -275,6 +275,8 @@ class CartController extends Controller
                     $orderItem->total = $item->price * $item->qty;
                     $orderItem->save();
                 }
+                //Send Email to
+                orderEmail($oder->id);
                 $type = 'success';
                 $message = 'Order placed successfully';
                 Cart::destroy();

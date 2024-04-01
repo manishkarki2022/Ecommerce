@@ -86,7 +86,9 @@
 
                             <!-- List group -->
                             <ul>
-                                @foreach($orderItems as $orderItem) @endforeach
+
+                                @foreach($orderItems as $orderItem)
+
                                 <li class="list-group-item">
                                     <div class="row align-items-center">
                                         <div class="col-4 col-md-3 col-xl-2">
@@ -111,6 +113,7 @@
                                         </div>
                                     </div>
                                 </li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
