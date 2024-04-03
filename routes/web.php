@@ -48,6 +48,9 @@ Route::post('get-order-summary', [CartController::class, 'getOrderSummary'])->na
 Route::post('/apply-discount', [CartController::class, 'applyDiscount'])->name('front.applyDiscount');
 Route::post('/remove-discount', [CartController::class, 'removeDiscount'])->name('front.removeDiscount');
 
+//Wishlist Route
+Route::post('add-to-wishlist/product',[FrontController::class,'addWishlist'])->name('front.addWishlist');
+
 
 Route::group(['prefix'=>'account'], function () {
     Route::group(['middleware'=>'guest'], function () {
@@ -63,6 +66,8 @@ Route::group(['prefix'=>'account'], function () {
         Route::get('/my-orders', [AuthController::class, 'orders'])->name('account.orders');
         Route::get('/order-detail/{id}', [AuthController::class, 'orderDetail'])->name('account.orderDetail');
         Route::get('/logout', [AuthController::class, 'logout'])->name('account.logout');
+        Route::get('/wishlists', [AuthController::class, 'wishlist'])->name('account.wishlist');
+        Route::delete('wishlist/remove/{id}', [AuthController::class, 'deleteWishlist'])->name('front.deleteWishlist');
 
 
     });

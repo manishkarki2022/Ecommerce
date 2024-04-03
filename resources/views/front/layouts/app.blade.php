@@ -55,8 +55,8 @@
         <div class="row align-items-center py-3 d-none d-lg-flex justify-content-between">
             <div class="col-lg-4 logo">
                 <a href="{{route('front.home')}}" class="text-decoration-none">
-                    <span class="h1 text-uppercase text-primary bg-dark px-2">INDIGO</span>
-                    <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">BOOK</span>
+                    <span class="h3 text-uppercase text-primary bg-dark px-2">All Book</span>
+                    <span class="h3 text-uppercase text-dark bg-primary px-2 ml-n1">Store</span>
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left  d-flex justify-content-end align-items-center">
@@ -343,13 +343,33 @@
         });
     }
     $(document).ready(function() {
-        // Check for flashed session message and show Toastr notification
+        // Check for flashed session message and show Toast notification
         @if(session()->has('success'))
         toastr.success('{{ session('success') }}');
         @elseif(session()->has('error'))
         toastr.error('{{ session('error') }}');
         @endif
     });
+    function addToWishList(id){
+        $.ajax({
+            url: "{{ route('front.addWishlist') }}",
+            type: "post",
+            data: {id: id},
+            dataType: "json",
+            success: function (response) {
+                if(response.status == true){
+                    toastr.success(response.message);
+                }else if(response.status == 'error') {
+                    toastr.error(response.message);
+                }
+                else{
+                    toastr.error(response.message);
+                   window.location.href = "{{route('account.login')}}";
+                }
+            }
+        });
+    }
+
 
 </script>
 

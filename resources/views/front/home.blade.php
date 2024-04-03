@@ -156,7 +156,7 @@
                                                 <span class="h6 text-underline"><del>${{$featuredItem->compare_price}}</del></span>
                                             @endif
                                         </div>
-                                        <a class="" href="#"><i class="far fa-heart text-primary"></i></a>
+                                        <a  onclick="addToWishList({{$featuredItem->id}})" class="wishlist" href="javascript:void(0);"><i class="far fa-heart text-primary"></i></a>
                                     </div>
                                 </div>
                                 <div>
@@ -203,7 +203,7 @@
                                                 <span class="h6 text-underline"><del>${{$latestItem->compare_price}}</del></span>
                                             @endif
                                         </div>
-                                        <a class="" href="#"><i class="far fa-heart text-primary"></i></a>
+                                        <a onclick="addToWishList({{$latestItem->id}})" class="wishlist" href="javascript:void(0);"><i class="far fa-heart text-primary"></i></a>
                                     </div>
                                 </div>
                                 <div>
