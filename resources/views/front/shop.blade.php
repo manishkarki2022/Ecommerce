@@ -126,7 +126,7 @@
 
                                         </div>
                                         <div class="card-body mt-2 p-1">
-                                            <a class="h6 link mt-0" href="product.php" alt="{{$product->title}}" title="{{$product->title}}">
+                                            <a class="h6 link mt-0" href="{{route('front.product',$product->slug)}}" alt="{{$product->title}}" title="{{$product->title}}">
                                                 {{ strlen($product->title) > 20 ? substr($product->title, 0, 20) . ' ...' : $product->title }}
                                             </a>
                                             <p class="text-muted text-left">Ram Bahadur</p>

@@ -122,7 +122,7 @@
 
                                 </div>
                                 <div class="card-body mt-2 p-1">
-                                    <a class="h4 link mt-0" href="product.php" title="{{$relatedProduct->title}}">{{ strlen($relatedProduct->title) > 15 ? substr($relatedProduct->title, 0, 15) . ' ...' : $relatedProduct->title }}</a>
+                                    <a class="h4 link mt-0" href="{{route('front.product',$relatedProduct->slug)}}" title="{{$relatedProduct->title}}">{{ strlen($relatedProduct->title) > 15 ? substr($relatedProduct->title, 0, 15) . ' ...' : $relatedProduct->title }}</a>
                                     <p class="text-muted text-left">Ram Bahadur</p>
                                     <div class="d-flex justify-content-between px-1">
                                         <div>
@@ -142,8 +142,9 @@
                             </div>
                         </div>
                     @endforeach
+                @else <p class="error">No Related Product </p>
                 @endif
-                <p class="error">No Related Product </p>
+
             </div>
         </div>
     </section>

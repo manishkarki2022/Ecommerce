@@ -96,9 +96,9 @@
         </div>
     </section>
     <section class="section-3">
-        <div class="container p-5">
+        <div class="container ">
             <div class="section-title">
-                <h2>Book Categories</h2>
+                <h4>Book Categories</h4>
             </div>
             <div class="row pb-3">
                 @if(getCategories()->isNotEmpty())
@@ -113,7 +113,7 @@
                                 </div>
                                 <div class="right">
                                     <div class="cat-data">
-                                        <h2>{{$category->name}}</h2>
+                                        <h6 >{{$category->name}}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -125,19 +125,19 @@
         </div>
     </section>
     <section class="section-4 pt-5">
-        <div class="container p-5">
+        <div class="container">
             <div class="section-title">
-                <h2>Featured Products</h2>
+                <h4>Featured Products</h4>
             </div>
             <div class="row pb-3 slider ">
                 @if($getFeatured->isNotEmpty())
                     @foreach($getFeatured as $featuredItem)
-                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                            <div class="card product-card">
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                            <div class="card rounded-top product-card">
                                 <div class="product-image position-relative" style="height: 300px !important; overflow: hidden">
                                     @if($featuredItem->images !== null && $featuredItem->images->isNotEmpty() && $featuredItem->images->first() !== null)
                                         <a href="{{route('front.product',$featuredItem->slug)}}" class="product-img ">
-                                            <img class="card-img-top img-fluid h-100" src="{{ asset('products/' . $featuredItem->images->first()->image) }}" alt="{{$featuredItem->litle}}">
+                                            <img class="card-img-top img-fluid h-80" src="{{ asset('products/' . $featuredItem->images->first()->image) }}" alt="{{$featuredItem->litle}}">
                                         </a>
                                     @else
                                         <a href="{{route('front.product',$featuredItem->slug)}}" class="product-img " alt="{{$featuredItem->litle}}">
@@ -146,8 +146,8 @@
                                     @endif
 
                                 </div>
-                                <div class="card-body mt-2 p-1">
-                                    <a class="h4 link mt-0" href="product.php" title="{{$featuredItem->title}}">{{ strlen($featuredItem->title) > 15 ? substr($featuredItem->title, 0, 15) . ' ...' : $featuredItem->title }}</a>
+                                <div class="card-body p-1 mt-0">
+                                    <a class="h6 link mt-0" href="{{route('front.product',$featuredItem->slug)}}" title="{{$featuredItem->title}}"><strong>{{ strlen($featuredItem->title) > 15 ? substr($featuredItem->title, 0, 15) . ' ...' : $featuredItem->title }}</strong></a>
                                     <p class="text-muted text-left">Ram Bahadur</p>
                                     <div class="d-flex justify-content-between px-1">
                                         <div>
@@ -172,11 +172,11 @@
         </div>
     </section>
     <section class="section-4 pt-5">
-        <div class="container p-5">
+        <div class="container">
             <div class="section-title">
-                <h2>Latest Product</h2>
+                <h4>Latest Product</h4>
             </div>
-            <div class="row pb-3 slider2">
+            <div class="row pb-2 slider2">
                 @if($latest->isNotEmpty())
                     @foreach($latest as $latestItem)
                         <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
@@ -194,11 +194,11 @@
 
                                 </div>
                                 <div class="card-body mt-2 p-1">
-                                    <a class="h4 link mt-0" href="product.php" title="{{$latestItem->title}}">{{ strlen($latestItem->title) > 15 ? substr($latestItem->title, 0, 15) . ' ...' : $latestItem->title }}</a>
+                                    <a class="h6 link mt-0" href="{{route('front.product',$latestItem->slug)}}" title="{{$latestItem->title}}"><strong>{{ strlen($latestItem->title) > 15 ? substr($latestItem->title, 0, 15) . ' ...' : $latestItem->title }}</strong></a>
                                     <p class="text-muted text-left">Ram Bahadur</p>
                                     <div class="d-flex justify-content-between px-1">
                                         <div>
-                                            <span class="h5 me-2"><strong>${{$latestItem->price}}</strong></span>
+                                            <span class="h6 me-2"><strong>${{$latestItem->price}}</strong></span>
                                             @if($latestItem->compare_price !== '')
                                                 <span class="h6 text-underline"><del>${{$latestItem->compare_price}}</del></span>
                                             @endif
