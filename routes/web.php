@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\ProductSubCategoryController;
 use App\Http\Controllers\admin\ShippingController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImagesController;
+use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\FrontController;
@@ -145,6 +146,15 @@ Route::group(['prefix'=>'admin'], function () {
         Route::get('/orders/search', [OrderController::class, 'search'])->name('orders.search');
         Route::post('/order/change-status/{id}', [OrderController::class, 'changeOrderStatus'])->name('order.changeOrderStatus');
         Route::post('/order/send-email/{id}', [OrderController::class, 'sendInvoiceEmail'])->name('order.sendInvoiceEmail');
+
+
+        //User Route
+        Route::get('users',[UserController::class,'index'])->name('users.index');
+        Route::get('/users/search', [UserController::class, 'search'])->name('users.search');
+        Route::get('users/create',[UserController::class,'create'])->name('users.create');
+        Route::post('users/store',[UserController::class,'store'])->name('users.store');
+//        Route::get('users/show/{id}',[UserController::class,'show'])->name('users.show');
+
 
 
 

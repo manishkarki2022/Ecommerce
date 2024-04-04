@@ -18,7 +18,6 @@
     <section class="content">
         <!-- Default box -->
         <div class="container-fluid">
-            @include('admin.message')
             <div class="card">
                 <form action="{{ route('categories.search') }}" method="get">
                     <div class="card">
