@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
+use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
@@ -71,9 +73,64 @@ class AuthController extends Controller
 
     }
     public function profile(){
-        return view('front.account.profile');
+        $cities = City::orderBy('name')->get();
+        $customerInfo = CustomerAddress::where('user_id', Auth::id())->first();
+        $userinfo = Auth::user();
+        return view('front.account.profile',compact('userinfo','cities','customerInfo'));
 
     }
+    public function updateProfile(Request $request){
+        $validate = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,'.Auth::id(),
+            'phone' => 'nullable ',
+        ]);
+        if($validate){
+            $user = User::find(Auth::id());
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->save();
+            session()->flash('success', 'User updated successfully');
+            return redirect()->route('account.profile');
+        }
+        else{
+            return redirect()->back()->withInput($request->all());
+        }
+
+    }
+    public function updateAddress(Request $request)
+    {
+        // Validate incoming data
+        $validatedData = $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email',
+            'mobile' => 'nullable',
+            'city_id' => 'required|exists:cities,id',
+            'address' => 'required',
+            'zip' => 'required',
+            'state' => 'required',
+        ]);
+
+        // Create or update user's address information
+        $customerAddress = CustomerAddress::updateOrCreate(
+            ['user_id' => Auth::id()],
+            $validatedData
+        );
+
+        if ($customerAddress) {
+            session()->flash('success', 'Address updated successfully');
+            return redirect()->route('account.profile');
+        } else {
+            session()->flash('error', 'Failed to update address');
+            return redirect()->back()->withErrors(['Failed to update address']);
+        }
+    }
+
+
+
+
     public function logout(){
         Auth::logout();
         session()->flash('success', 'User logged out successfully');
