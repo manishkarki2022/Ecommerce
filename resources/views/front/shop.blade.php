@@ -141,9 +141,22 @@
                                             </div>
                                         </div>
                                             <div>
-                                                <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0)" onclick="addToCart({{$product->id}})">
-                                                    <i class="fa fa-shopping-cart"></i> Add To Cart
-                                                </a>
+                                                @if($product->track_qty =='Yes')
+                                                    @if($product->qty > 0)
+                                                        <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$product->id}})">
+                                                            <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                        </a>
+                                                    @else
+                                                        <a class="btn btn-dark w-100" style="background-color: white !important;color: red; border: none !important" href="javascript:void(0);">
+                                                            <i class="fas fa-exclamation-circle"></i> Out Of Stock
+                                                        </a>
+                                                    @endif
+                                                @else
+                                                    <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$product->id}})">
+                                                        <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                    </a>
+
+                                                @endif
                                             </div>
                                     </div>
                                 </div>

@@ -159,7 +159,7 @@
                                     <select multiple class="related-product w-100" name="related_products[]" id="related_products">
                                         @if(!empty($relatedProducts))
                                             @foreach($relatedProducts as $relatedProduct)
-                                                <option selec value="{{ $relatedProduct->id }}" selected>{{ $relatedProduct->title }}</option>
+                                                <option  value="{{ $relatedProduct->id }}" selected>{{ $relatedProduct->title }}</option>
                                             @endforeach
                                         @endif
                                     </select>

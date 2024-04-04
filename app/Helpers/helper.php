@@ -37,6 +37,20 @@ else{
  Mail::to($email)->send(new OrderEmail($mailData));
 
 }
+function getwishlist ($product_id){
+    if(auth()->check()){
+        $wishlist = \App\Models\Wishlist::where('product_id',$product_id)->where('user_id',auth()->id())->first();
+        if($wishlist){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
+}
 
 
 

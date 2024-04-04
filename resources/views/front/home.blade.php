@@ -1,8 +1,8 @@
 @extends('front.layouts.app')
 @section('content')
-    <section class="section-1">
+    <section class="section-1 p-3">
         <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="false">
-            <div class="carousel-inner">
+            <div class="carousel-inner rounded">
                 <div class="carousel-item active">
                     <!-- <img src="images/carousel-1.jpg" class="d-block w-100" alt=""> -->
 
@@ -15,7 +15,7 @@
                     </picture>
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-2 my-3">
-                            <h1 class="display-4 text-white mb-2">Discover Captivating Reads at Our Bookstore</h1>
+                            <h2 class="display-4 text-white mb-2">Discover Captivating Reads at Our Bookstore</h2>
                             <p class="mx-md-5 px-3 fs-md-4 fs-lg-3"><strong>Welcome to our bookstore, where every page holds a new adventure.</strong></p>
                             <a class="btn btn-outline-light py-1 px-3 mt-2" href="{{route('front.shop')}}">Shop Now</a>
                         </div>
@@ -31,7 +31,7 @@
 
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-1 my-3">
-                            <h1 class="display-4 text-white mb-2">Unveil Worlds of Wonder</h1>
+                            <h2 class="display-4 text-white mb-2">Unveil Worlds of Wonder</h2>
                             <p class="mx-md-5 px-3 fs-md-4 fs-lg-3"><strong>Step into a realm where imagination knows no bounds. Our bookstore is a sanctuary for bibliophiles.</strong></p>
                             <a class="btn btn-outline-light py-1 px-3 mt-2" href="{{route('front.shop')}}">Shop Now</a>
                         </div>
@@ -48,7 +48,7 @@
 
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="p-2 my-3">
-                            <h1 class="display-4 text-white mb-2">Journey Through Time and Space</h1>
+                            <h2 class="display-4 text-white mb-2">Journey Through Time and Space</h2>
                             <p class="mx-md-5 px-3 fs-md-4 fs-lg-3"><strong>Embark on an odyssey through the ages and beyond as you traverse the pages of our bookstore.</strong></p>
                             <a class="btn btn-outline-light py-1 px-3 mt-1" href="{{route('front.shop')}}">Shop Now</a>
                         </div>
@@ -95,7 +95,7 @@
             </div>
         </div>
     </section>
-    <section class="section-3">
+    <section class="section-3 p-5">
         <div class="container ">
             <div class="section-title">
                 <h4>Book Categories</h4>
@@ -107,7 +107,7 @@
                             <div class="cat-card">
                                 <div class="left">
                                     @if($category->image =!'')
-                                        <img src="{{asset('dBook.png')}}" alt="" class="img-fluid">
+                                        <img src="{{asset('dBook.png')}}" alt="" class="php ">
                                     @endif
 
                                 </div>
@@ -156,13 +156,31 @@
                                                 <span class="h6 text-underline"><del>${{$featuredItem->compare_price}}</del></span>
                                             @endif
                                         </div>
-                                        <a  onclick="addToWishList({{$featuredItem->id}})" class="wishlist" href="javascript:void(0);"><i class="far fa-heart text-primary"></i></a>
+                                        @if(getwishlist($featuredItem->id))
+                                            <a class="wishlist" href="javascript:void(0);"><i class="fas fa-heart text-primary"></i></a>
+                                        @else
+                                            <a onclick="addToWishList({{$featuredItem->id}})" class="wishlist" href="javascript:void(0);"><i class="far fa-heart text-primary"></i></a>
+                                        @endif
                                     </div>
                                 </div>
                                 <div>
-                                    <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$featuredItem->id}})">
-                                        <i class="fa fa-shopping-cart"></i> Add To Cart
-                                    </a>
+                                    @if($featuredItem->track_qty =='Yes')
+                                        @if($featuredItem->qty > 0)
+                                            <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$featuredItem->id}})">
+                                                <i class="fa fa-shopping-cart"></i> Add To Cart
+                                            </a>
+                                         @else
+                                            <a class="btn btn-dark w-100" style="background-color: white !important;color: red; border: none !important" href="javascript:void(0);">
+                                                <i class="fas fa-exclamation-circle"></i> Out Of Stock
+                                            </a>
+                                        @endif
+                                    @else
+                                        <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$featuredItem->id}})">
+                                            <i class="fa fa-shopping-cart"></i> Add To Cart
+                                        </a>
+
+                                    @endif
+
                                 </div>
                             </div>
                         </div>
@@ -203,13 +221,31 @@
                                                 <span class="h6 text-underline"><del>${{$latestItem->compare_price}}</del></span>
                                             @endif
                                         </div>
-                                        <a onclick="addToWishList({{$latestItem->id}})" class="wishlist" href="javascript:void(0);"><i class="far fa-heart text-primary"></i></a>
+                                        @if(getwishlist($latestItem->id))
+                                            <a class="wishlist" href="javascript:void(0);"><i class="fas fa-heart text-primary"></i></a>
+                                        @else
+                                            <a onclick="addToWishList({{$latestItem->id}})" class="wishlist" href="javascript:void(0);"><i class="far fa-heart text-primary"></i></a>
+                                        @endif
+
                                     </div>
                                 </div>
                                 <div>
-                                    <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$latestItem->id}})">
-                                        <i class="fa fa-shopping-cart"></i> Add To Cart
-                                    </a>
+                                    @if($latestItem->track_qty =='Yes')
+                                        @if($latestItem->qty > 0)
+                                            <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$latestItem->id}})">
+                                                <i class="fa fa-shopping-cart"></i> Add To Cart
+                                            </a>
+                                        @else
+                                            <a class="btn btn-dark w-100" style="background-color: white !important;color: red; border: none !important" href="javascript:void(0);">
+                                                <i class="fas fa-exclamation-circle"></i> Out Of Stock
+                                            </a>
+                                        @endif
+                                    @else
+                                        <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$latestItem->id}})">
+                                            <i class="fa fa-shopping-cart"></i> Add To Cart
+                                        </a>
+
+                                    @endif
                                 </div>
                             </div>
                         </div>
