@@ -30,5 +30,15 @@ class Product extends Model
     {
         return $this->hasMany(Wishlist::class);
     }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    // Define the relationship with SubCategory if needed
+    public function subCategory()
+    {
+        return $this->belongsTo(SubCategory::class);
+    }
 
 }

@@ -64,6 +64,21 @@ class ShopController extends Controller
                     break;
             }
         }
+        if (!empty($request->get('search'))) {
+            $searchTerm = $request->input('search');
+
+            $productsQuery->where(function ($query) use ($searchTerm) {
+                $query->where('title', 'like', '%' . $searchTerm . '%')
+                    ->orWhereHas('category', function ($query) use ($searchTerm) {
+                        $query->where('name', 'like', '%' . $searchTerm . '%');
+                    })
+                    ->orWhereHas('subCategory', function ($query) use ($searchTerm) {
+                        $query->where('name', 'like', '%' . $searchTerm . '%');
+                    })
+                    ->orWhere('price', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
         $products = $productsQuery->paginate(12);
         $sortOption = $request->input('sort');
 
