@@ -53,6 +53,9 @@ Route::post('/remove-discount', [CartController::class, 'removeDiscount'])->name
 //Wishlist Route
 Route::post('add-to-wishlist/product',[FrontController::class,'addWishlist'])->name('front.addWishlist');
 
+//Front Page Route
+Route::get('/page/{slug}', [FrontController::class, 'page'])->name('front.page');
+
 
 Route::group(['prefix'=>'account'], function () {
     Route::group(['middleware'=>'guest'], function () {

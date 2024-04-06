@@ -51,6 +51,9 @@ function getwishlist ($product_id){
         return false;
     }
 }
+function getPages(){
+    return \App\Models\Page::where('status',1)->get();
+}
 
 
 

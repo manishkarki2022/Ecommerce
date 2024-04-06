@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Page;
 use App\Models\Product;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
@@ -40,6 +41,15 @@ public function index(){
         return response()->json([
             'status'=>true,
             'message'=>'Product added to wishlist']);
+}
+
+    public function page($slug){
+        $page = Page::where('slug', $slug)->first();
+        if (!$page) {
+            // If page not found, render the 404 error view without passing the $page variable
+            abort(404);
+        }
+        return view('front.page',compact('page'));
     }
 
 
