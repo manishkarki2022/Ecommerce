@@ -54,6 +54,51 @@ class UserController extends Controller
            return redirect()->back()->with('error', 'Something went wrong');
        }
     }
+    public function edit(Request $request, $id)
+    {
+        $user = User::find($id);
+        if($user == null){
+            session()->flash('error', 'User not found');
+            return redirect()->route('users.index');
+        }
+        return view('admin.user.edit', compact('user'));
+    }
+    public function update(Request $request, $id)
+    {
+        $validate = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,'.$id,
+            'phone' => 'required|numeric|unique:users,phone,'.$id,
+            'password' => 'nullable|min:6',
+        ]);
+        if($validate){
+            $user = User::find($id);
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->status = $request->status;
+            if($request->password){
+                $user->password = bcrypt($request->password);
+            }
+            $user->save();
+            return redirect()->route('users.index')->with('success', 'User updated successfully.');
+        }else{
+            return redirect()->back()->with('error', 'Something went wrong');
+        }
+    }
+    public function destroy($id)
+    {
+        $user = User::find($id);
+        if($user == null){
+            session()->flash('error', 'User not found');
+            return redirect()->route('users.index');
+        }
+        $user->delete();
+        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+    }
+
+
+
 
 
 //    public function show($id){

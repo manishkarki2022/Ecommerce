@@ -64,28 +64,28 @@
                                 <div class="row">
                                     <div class=" col-md-6 mb-3">
                                         <label for="name">First Name</label>
-                                        <input type="text" name="first_name" id="first_name" placeholder="Enter Your First Name" class="form-control" value="{{$customerInfo->first_name}}">
+                                        <input type="text" name="first_name" id="first_name" placeholder="Enter Your First Name" class="form-control" value="{{ $customerInfo ? $customerInfo->first_name : '' }}">
                                         @error('first_name')
                                         <span class="text-danger">{{$message}}</span>
                                         @enderror
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="name">Last Name</label>
-                                        <input type="text" name="last_name" id="last_name" placeholder="Enter Your Last Name" class="form-control" value="{{$customerInfo->last_name}}">
+                                        <input type="text" name="last_name" id="last_name" placeholder="Enter Your Last Name" class="form-control" value="{{ $customerInfo ? $customerInfo->last_name : '' }}">
                                         @error('last_name')
                                         <span class="text-danger">{{$message}}</span>
                                         @enderror
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="email">Email</label>
-                                        <input readonly type="text" name="email" id="email" placeholder="Enter Your Email" class="form-control" value="{{$customerInfo->email}}">
+                                        <input readonly type="text" name="email" id="email" placeholder="Enter Your Email" class="form-control" value="{{ $customerInfo ? $customerInfo->email : '' }}">
                                         @error('email')
                                         <span class="text-danger">{{$message}}</span>
                                         @enderror
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="Mobile">Mobile</label>
-                                        <input type="text" name="mobile" id="mobile" placeholder="Enter Your Mobile" class="form-control" value="{{$customerInfo->mobile}}">
+                                        <input type="text" name="mobile" id="mobile" placeholder="Enter Your Mobile" class="form-control" value="{{ $customerInfo ? $customerInfo->mobile : '' }}">
                                         @error('mobile')
                                         <span class="text-danger">{{$message}}</span>
                                         @enderror
@@ -95,7 +95,7 @@
                                         <select name="city_id" id="city_id" class="form-control">
                                             <option value="">Select City</option>
                                             @foreach($cities as $city)
-                                                <option value="{{$city->id}}" {{ $customerInfo->city_id == $city->id ? 'selected' : '' }}>
+                                                <option value="{{$city->id}}" {{ isset($customerInfo) && $customerInfo->city_id == $city->id ? 'selected' : '' }}>
                                                     {{$city->name}}
                                                 </option>
                                             @endforeach
@@ -107,21 +107,21 @@
 
                                     <div class="col-md-6 mb-3">
                                         <label for="Zip">Zip</label>
-                                        <input type="text" name="zip" id="zip" placeholder="Enter Your Zip Code" class="form-control" value="{{$customerInfo->zip}}">
+                                        <input type="text" name="zip" id="zip" placeholder="Enter Your Zip Code" class="form-control" value="{{ $customerInfo ? $customerInfo->zip : '' }}">
                                         @error('zip')
                                         <span class="text-danger">{{$message}}</span>
                                         @enderror
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="State">State</label>
-                                        <input type="text" name="state" id="state" placeholder="Enter Your State" class="form-control" value="{{$customerInfo->state}}">
+                                        <input type="text" name="state" id="state" placeholder="Enter Your State" class="form-control" value="{{ $customerInfo ? $customerInfo->state : '' }}">
                                         @error('state')
                                         <span class="text-danger">{{$message}}</span>
                                         @enderror
                                     </div>
                                     <div class="mb-3">
                                         <label for="Address">Address</label>
-                                        <textarea name="address" id="address" cols="30" rows="5" class="form-control">{{$customerInfo->address}}</textarea>
+                                        <textarea name="address" id="address" cols="30" rows="5" class="form-control">{{ $customerInfo ? $customerInfo->state : '' }}</textarea>
                                         @error('address')
                                         <span class="text-danger">{{$message}}</span>
                                         @enderror

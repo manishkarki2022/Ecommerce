@@ -97,6 +97,7 @@
 <script src="{{ asset('admin-assets/js/datetimepicker.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{asset('admin-assets/js/demo.js')}}"></script>
+@yield('customJs')
 <script>
     $.ajaxSetup({
         headers: {
@@ -117,6 +118,26 @@
         @endif
     });
 </script>
-@yield('customJs')
+<script>
+    function confirmDelete(id) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this user!",
+            icon: "warning",
+            showCancelButton: true, // Show cancel button
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel", // Text for the cancel button
+            closeOnConfirm: false,
+            closeOnCancel: true
+        }).then((willDelete) => {
+            if (willDelete.isConfirmed) {
+                // Submit the form
+                document.getElementById('delete-form-' + id).submit();
+            }
+        });
+    }
+</script>
+
 </body>
 </html>
