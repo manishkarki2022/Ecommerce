@@ -57,6 +57,9 @@ Route::post('add-to-wishlist/product',[FrontController::class,'addWishlist'])->n
 //Front Page Route
 Route::get('/page/{slug}', [FrontController::class, 'page'])->name('front.page');
 
+//Contact us Email
+Route::post('/send-contact-email', [FrontController::class, 'sendContactEmail'])->name('front.sendContactEmail');
+
 
 Route::group(['prefix'=>'account'], function () {
     Route::group(['middleware'=>'guest'], function () {

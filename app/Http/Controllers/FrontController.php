@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactEmail;
 use App\Models\Page;
 use App\Models\Product;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+
 
 class FrontController extends Controller
 {
@@ -51,7 +54,35 @@ public function index(){
         }
         return view('front.page',compact('page'));
     }
+    public function sendContactEmail(Request $request){
+        $validate = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'subject' => 'required',
+            'message' => 'required',
+        ]);
+       if($validate){
+           $mailData = [
+               'name' => $request->name,
+               'email' => $request->email,
+               'subject' => $request->subject,
+               'message' => $request->message,
+               'mail_subject' => 'Contact Email'
+           ];
+           $admin = env('MAIL_FROM_ADDRESS');
+              Mail::to($admin)->send(new ContactEmail($mailData));
+              return redirect()->back()->with('success','Email sent successfully');
+       }else{
+           return redirect()->back()->with('error','Please fill all fields');
+       }
+
+       }
+
+
+    }
 
 
 
-}
+
+
+
