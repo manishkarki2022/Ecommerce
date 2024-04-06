@@ -5,6 +5,7 @@ use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\admin\PageController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ProductSubCategoryController;
+use App\Http\Controllers\admin\SettingController;
 use App\Http\Controllers\admin\ShippingController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImagesController;
@@ -173,6 +174,10 @@ Route::group(['prefix'=>'admin'], function () {
         Route::get('/pages/{pages}/edit', [PageController::class, 'edit'])->name('pages.edit');
         Route::put('/pages/update/{id}', [PageController::class, 'update'])->name('pages.update');
         Route::delete('/pages/delete/{id}', [PageController::class, 'destroy'])->name('pages.destroy');
+
+        //Change Password
+        Route::get('/change-password', [SettingController::class, 'showChangePasswordForm'])->name('admin.showChangePassword');
+        Route::post('/change-password', [SettingController::class, 'updatePassword'])->name('admin.updatePassword');
 
 
 
