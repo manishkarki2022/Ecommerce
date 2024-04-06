@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ResetPasswordEmail;
 use App\Models\City;
 use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
 use App\Models\Wishlist;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -200,6 +205,92 @@ class AuthController extends Controller
         // Redirect back with success message
         return redirect()->route('account.changePassword')->with('success', 'Password changed successfully.');
     }
+    public function forgotPassword(){
+        return view('front.account.forgot-password');
+    }
+    public function processForgotPassword(Request $request)
+    {
+        // Validate form data
+        $validate = $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+        if($validate == false){
+            return redirect()->back()->with('error', 'Email not found');
+        }
+
+
+           // Generate a unique token
+        $token = Str::random(60);
+        //Delete any existing tokens for this user
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+        DB::table('password_reset_tokens')->insert([
+            'email' => $request->email,
+            'token' => $token,
+            'created_at' => now(),
+        ]);
+        $user = User::where('email', $request->email)->first();
+        $formData = [
+            'token' => $token,
+            'name' => $user,
+            'mailSubject' => 'Reset Password Email',
+        ];
+        Mail::to($request->email)->send(new ResetPasswordEmail($formData));
+        return redirect()->back()->with('success', 'Password reset link sent to your email.');
+    }
+    public function resetPassword($token)
+    {
+        // Find the token in the database
+        $passwordResetToken = DB::table('password_reset_tokens')->where('token', $token)->first();
+
+        // Check if the token exists
+        if (!$passwordResetToken) {
+            return redirect()->route('front.forgotPassword')->with('error', 'Invalid token.');
+        }
+
+        // Check if the token is expired
+        if (now() > Carbon::parse($passwordResetToken->created_at)->addMinutes(10)) {
+            return redirect()->route('front.forgotPassword')->with('error', 'Token expired.');
+        }
+
+        // Render the reset password form
+        return view('front.account.reset-password',compact('token'));
+    }
+public function processResetPassword(Request $request)
+    {
+        // Validate form data
+        $request->validate([
+            'new_password' => 'required|string|min:6',
+            'confirm_password' => 'required|same:new_password',
+            'reset_token' => 'required',
+        ]);
+
+        // Find the token in the database
+        $passwordResetToken = DB::table('password_reset_tokens')->where('token', $request->reset_token)->first();
+
+        // Check if the token exists
+        if (!$passwordResetToken) {
+            return redirect()->route('front.forgotPassword')->with('error', 'Invalid token.');
+        }
+
+        // Check if the token is expired
+        if (now() > Carbon::parse($passwordResetToken->created_at)->addMinutes(10)) {
+            return redirect()->route('front.forgotPassword')->with('error', 'Token expired.');
+        }
+
+        // Find the user by email
+        $user = User::where('email', $passwordResetToken->email)->first();
+
+        // Update the user's password
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        // Delete the password reset token
+        DB::table('password_reset_tokens')->where('token', $request->token)->delete();
+
+        // Redirect to the login page with success message
+        return redirect()->route('account.login')->with('success', 'Password reset successfully.');
+    }
+
 
 
 }
