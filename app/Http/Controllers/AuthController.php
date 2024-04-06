@@ -173,9 +173,33 @@ class AuthController extends Controller
             return redirect()->back()->with('error', 'Product not found in wishlist.');
         }
     }
+    public function changePassword(){
+        return view('front.account.change-password');
+    }
+    public function updatePassword(Request $request)
+    {
+        // Validate form data
+        $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|string|min:6|different:old_password', // Ensure new password is different from old password
+            'confirm_password' => 'required|same:new_password', // Confirm password should match new password
+        ]);
 
+        // Get the authenticated user
+        $user = Auth::user();
 
+        // Check if the old password matches the user's current password
+        if (!Hash::check($request->old_password, $user->password)) {
+            return redirect()->back()->with('error', 'The old password is incorrect.');
+        }
 
+        // Update the user's password
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        // Redirect back with success message
+        return redirect()->route('account.changePassword')->with('success', 'Password changed successfully.');
+    }
 
 
 }

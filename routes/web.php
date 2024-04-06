@@ -75,6 +75,8 @@ Route::group(['prefix'=>'account'], function () {
         Route::get('/logout', [AuthController::class, 'logout'])->name('account.logout');
         Route::get('/wishlists', [AuthController::class, 'wishlist'])->name('account.wishlist');
         Route::delete('wishlist/remove/{id}', [AuthController::class, 'deleteWishlist'])->name('front.deleteWishlist');
+        Route::get('/change-password', [AuthController::class, 'changePassword'])->name('account.changePassword');
+        Route::post('/change-password', [AuthController::class, 'updatePassword'])->name('account.updatePassword');
 
 
     });
