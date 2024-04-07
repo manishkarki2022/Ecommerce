@@ -66,6 +66,9 @@ Route::post('/process-forgot-password', [AuthController::class, 'processForgotPa
 Route::get('/reset-password/{token}', [AuthController::class, 'resetPassword'])->name('front.resetPassword');
 Route::post('/process-reset-password', [AuthController::class, 'processResetPassword'])->name('front.processResetPassword');
 
+//Product Rating
+Route::post('/product-rating/', [ShopController::class, 'productRating'])->name('front.productRating');
+
 
 Route::group(['prefix'=>'account'], function () {
     Route::group(['middleware'=>'guest'], function () {

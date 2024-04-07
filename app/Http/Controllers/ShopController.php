@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductRating;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
@@ -98,6 +99,39 @@ class ShopController extends Controller
         }
            return view('front.product', compact('product','relatedProducts'));
 
+
+
+    }
+    public function productRating(Request $request){
+
+         $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'name' => 'required',
+            'email' => 'required|email',
+            'comment' => 'required',
+            'rating' => 'required|numeric|min:1|max:5',
+        ]);
+
+        $product = Product::find($request->product_id);
+
+        if (!$product) {
+            return response()->back()->with('error', 'Product not found');
+        }
+        $count = ProductRating::where('product_id', $request->product_id)->where('email', $request->email)->count();
+        if ($count > 0) {
+            return redirect()->back()->with('error', 'You have already rated this product');
+        }
+
+
+        $rating = new ProductRating();
+        $rating->product_id = $request->product_id;
+        $rating->username = $request->name;
+        $rating->email = $request->email;
+        $rating->comment = $request->comment;
+        $rating->rating = $request->rating;
+        $rating->status = 0;
+        $rating->save();
+        return redirect()->back()->with('success', 'Rating added successfully');
 
 
     }
