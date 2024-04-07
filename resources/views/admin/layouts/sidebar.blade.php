@@ -75,6 +75,12 @@
                         <p>Pages</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{route('products.productRatings')}}" class="nav-link">
+                        <i class="nav-icon far fa-star"></i>
+                        <p>Review</p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

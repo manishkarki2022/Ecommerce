@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Ebook;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\ProductRating;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -259,6 +260,38 @@ class ProductController extends Controller
             'tags' => $tempProduct,
             'status' => true,
         ]);
+
+    }
+    public function productRatings(){
+        $ratings = ProductRating::latest()->paginate(10);
+        return view('admin.products.ratings',compact('ratings') );
+    }
+    public function ratingSearch(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        // Perform the search query
+        $ratings = ProductRating::where('username', 'like', '%' . $keyword . '%')
+            ->orWhere('rating', 'like', '%' . $keyword . '%')
+            ->orWhere('email', 'like', '%' . $keyword . '%')
+            ->orWhere('comment', 'like', '%' . $keyword . '%')
+            ->orWhereHas('product', function ($query) use ($keyword) {
+                $query->where('title', 'like', '%' . $keyword . '%');
+            })
+            ->paginate(10);
+
+        // Pass the search results to your view
+        return view('admin.products.ratings', ['ratings' => $ratings]);
+    }
+    public function changeRatingStatus(Request $request){
+        $rating = ProductRating::find($request->id);
+        if($rating){
+            $rating->status = $request->status;
+            $rating->save();
+            return response()->json(['status' => true, 'message' => 'Rating status updated successfully.']);
+        }else{
+            return response()->json(['status' => false, 'message' => 'Rating not found.'], 404);
+        }
 
     }
 

@@ -136,6 +136,9 @@ Route::group(['prefix'=>'admin'], function () {
         Route::delete('/delete-image', [ProductController::class, 'deleteImage'])->name('delete-image');
         Route::delete('/sub-products/{products}', [ProductController::class, 'destroy'])->name('products.destroy');
         Route::get('/get-products', [ProductController::class, 'getProducts'])->name('products.getProducts');
+        Route::get('/ratings', [ProductController::class, 'productRatings'])->name('products.productRatings');
+        Route::get('/ratings/search', [ProductController::class, 'ratingSearch'])->name('products.ratingSearch');
+Route::get('/change-rating-status}', [ProductController::class, 'changeRatingStatus'])->name('products.changeRatingStatus');
 
 
         //Product Category get SubCategory Route
