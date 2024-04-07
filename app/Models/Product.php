@@ -40,5 +40,10 @@ class Product extends Model
     {
         return $this->belongsTo(SubCategory::class);
     }
+    public function ratings()
+    {
+        return $this->hasMany(ProductRating::class)->where('status', 1);
+    }
+
 
 }

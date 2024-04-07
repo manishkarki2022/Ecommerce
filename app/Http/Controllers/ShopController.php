@@ -88,16 +88,30 @@ class ShopController extends Controller
 
 
     public function product($slug){
-        $product = Product::where('slug', $slug)->with('images')->first();
+        $product = Product::where('slug', $slug)
+            ->withCount('ratings')
+            ->withSum('ratings', 'rating')
+            ->with(['images','ratings'])->first();
            if (!$product) {
                 abort(404);
             }
         $relatedProducts=[];
+
+           //Average rating
+
+        $avgRating = '0.00';
+        $avgRatingPer = 0;
+        if($product->ratings_count > 0){
+            $avgRating = number_format($product->ratings_sum_rating / $product->ratings_count, 2);
+            $avgRatingPer = ($avgRating*100) / 5;
+        }
+
+
         if($product->related_products !=''){
             $productArray = explode(',',$product->related_products);
             $relatedProducts = Product::whereIn('id',$productArray)->with('images')->get();
         }
-           return view('front.product', compact('product','relatedProducts'));
+           return view('front.product', compact('product','relatedProducts','avgRating','avgRatingPer'));
 
 
 
