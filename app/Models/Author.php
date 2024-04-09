@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Author extends Model
 {
     use HasFactory;
+    protected $fillable = ['name', 'description', 'status', 'created_by'];
+
+    public function authorImage()
+    {
+        return $this->hasMany(AuthorImage::class);
+    }
 }

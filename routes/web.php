@@ -11,6 +11,7 @@ use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImagesController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\ShopController;
@@ -193,6 +194,15 @@ Route::get('/change-rating-status}', [ProductController::class, 'changeRatingSta
         //Change Password
         Route::get('/change-password', [SettingController::class, 'showChangePasswordForm'])->name('admin.showChangePassword');
         Route::post('/change-password', [SettingController::class, 'updatePassword'])->name('admin.updatePassword');
+
+        //Author Route
+        Route::get('authors',[AuthorController::class,'index'])->name('authors.index');
+        Route::get('authors/create',[AuthorController::class,'create'])->name('authors.create');
+        Route::post('authors/store',[AuthorController::class,'store'])->name('authors.store');
+        Route::get('authors/edit/{id}',[AuthorController::class,'edit'])->name('authors.edit');
+        Route::delete('/delete-authorImage', [AuthorController::class, 'deleteImage'])->name('delete-authorImage');
+        Route::put('authors/update/{id}',[AuthorController::class,'update'])->name('authors.update');
+        Route::delete('authors/delete/{id}',[AuthorController::class,'destroy'])->name('authors.destroy');
 
 
 

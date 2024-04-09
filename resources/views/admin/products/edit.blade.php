@@ -26,7 +26,7 @@
                         <div class="card mb-3">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="title">Title</label>
                                             <input type="text" name="title" id="title" class="form-control" placeholder="Title" value="{{$product->title}}">
@@ -35,7 +35,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="slug">Slug</label>
                                             <input type="text" readonly name="slug" id="slug" class="form-control" placeholder="Slug" value="{{ $product->slug }}">
@@ -97,7 +97,7 @@
                             <div class="card-body">
                                 <h2 class="h4 mb-3">Pricing</h2>
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="price">Price</label>
                                             <input type="text" name="price" id="price" class="form-control" placeholder="Price" value="{{ $product->price }}">
@@ -106,15 +106,16 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="compare_price">Compare at Price</label>
                                             <input type="text" name="compare_price" id="compare_price" class="form-control" placeholder="Compare Price" value="{{$product->compare_price }}">
-                                            <p class="text-muted mt-3">
-                                                To show a reduced price, move the product’s original price into Compare at price. Enter a lower value into Price.
-                                            </p>
+
                                         </div>
                                     </div>
+                                    <p class="text-muted mt-3 text-center">
+                                        To show a reduced price, move the product’s original price into Compare at price. Enter a lower value into Price.
+                                    </p>
                                 </div>
                             </div>
                         </div>

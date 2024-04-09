@@ -25,7 +25,7 @@
                         <div class="card mb-3">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="title">Title</label>
                                             <input type="text" name="title" id="title" class="form-control" placeholder="Title" value="{{ old('title') }}">
@@ -34,7 +34,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="slug">Slug</label>
                                             <input type="text" readonly name="slug" id="slug" class="form-control" placeholder="Slug" value="{{ old('slug') }}">
