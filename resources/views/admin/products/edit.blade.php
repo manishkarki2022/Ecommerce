@@ -92,6 +92,76 @@
                                     @endforeach
                                 @endif
                         </div>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h2 class="h4 mb-3"><i class="fa fa-book"></i> Book Information</h2>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="publisher_name">Publisher Name</label>
+                                            <input type="text" name="publisher_name" id="publisher_name" class="form-control" placeholder="Enter publisher name" value="{{ $product->publisher_name}}">
+                                            @error('price')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="published_year">Publication Year</label>
+                                            <input type="number" name="published_year" id="published_year" class="form-control" placeholder="Publication Year" value="{{$product->published_year}}" min="1900" max="2099">
+                                            @error('published_year')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="isbn">ISBN</label>
+                                            <input type="text" name="isbn_number" id="isbn_number" class="form-control" placeholder="Enter ISBN" value="{{ $product->isbn_number }}">
+                                            @error('isbn_number')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="edition">Book Edition</label>
+                                            <input type="text" name="edition" id="edition" class="form-control" placeholder="Enter Book edition" value="{{ $product->edition }}">
+                                            @error('edition')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="country">Book Origin Country</label>
+                                            <input type="text" name="country" id="country" class="form-control" placeholder="Enter Book origin country" value="{{ $product->country }}">
+                                            @error('country')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="pages">Numbers of Pages</label>
+                                            <input type="number" name="pages" id="pages" class="form-control" placeholder="Enter Book numbers of Pages" value="{{ $product->pages }}">
+                                            @error('pages')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="language">Book Language</label>
+                                            <input type="text" name="language" id="language" class="form-control" placeholder="Enter Book Language" value="{{ $product->language }}">
+                                            @error('language')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="card mb-3">
                             <div class="card-body">
@@ -182,6 +252,28 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h2 class="h4 mb-3"><i class="fa fa-user"></i> Author </h2>
+                                <div class="mb-3">
+                                    <label for="author">Author</label>
+                                    <select name="author_id" id="author" class="form-control">
+                                        <option value="">Select an Author</option>
+                                        @if(!$authors->isEmpty())
+                                            @foreach($authors as $author)
+                                                <option value="{{ $author->id }}" {{ $author->id == $product->author_id ? 'selected' : '' }}>
+                                                    {{ $author->name }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    @error('author_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="card">
                             <div class="card-body">
                                 <h2 class="h4  mb-3">Product category</h2>
@@ -225,7 +317,52 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h2 class="h4 mb-3">Book Type</h2>
+                                <div class="mb-3">
+                                    <select name="book_type_id" id="book_type_id" class="form-control">
+                                        <option value="">Select Book Type</option>
+                                        @foreach($bookTypes as $bookType)
+                                            <option value="{{ $bookType->id }}" {{ $product->book_type_id == $bookType->id ? 'selected' : '' }}>
+                                                {{ $bookType->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('book_type_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-3" id="ebook_upload_container" style="display: none;">
+                            <div class="card-body">
+                                <h2 class="h4 mb-3">
+                                    <i class="fas fa-book"></i> Ebook Upload
+                                </h2>
+                                <div class="mb-3">
+                                    <input type="file" name="ebook" id="ebook" class="form-control-file">
+                                    <p>Preview</p>
+                                    @error('ebook')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mb-3">
+                                    <label for="ebook_price">E-Book Price</label>
+                                    <input type="number" name="ebook_price" id="ebook_price" class="form-control" placeholder="Enter Ebook Price" value="{{ $product->ebook_price ?? '' }}">
+                                    @error('ebook_price')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mb-3">
+                                    <label for="ebook_compare_price">E-Book Compare at Price</label>
+                                    <input type="number" name="ebook_compare_price" id="ebook_compare_price" class="form-control" placeholder="Enter Ebook Compare Price"` value="{{ $product->ebook_compare_price ?? '' }}">
+                                    @error('ebook_compare_price')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -317,6 +454,26 @@
                     });
                 }
             });
+        });
+        // Define a function to handle the visibility of the eBook upload container
+        function handleEbookUploadContainer() {
+            var bookTypeId = document.getElementById('book_type_id').value;
+            var ebookUploadContainer = document.getElementById('ebook_upload_container');
+
+            if (bookTypeId === '1' || bookTypeId === '3') { // Digital or Both
+                ebookUploadContainer.style.display = 'block';
+            } else {
+                ebookUploadContainer.style.display = 'none';
+            }
+        }
+
+        // Add event listener for the change event of the book_type_id select element
+        document.getElementById('book_type_id').addEventListener('change', handleEbookUploadContainer);
+
+        // Call the function to handle the visibility of the eBook upload container when the page is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Document is ready');
+            handleEbookUploadContainer();
         });
 
     </script>

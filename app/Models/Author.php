@@ -14,4 +14,8 @@ class Author extends Model
     {
         return $this->hasMany(AuthorImage::class);
     }
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

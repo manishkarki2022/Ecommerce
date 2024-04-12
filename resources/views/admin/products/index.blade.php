@@ -17,7 +17,6 @@
     <!-- Main content -->
     <section class="content">
         <!-- Default box -->
-        @include('admin.message')
         <div class="container-fluid">
             <div class="card">
                 <form action="{{ route('products.search') }}" method="get">
@@ -46,6 +45,7 @@
                             <th width="60">ID</th>
                             <th width="90"></th>
                             <th>Product</th>
+                            <th >Book Type</th>
                             <th>Price</th>
                             <th>Qty</th>
                             <th>SKU</th>
@@ -71,7 +71,25 @@
                                         @endif
                                     </td>
                                     <td><a href="{{route('products.edit',$product->id)}}">{{ $product->title }}</a></td>
-                                    <td>${{ $product->price }}</td>
+                                    @if($product->bookType != null)
+                                        <td>{{ $product->bookType->name }}</td>
+                                    @else
+                                        <td>Not Set</td>
+                                    @endif
+                                    <td>
+                                        @if($product->price != null)
+                                           Paper Rs.{{ $product->price }} <br>
+                                            @if($product->ebook_price != null)
+                                              Ebook Rs.{{ $product->ebook_price }}
+                                            @endif
+                                        @elseif($product->ebook_price != null)
+                                          Ebook Rs.{{ $product->ebook_price }}<br>
+                                            @if($product->price != null)
+                                               Paper Rs.{{ $product->price }}
+                                            @endif
+                                        @endif
+                                    </td>
+
                                     <td>{{ $product->qty }} left in Stock</td>
                                     <td>{{ $product->sku }}</td>
                                     <td>

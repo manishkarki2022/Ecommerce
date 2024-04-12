@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Author;
 use App\Models\BookType;
 use App\Models\Category;
 use App\Models\Ebook;
@@ -36,9 +37,10 @@ class ProductController extends Controller
     }
 
     public function create(){
+        $authors = Author::where('status', 'active')->orderBy('name', 'asc')->get();
         $categories = Category::orderBy('name', 'asc')->get();
         $bookTypes = BookType::orderBy('name', 'asc')->get();
-        return view('admin.products.create',compact('categories','bookTypes') );
+        return view('admin.products.create',compact('categories','bookTypes','authors') );
 
     }
     public function store(Request $request)
@@ -48,6 +50,14 @@ class ProductController extends Controller
             'title' => 'required',
             'slug' => 'required|unique:products',
             'compare_price' => 'nullable',
+            'author_id' => 'required',
+            'isbn_number' => 'nullable',
+            'publisher_name' => 'nullable',
+            'published_year' => 'nullable',
+            'edition' => 'nullable',
+            'country' => 'nullable',
+            'language' => 'nullable',
+            'pages' => 'nullable',
             'price' => 'required|numeric',
             'sku' => 'required|unique:products',
             'track_qty' => 'required|in:Yes,No',
@@ -62,10 +72,28 @@ class ProductController extends Controller
             'short_description' => 'nullable',
             'shipping_returns' => 'nullable',
             'related_products' => 'nullable',
-             'ebook' => 'nullable|file|mimes:pdf,epub|mimetypes:application/pdf,application/epub+zip|max:30048',
+            'ebook_price' => 'nullable|numeric',
+            'ebook_compare_price' => 'nullable|numeric',
+            'ebook' => 'nullable|file|mimes:pdf,epub|mimetypes:application/pdf,application/epub+zip|max:30048',
         ]);
+        // Add conditional rules based on book_type_id
+        if (in_array($request->book_type_id, [1, 3])) {
+            $validator->sometimes('ebook_price', 'required|numeric', function ($input) {
+                return in_array($input->book_type_id, [1, 3]);
+            });
+
+            $validator->sometimes('ebook_compare_price', 'required|numeric', function ($input) {
+                return in_array($input->book_type_id, [1, 3]);
+            });
+
+            $validator->sometimes('ebook', 'required|file|mimes:pdf,epub|mimetypes:application/pdf,application/epub+zip|max:30048', function ($input) {
+                return in_array($input->book_type_id, [1, 3]);
+            });
+        }
 
         if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            session()->flash('error', implode('<br>', $errors));
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
@@ -108,8 +136,6 @@ class ProductController extends Controller
                 $productEbook->product_id = $product->id;
                 $productEbook->file_location = $directory . '/' . $ebookName;
                 $productEbook->save();
-
-
         }
 
         $request->session()->flash('success', 'Product created successfully.');
@@ -125,6 +151,7 @@ class ProductController extends Controller
             $request->session()->flash('error', 'Product Not found.');
             return redirect()->route('products.index');
         }
+        $authors = Author::where('status', 'active')->orderBy('name', 'asc')->get();
         //Fetch Product Image
         $productImages = ProductImage::where('product_id', $product->id)->get();
 
@@ -137,17 +164,25 @@ class ProductController extends Controller
            $productArray = explode(',',$product->related_products);
            $relatedProducts = Product::whereIn('id',$productArray)->get();
         }
+        $bookTypes = BookType::orderBy('name', 'asc')->get();
 
 
-        return view('admin.products.edit',compact('product','categories','subCategories','productImages','relatedProducts') );
+        return view('admin.products.edit',compact('product','categories','subCategories','productImages','relatedProducts','authors','bookTypes') );
     }
     public function update(Request $request, $id)
     {
-
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'slug' => 'required|unique:products,slug,'.$id,
             'compare_price' => 'nullable',
+            'author_id' => 'required',
+            'isbn_number' => 'nullable',
+            'publisher_name' => 'nullable',
+            'published_year' => 'nullable',
+            'edition' => 'nullable',
+            'country' => 'nullable',
+            'language' => 'nullable',
+            'pages' => 'nullable',
             'price' => 'required|numeric',
             'sku' => 'required|unique:products,sku,'.$id,
             'track_qty' => 'required|in:Yes,No',
@@ -160,8 +195,28 @@ class ProductController extends Controller
             'sub_category_id' => 'nullable|numeric',
             'short_description' => 'nullable',
             'shipping_returns' => 'nullable',
-            'related_products' => 'nullable'
+            'related_products' => 'nullable',
+            'ebook_price' => 'nullable|numeric',
+            'ebook_compare_price' => 'nullable|numeric',
+            'ebook' => 'nullable|file|mimes:pdf,epub|mimetypes:application/pdf,application/epub+zip|max:30048',
+
+
+
         ]);
+        // Add conditional rules based on book_type_id
+        if (in_array($request->book_type_id, [1, 3])) {
+            $validator->sometimes('ebook_price', 'required|numeric', function ($input) {
+                return in_array($input->book_type_id, [1, 3]);
+            });
+
+            $validator->sometimes('ebook_compare_price', 'required|numeric', function ($input) {
+                return in_array($input->book_type_id, [1, 3]);
+            });
+
+            $validator->sometimes('ebook', 'required|file|mimes:pdf,epub|mimetypes:application/pdf,application/epub+zip|max:30048', function ($input) {
+                return in_array($input->book_type_id, [1, 3]);
+            });
+        }
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
@@ -171,6 +226,7 @@ class ProductController extends Controller
         $product->fill($validator->validated());
         $product->related_products=(!empty($request->related_products)) ? implode(',',$request->related_products) : '';
         $product->save();
+
 
         // Save product images
         if ($request->hasFile('images')) {

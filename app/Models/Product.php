@@ -44,6 +44,10 @@ class Product extends Model
     {
         return $this->hasMany(ProductRating::class)->where('status', 1);
     }
+    public function author()
+    {
+        return $this->belongsTo(Author::class);
+    }
 
 
 }
