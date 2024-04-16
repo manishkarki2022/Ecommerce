@@ -80,7 +80,7 @@ class ShopController extends Controller
             });
         }
 
-        $products = $productsQuery->paginate(12);
+        $products = $productsQuery->latest()->paginate(12);
         $sortOption = $request->input('sort');
 
         return view('front.shop', compact('categories', 'products', 'categorySelected', 'subCategorySelected', 'sortOption'));

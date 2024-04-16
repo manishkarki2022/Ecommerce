@@ -44,7 +44,7 @@ Route::post('/update-cart', [CartController::class, 'updateCart'])->name('front.
 Route::delete('/deleteItem-cart', [CartController::class, 'deleteItem'])->name('front.deleteItemCart');
 Route::get('/checkout',[CartController::class, 'checkout'])->name('front.checkout');
 Route::post('/process-checkout',[CartController::class, 'processCheckout'])->name('front.processCheckout');
-Route::get('/thanks/{orderId}', [CartController::class, 'thankYou'])->name('front.thanks');
+Route::get('/thanks/{orderId?}', [CartController::class, 'thankYou'])->name('front.thanks');
 Route::post('get-order-summary', [CartController::class, 'getOrderSummary'])->name('front.getOrderSummary');
 
 
@@ -91,10 +91,11 @@ Route::group(['prefix'=>'account'], function () {
         Route::delete('wishlist/remove/{id}', [AuthController::class, 'deleteWishlist'])->name('front.deleteWishlist');
         Route::get('/change-password', [AuthController::class, 'changePassword'])->name('account.changePassword');
         Route::post('/change-password', [AuthController::class, 'updatePassword'])->name('account.updatePassword');
+        Route::get('/my-books', [AuthController::class, 'myBooks'])->name('account.myBooks');
+        Route::get('/read/{ebook_id}', [AuthController::class, 'myBookShow'])->name('account.myBookShow');
 
 
     });
-
 
 });
 

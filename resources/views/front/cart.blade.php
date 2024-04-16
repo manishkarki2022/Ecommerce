@@ -29,62 +29,68 @@
                 <div class="col-md-8">
                     <div class="table-responsive">
 
-                            <table class="table" id="cart">
-                                <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Total</th>
-                                    <th>Remove</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                @if(!empty($cartItems))
-
-                                    @foreach($cartItems as $cartItem)
-                                        <tr>
-
-                                            <td>
-                                                <div class="d-flex align-items-center ">
-                                                    @if ($cartItem->options->images !==null)
-                                                        <img src="{{ asset('products/' . $cartItem->options->images->image) }}" width="" height="">
-                                                    @else
-                                                        <img src="{{ asset('products/di.jpg') }}" width="" height="">
-                                                    @endif
-                                                    <h2>{{$cartItem->name}}</h2>
-                                                </div>
-                                            </td>
-                                            <td>${{$cartItem->price}}</td>
-                                            <td>
+                        <table class="table" id="cart">
+                            <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Type</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Remove</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if(!empty($cartItems))
+                                @foreach($cartItems as $cartItem)
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                @if ($cartItem->options->images !==null)
+                                                    <img src="{{ asset('products/' . $cartItem->options->images->image) }}" width="" height="">
+                                                @else
+                                                    <img src="{{ asset('products/di.jpg') }}" width="" height="">
+                                                @endif
+                                                <h2>{{$cartItem->name}}</h2>
+                                            </div>
+                                        </td>
+                                        <td>{{$cartItem->options->type == 'ebook' ? 'eBook' : 'paperback'}}</td>
+                                        <td>Rs.{{$cartItem->price}}</td>
+                                        <td>
+                                            @if($cartItem->options->type == 'ebook')
+                                                Not Available
+                                            @else
                                                 <div class="input-group quantity mx-auto" style="width: 100px;">
                                                     <div class="input-group-btn">
                                                         <button class="btn btn-sm btn-dark btn-minus p-2 pt-1 pb-1 sub" data-id="{{$cartItem->rowId}}">
                                                             <i class="fa fa-minus"></i>
                                                         </button>
                                                     </div>
-                                                    <input type="text" class="form-control form-control-sm  border-0 text-center" value="{{$cartItem->qty}}">
+                                                    <input type="text" class="form-control form-control-sm border-0 text-center" value="{{$cartItem->qty}}">
                                                     <div class="input-group-btn">
                                                         <button class="btn btn-sm btn-dark btn-plus p-2 pt-1 pb-1 add" data-id="{{$cartItem->rowId}}">
                                                             <i class="fa fa-plus"></i>
                                                         </button>
                                                     </div>
                                                 </div>
-                                            </td>
-                                            <td>
-                                                ${{$cartItem->price*$cartItem->qty}}
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-sm btn-danger" onclick="deleteItem('{{ $cartItem->rowId }}');"><i class="fa fa-times"></i></button>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($cartItem->options->type == 'ebook')
+                                                Rs.{{$cartItem->price}}
+                                            @else
+                                            Rs.{{$cartItem->price * $cartItem->qty}}
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" onclick="deleteItem('{{ $cartItem->rowId }}');"><i class="fa fa-times"></i></button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                            </tbody>
+                        </table>
 
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @endif
-
-                                </tbody>
-                            </table>
 
 
                     </div>
@@ -97,7 +103,7 @@
                             </div>
                             <div class="d-flex justify-content-between pb-2">
                                 <div>Subtotal</div>
-                                <div>${{Cart::subtotal()}}</div>
+                                <div>Rs.{{Cart::subtotal()}}</div>
                             </div>
                             <div class="pt-2">
                                 <a href="{{route('front.checkout')}}" class="btn-dark btn btn-block w-100">Proceed to Checkout</a>

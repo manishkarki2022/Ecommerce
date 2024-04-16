@@ -22,7 +22,7 @@ class Product extends Model
     {
         return $this->hasOne(Ebook::class);
     }
-    public function orderItems()
+    public function item()
     {
         return $this->hasMany(OrderItem::class);
     }

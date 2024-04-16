@@ -58,12 +58,12 @@ class ProductController extends Controller
             'country' => 'nullable',
             'language' => 'nullable',
             'pages' => 'nullable',
-            'price' => 'required|numeric',
+            'price' => 'nullable|numeric',
             'sku' => 'required|unique:products',
-            'track_qty' => 'required|in:Yes,No',
+            'track_qty' => 'nullable|in:Yes,No',
             'qty' => $request->filled('track_qty') ? 'required|numeric' : '',
             'category_id' => 'required|numeric',
-            'is_featured' => 'required|in:Yes,No',
+            'is_featured' => 'nullable|in:Yes,No',
             'description' => 'nullable',
             'barcode' => 'nullable',
             'book_type_id' => 'required',
@@ -127,19 +127,25 @@ class ProductController extends Controller
                 $productImage->save();
             }
         }
-        if($request->hasFile('ebook')){
-               $ebook = $request->file('ebook');
-                $ebookName = uniqid() . '_' . time() . '.' . $ebook->getClientOriginalExtension();
-                $directory = 'ebooks/' . $product->id;
-                $ebook->move(public_path($directory), $ebookName);
-                $productEbook= new Ebook();
-                $productEbook->product_id = $product->id;
-                $productEbook->file_location = $directory . '/' . $ebookName;
-                $productEbook->save();
+        if ($request->hasFile('ebook')) {
+            $ebook = $request->file('ebook');
+            $ebookName = uniqid() . '_' . time() . '.' . $ebook->getClientOriginalExtension();
+            $directory = 'ebooks/' . $product->id;
+
+            // Store the ebook in the 'public' directory
+            $ebook->move(public_path($directory), $ebookName);
+
+            $productEbook = new Ebook();
+            $productEbook->product_id = $product->id;
+
+            // Store the relative path to the ebook file
+            $productEbook->file_location = $directory . '/' . $ebookName;
+            $productEbook->save();
+            $request->session()->flash('success', 'Product created successfully.');
+            return redirect()->route('products.index');
         }
 
-        $request->session()->flash('success', 'Product created successfully.');
-        return redirect()->route('products.index');
+
     }
 
 
@@ -253,9 +259,34 @@ class ProductController extends Controller
                 $productImage->image = $newName;
                 $productImage->save();
             }
+
         }
+        if ($request->hasFile('ebook')) {
+            $ebook = $request->file('ebook');
+            $ebookName = uniqid() . '_' . time() . '.' . $ebook->getClientOriginalExtension();
+            $directory = 'ebooks/' . $product->id;
 
+            // Store the new eBook in the 'public' directory
+            $ebook->move(public_path($directory), $ebookName);
 
+            // Delete the old eBook file if it exists
+            $oldEbook = Ebook::where('product_id', $product->id)->first();
+            if ($oldEbook && file_exists(public_path($oldEbook->file_location))) {
+                unlink(public_path($oldEbook->file_location));
+            }
+
+            // Update the file_location of the associated eBook or create a new one
+            if ($oldEbook) {
+                $oldEbook->update([
+                    'file_location' => $directory . '/' . $ebookName
+                ]);
+            } else {
+                $newEbook = new Ebook();
+                $newEbook->product_id = $product->id;
+                $newEbook->file_location = $directory . '/' . $ebookName;
+                $newEbook->save();
+            }
+        }
 
         $request->session()->flash('success', 'Product updated successfully.');
         return redirect()->route('products.index');
@@ -279,28 +310,54 @@ class ProductController extends Controller
             return response()->json(['success' => false, 'message' => 'Image not found.'], 404);
         }
     }
-    public function destroy($id,Request $request){
+    public function destroy($id, Request $request)
+    {
         $product = Product::find($id);
-        if(empty($product)){
-            $request->session()->flash('error', 'Product Not found.');
+
+        if (empty($product)) {
+            $request->session()->flash('error', 'Product not found.');
             return redirect()->route('products.index');
         }
+
+        // Delete associated product images
         $productImages = ProductImage::where('product_id', $id)->get();
         if (!$productImages->isEmpty()) {
             foreach ($productImages as $productImage) {
-                // Delete the image file
                 $imagePath = public_path('products/' . $productImage->image);
                 if (file_exists($imagePath)) {
                     unlink($imagePath);
                 }
-                // Delete the product image record
                 $productImage->delete();
             }
         }
+
+
+
+        // Delete associated ebook file and product folder
+        $productEbook = Ebook::where('product_id', $id)->first();
+        if ($productEbook) {
+            $ebookPath = public_path($productEbook->file_location);
+            if (file_exists($ebookPath)) {
+                unlink($ebookPath);
+            }
+            // Extracting the directory name from file path
+            $directory = pathinfo($ebookPath, PATHINFO_DIRNAME);
+            // Deleting the product folder along with its contents
+            if (is_dir($directory)) {
+                $files = glob($directory . '/*');
+                foreach ($files as $file) {
+                    unlink($file);
+                }
+                rmdir($directory);
+            }
+            $productEbook->delete();
+        }
+
+        // Delete the product
         $product->delete();
+
         $request->session()->flash('success', 'Product deleted successfully.');
         return redirect()->route('products.index');
-
     }
     public function getProducts(Request $request){
         $tempProduct=[];

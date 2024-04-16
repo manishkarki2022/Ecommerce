@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\ResetPasswordEmail;
 use App\Models\City;
 use App\Models\CustomerAddress;
+use App\Models\Ebook;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
@@ -290,7 +291,34 @@ public function processResetPassword(Request $request)
         // Redirect to the login page with success message
         return redirect()->route('account.login')->with('success', 'Password reset successfully.');
     }
+    public function myBooks(){
+        $user = Auth::user();
+        $orders = Order::where('user_id', $user->id)
+            ->where('status', 'delivered')
+            ->where('payment_status', 'paid')
+            ->where('book','ebook')
+            ->latest()->paginate(5);
+        return view('front.account.mybook',compact('orders'));
+    }
+    public function myBookShow($product_id)
+    {
+        // Ensure user is authenticated
+        if (!auth()->check()) {
+            abort(403, 'Unauthorized');
+        }
 
+        $ebook = Ebook::where('product_id', $product_id)->first();
 
+        // Check if the ebook file exists
+        if (!$ebook || !file_exists(public_path($ebook->file_location))) {
+            abort(404);
+        }
+
+        // Get the URL of the EPUB file
+        $fileUrl = asset($ebook->file_location);
+
+        // Pass the file URL to the view
+        return view('front.account.ebookshow', compact('fileUrl'));
+    }
 
 }

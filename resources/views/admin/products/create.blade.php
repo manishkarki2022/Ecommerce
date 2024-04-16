@@ -150,7 +150,7 @@
                             </div>
                         </div>
 
-                        <div class="card mb-3">
+                        <div class="card mb-3" id="paperback_price" style="display: none;">
                             <div class="card-body">
                                 <h2 class="h4 mb-3">Pricing</h2>
                                 <div class="row">
@@ -201,7 +201,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-12" id="trackQty"  style="display: none;">
                                         <div class="mb-3">
                                             <div class="custom-control custom-checkbox">
                                                 <input type="hidden" name="track_qty" value="No">
@@ -224,6 +224,22 @@
                         </div>
                     </div>
                     <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h2 class="h4 mb-3">Book Type</h2>
+                                <div class="mb-3">
+                                    <select name="book_type_id" id="book_type_id" class="form-control">
+                                        <option value="">Select Book Type</option>
+                                        @foreach ($bookTypes as $bookType)
+                                            <option value="{{ $bookType->id }}">{{ $bookType->name }}</option>
+                                            @error('book_type_id')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card mb-3">
                             <div class="card-body">
                                 <h2 class="h4 mb-3">Book status</h2>
@@ -305,22 +321,6 @@
                                         @error('is_featured')
                                         <span class="text-danger">{{ $message }}</span>
                                         @enderror
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h2 class="h4 mb-3">Book Type</h2>
-                                <div class="mb-3">
-                                    <select name="book_type_id" id="book_type_id" class="form-control">
-                                        <option value="">Select Book Type</option>
-                                        @foreach ($bookTypes as $bookType)
-                                            <option value="{{ $bookType->id }}">{{ $bookType->name }}</option>
-                                            @error('book_type_id')
-                                            <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -407,12 +407,22 @@
         document.getElementById('book_type_id').addEventListener('change', function() {
             var bookTypeId = this.value;
             var ebookUploadContainer = document.getElementById('ebook_upload_container');
+            var paperBackPrice = document.getElementById('paperback_price')
+            var trackQty =  document.getElementById('trackQty')
 
             if (bookTypeId === '1' || bookTypeId === '3') { // Digital or Both
                 ebookUploadContainer.style.display = 'block';
             } else {
                 ebookUploadContainer.style.display = 'none';
             }
+            if(bookTypeId ==='2'  || bookTypeId === '3') {//Paper or Both
+                paperBackPrice.style.display = 'block';
+                trackQty.style.display = 'block';
+            }else{
+                paperBackPrice.style.display='none';
+                trackQty.style.display='none';
+            }
+
         });
     </script>
 @endsection

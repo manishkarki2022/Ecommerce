@@ -65,14 +65,6 @@
                 @else
                     <a href="{{route('account.login')}}" class="nav-link text-dark">Login/Register</a>
                 @endif
-                <form action="{{route('front.shop')}}" method="get">
-                    <div class="input-group">
-                        <input type="text" placeholder="Search For Products" class="form-control" aria-label="Amount (to the nearest dollar)" name="search">
-                        <button type="submit" class="input-group-text">
-							<i class="fa fa-search"></i>
-					  	</button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
@@ -110,19 +102,23 @@
 <header class="bg-dark">
     <div class="container">
         <nav class="navbar navbar-expand-xl" id="navbar">
-            <a href="index.php" class="text-decoration-none mobile-logo">
+            <a href="{{ route('front.home') }}" class="text-decoration-none mobile-logo">
                 <span class="h2 text-uppercase text-primary bg-dark">All store</span>
                 <span class="h2 text-uppercase text-white px-2">Shop</span>
             </a>
             <button class="navbar-toggler menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <!-- <span class="navbar-toggler-icon icon-menu"></span> -->
                 <i class="navbar-toggler-icon fas fa-bars"></i>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <!-- <li class="nav-item">
-                          <a class="nav-link active" aria-current="page" href="index.php" title="Products">Home</a>
-                    </li> -->
+            <div class="collapse navbar-collapse justify-content-around" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 mr-lg-0" style="margin: 0 !important;" >
+                    <li class="nav-item">
+                        <a href="{{ route('front.shop') }}" class="nav-link text-primary">All Book</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('front.home') }}" class="nav-link text-primary">Ebook</a>
+                    </li>
+                <!-- Navigation Links -->
+                    <!-- Categories -->
                     @if(getCategories()->isNotEmpty())
                         @foreach(getCategories() as $category)
                             <li class="nav-item dropdown">
@@ -139,21 +135,33 @@
                             </li>
                         @endforeach
                     @endif
+
                 </ul>
+                <!-- Search Form -->
+                <form action="{{ route('front.shop') }}" method="get">
+                    <div class="input-group">
+                        <input type="text" placeholder="Enter keyword Author, title or ISBN" class="form-control" aria-label="Amount (to the nearest dollar)" name="search">
+                        <button type="submit" class="input-group-text">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="right-nav py-0">
-                <a href="{{route('front.cart')}}" class="ml-3 d-flex pt-2">
-                     <span class="position-relative">
-                         <i class="fas fa-shopping-cart text-primary"></i>
-                         @if(Cart::count() > 0)
-                             <span class="badge badge-pill badge-danger position-absolute top-0 start-100 translate-middle">{{ Cart::count() }}</span>
-                         @endif
-                    </span>
+
+            <div class="right-nav py-0 ml-lg-4">
+                <a href="{{ route('front.cart') }}" class="nav-link text-white">
+            <span class="position-relative">
+                <i class="fas fa-shopping-cart text-primary"></i>
+                @if(Cart::count() > 0)
+                    <span class="badge text-danger position-absolute top-0 start-100 translate-middle">{{ Cart::count() }}</span>
+                @endif
+            </span>
                 </a>
             </div>
         </nav>
     </div>
 </header>
+
 <main>
 @yield('content')
 
@@ -206,7 +214,7 @@
             <div class="row">
                 <div class="col-12 mt-3">
                     <div class="copy-right text-center">
-                        <p>© All copyrights are reserved. INDIGO 2024. </p>
+                        <p>© All copyrights are reserved. All Book Store 2024. </p>
                     </div>
                 </div>
             </div>
@@ -330,11 +338,11 @@
             initSlider();
         });
     });
-    function addToCart(id){
+    function addToCart(id,type){
         $.ajax({
             url: "{{ route('front.addToCart') }}",
             type: "post",
-            data: {id: id},
+            data: {id: id, type: type},
             dataType: "json",
             success: function (response) {
                 if(response.status == true){
