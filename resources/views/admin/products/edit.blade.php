@@ -100,7 +100,7 @@
                                         <div class="mb-3">
                                             <label for="publisher_name">Publisher Name</label>
                                             <input type="text" name="publisher_name" id="publisher_name" class="form-control" placeholder="Enter publisher name" value="{{ $product->publisher_name}}">
-                                            @error('price')
+                                            @error('publisher_name')
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -163,7 +163,7 @@
                             </div>
                         </div>
 
-                        <div class="card mb-3">
+                        <div class="card mb-3" id="paperback_price" style="display: none;">
                             <div class="card-body">
                                 <h2 class="h4 mb-3">Pricing</h2>
                                 <div class="row">
@@ -208,7 +208,7 @@
                                             <input type="text" name="barcode" id="barcode" class="form-control" placeholder="Barcode" value="{{ $product->barcode }}">
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-12" id="trackQty"  style="display: none;">
                                         <div class="mb-3">
                                             <div class="custom-control custom-checkbox">
                                                 <input type="hidden" name="track_qty" value="No">
@@ -241,6 +241,24 @@
                         </div>
                     </div>
                     <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h2 class="h4 mb-3">Book Type</h2>
+                                <div class="mb-3">
+                                    <select name="book_type_id" id="book_type_id" class="form-control">
+                                        <option value="">Select Book Type</option>
+                                        @foreach($bookTypes as $bookType)
+                                            <option value="{{ $bookType->id }}" {{ $product->book_type_id == $bookType->id ? 'selected' : '' }}>
+                                                {{ $bookType->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('book_type_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
                         <div class="card mb-3">
                             <div class="card-body">
                                 <h2 class="h4 mb-3">Product status</h2>
@@ -317,24 +335,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h2 class="h4 mb-3">Book Type</h2>
-                                <div class="mb-3">
-                                    <select name="book_type_id" id="book_type_id" class="form-control">
-                                        <option value="">Select Book Type</option>
-                                        @foreach($bookTypes as $bookType)
-                                            <option value="{{ $bookType->id }}" {{ $product->book_type_id == $bookType->id ? 'selected' : '' }}>
-                                                {{ $bookType->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('book_type_id')
-                                    <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
                         <div class="card mb-3" id="ebook_upload_container" style="display: none;">
                             <div class="card-body">
                                 <h2 class="h4 mb-3">
@@ -342,7 +342,13 @@
                                 </h2>
                                 <div class="mb-3">
                                     <input type="file" name="ebook" id="ebook" class="form-control-file">
-                                    <p>Preview</p>
+                                    @if($product->ebookss)
+                                        <div class="ebook-container">
+                                            <i class="fas fa-book"></i>
+                                            {{$product->title}}
+                                            <button class="delete-ebook" data-ebook-id="{{$product->ebookss->id}}"><i class="fas fa-trash text-danger"></i></button>
+                                        </div>
+                                    @endif
                                     @error('ebook')
                                     <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -444,8 +450,6 @@
                             _token: '{{ csrf_token() }}'
                         },
                         success: function(response) {
-                            // Handle success (e.g., remove the deleted image from the DOM)
-                            console.log(response);
                         },
                         error: function(xhr, status, error) {
                             // Handle error
@@ -459,11 +463,20 @@
         function handleEbookUploadContainer() {
             var bookTypeId = document.getElementById('book_type_id').value;
             var ebookUploadContainer = document.getElementById('ebook_upload_container');
+            var paperBackPrice = document.getElementById('paperback_price')
+            var trackQty =  document.getElementById('trackQty')
 
             if (bookTypeId === '1' || bookTypeId === '3') { // Digital or Both
                 ebookUploadContainer.style.display = 'block';
             } else {
                 ebookUploadContainer.style.display = 'none';
+            }
+            if(bookTypeId ==='2'  || bookTypeId === '3') {//Paper or Both
+                paperBackPrice.style.display = 'block';
+                trackQty.style.display = 'block';
+            }else{
+                paperBackPrice.style.display='none';
+                trackQty.style.display='none';
             }
         }
 
@@ -472,9 +485,32 @@
 
         // Call the function to handle the visibility of the eBook upload container when the page is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Document is ready');
             handleEbookUploadContainer();
         });
+        $(document).ready(function() {
+            $('.delete-ebook').click(function() {
+                var ebookId = $(this).data('ebook-id');
+                if (confirm('Are you sure you want to delete this ebook?')) {
+                    $.ajax({
+                        url: '{{ route("delete-ebook") }}',
+                        method: 'DELETE',
+                        data: {
+                            ebookId:ebookId,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                $('.ebook-container').remove(); // Remove the ebook container if the deletion was successful
+                            } else {
+                                // Handle the case where the deletion was not successful (optional)
+                                console.error('Failed to delete ebook:', response.message);
+                            }
+                        },
+                    });
+                }
+            });
+        });
+
 
     </script>
 @endsection

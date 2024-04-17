@@ -136,6 +136,7 @@ Route::group(['prefix'=>'admin'], function () {
         Route::get('/products/{products}/edit', [ProductController::class, 'edit'])->name('products.edit');
         Route::put('/products/{products}', [ProductController::class, 'update'])->name('products.update');
         Route::delete('/delete-image', [ProductController::class, 'deleteImage'])->name('delete-image');
+        Route::delete('/delete-ebook',  [ProductController::class, 'deleteEbook'])->name('delete-ebook');
         Route::delete('/sub-products/{products}', [ProductController::class, 'destroy'])->name('products.destroy');
         Route::get('/get-products', [ProductController::class, 'getProducts'])->name('products.getProducts');
         Route::get('/ratings', [ProductController::class, 'productRatings'])->name('products.productRatings');

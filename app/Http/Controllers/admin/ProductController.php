@@ -197,6 +197,7 @@ class ProductController extends Controller
             'is_featured' => 'required|in:Yes,No',
             'description' => 'nullable',
             'barcode' => 'nullable',
+            'book_type_id' => 'required',
             'status' => 'required|in:0,1',
             'sub_category_id' => 'nullable|numeric',
             'short_description' => 'nullable',
@@ -210,25 +211,28 @@ class ProductController extends Controller
 
         ]);
         // Add conditional rules based on book_type_id
-        if (in_array($request->book_type_id, [1, 3])) {
-            $validator->sometimes('ebook_price', 'required|numeric', function ($input) {
-                return in_array($input->book_type_id, [1, 3]);
-            });
+        $product = Product::findOrFail($id);
+        if(!$product){
+            if (in_array($request->book_type_id, [1, 3])) {
+                $validator->sometimes('ebook_price', 'required|numeric', function ($input) {
+                    return in_array($input->book_type_id, [1, 3]);
+                });
 
-            $validator->sometimes('ebook_compare_price', 'required|numeric', function ($input) {
-                return in_array($input->book_type_id, [1, 3]);
-            });
+                $validator->sometimes('ebook_compare_price', 'required|numeric', function ($input) {
+                    return in_array($input->book_type_id, [1, 3]);
+                });
 
-            $validator->sometimes('ebook', 'required|file|mimes:pdf,epub|mimetypes:application/pdf,application/epub+zip|max:30048', function ($input) {
-                return in_array($input->book_type_id, [1, 3]);
-            });
+                $validator->sometimes('ebook', 'required|file|mimes:pdf,epub|mimetypes:application/pdf,application/epub+zip|max:30048', function ($input) {
+                    return in_array($input->book_type_id, [1, 3]);
+                });
+            }
         }
+
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $product = Product::findOrFail($id);
         $product->fill($validator->validated());
         $product->related_products=(!empty($request->related_products)) ? implode(',',$request->related_products) : '';
         $product->save();
@@ -309,6 +313,23 @@ class ProductController extends Controller
         } else {
             return response()->json(['success' => false, 'message' => 'Image not found.'], 404);
         }
+    }
+    public function deleteEbook(Request $request){
+        $ebookd = $request->input('ebookId');
+        $ebook = Ebook::findOrFail($ebookd);
+        if ($ebook) {
+            // Delete the ebook file from the public folder
+            $ebookPath = public_path($ebook->file_location);
+            if (file_exists($ebookPath)) {
+                unlink($ebookPath);
+            }
+            // Delete the ebook record from the database
+            $ebook->delete();
+            return response()->json(['success' => true, 'message' => 'Ebook deleted successfully.']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Ebook not found.'], 404);
+        }
+
     }
     public function destroy($id, Request $request)
     {

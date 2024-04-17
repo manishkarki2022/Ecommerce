@@ -4,7 +4,7 @@
         <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="false">
             <div class="carousel-inner rounded">
                 <div class="carousel-item active">
-                    <!-- <img src="images/carousel-1.jpg" class="d-block w-100" alt=""> -->
+
 
                     <picture>
                         <source media="(max-width: 799px)" srcset="{{ asset('cp.png') }}" />
@@ -65,36 +65,36 @@
             </button>
         </div>
     </section>
-    <section class="section-2">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="box shadow-lg">
-                        <div class="fa icon fa-check text-primary m-0 mr-3"></div>
-                        <h2 class="font-weight-semi-bold m-0">Quality Product</h5>
-                    </div>
-                </div>
-                <div class="col-lg-3 ">
-                    <div class="box shadow-lg">
-                        <div class="fa icon fa-shipping-fast text-primary m-0 mr-3"></div>
-                        <h2 class="font-weight-semi-bold m-0">Free Shipping</h2>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="box shadow-lg">
-                        <div class="fa icon fa-exchange-alt text-primary m-0 mr-3"></div>
-                        <h2 class="font-weight-semi-bold m-0">14-Day Return</h2>
-                    </div>
-                </div>
-                <div class="col-lg-3 ">
-                    <div class="box shadow-lg">
-                        <div class="fa icon fa-phone-volume text-primary m-0 mr-3"></div>
-                        <h2 class="font-weight-semi-bold m-0">24/7 Support</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+{{--    <section class="section-2">--}}
+{{--        <div class="container">--}}
+{{--            <div class="row">--}}
+{{--                <div class="col-lg-3">--}}
+{{--                    <div class="box shadow-lg">--}}
+{{--                        <div class="fa icon fa-check text-primary m-0 mr-3"></div>--}}
+{{--                        <h2 class="font-weight-semi-bold m-0">Quality Product</h5>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="col-lg-3 ">--}}
+{{--                    <div class="box shadow-lg">--}}
+{{--                        <div class="fa icon fa-shipping-fast text-primary m-0 mr-3"></div>--}}
+{{--                        <h2 class="font-weight-semi-bold m-0">Free Shipping</h2>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="col-lg-3">--}}
+{{--                    <div class="box shadow-lg">--}}
+{{--                        <div class="fa icon fa-exchange-alt text-primary m-0 mr-3"></div>--}}
+{{--                        <h2 class="font-weight-semi-bold m-0">14-Day Return</h2>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--                <div class="col-lg-3 ">--}}
+{{--                    <div class="box shadow-lg">--}}
+{{--                        <div class="fa icon fa-phone-volume text-primary m-0 mr-3"></div>--}}
+{{--                        <h2 class="font-weight-semi-bold m-0">24/7 Support</h5>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </section>--}}
     <section class="section-3 p-5">
         <div class="container ">
             <div class="section-title">
@@ -111,9 +111,9 @@
                                     @endif
 
                                 </div>
-                                <div class="right">
-                                    <div class="cat-data">
-                                        <h6 >{{$category->name}}</h6>
+                                <div class="right ">
+                                    <div class="">
+                                        <h5  ><a class="text-primary" href={{route('front.shop',$category->slug)}}  >{{$category->name}}</a></h5>
                                     </div>
                                 </div>
                             </div>
@@ -124,13 +124,15 @@
             </div>
         </div>
     </section>
+    @if($getFeatured->isNotEmpty())
     <section class="section-4 pt-5">
         <div class="container">
+
             <div class="section-title">
                 <h4>Featured Products</h4>
             </div>
             <div class="row pb-3 slider ">
-                @if($getFeatured->isNotEmpty())
+
                     @foreach($getFeatured as $featuredItem)
                         <div class="col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
                             <div class="card rounded-top product-card">
@@ -148,13 +150,9 @@
                                 </div>
                                 <div class="card-body p-1 mt-0">
                                     <a class="h6 link mt-0" href="{{route('front.product',$featuredItem->slug)}}" title="{{$featuredItem->title}}"><strong>{{ strlen($featuredItem->title) > 15 ? substr($featuredItem->title, 0, 15) . ' ...' : $featuredItem->title }}</strong></a>
-                                    <p class="text-muted text-left">Ram Bahadur</p>
+                                    <p class="text-muted text-left">By:{{ $featuredItem->author->name }}</p>
                                     <div class="d-flex justify-content-between px-1">
                                         <div>
-                                            <span class="h5 me-2"><strong>${{$featuredItem->price}}</strong></span>
-                                            @if($featuredItem->compare_price !== '')
-                                                <span class="h6 text-underline"><del>${{$featuredItem->compare_price}}</del></span>
-                                            @endif
                                         </div>
                                         @if(getwishlist($featuredItem->id))
                                             <a class="wishlist" href="javascript:void(0);"><i class="fas fa-heart text-primary"></i></a>
@@ -163,97 +161,58 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div>
-                                    @if($featuredItem->track_qty =='Yes')
-                                        @if($featuredItem->qty > 0)
-                                            <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$featuredItem->id}})">
-                                                <i class="fa fa-shopping-cart"></i> Add To Cart
-                                            </a>
-                                         @else
-                                            <a class="btn btn-dark w-100" style="background-color: white !important;color: red; border: none !important" href="javascript:void(0);">
-                                                <i class="fas fa-exclamation-circle"></i> Out Of Stock
-                                            </a>
-                                        @endif
-                                    @else
-                                        <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$featuredItem->id}})">
-                                            <i class="fa fa-shopping-cart"></i> Add To Cart
-                                        </a>
-
-                                    @endif
-
-                                </div>
                             </div>
                         </div>
                     @endforeach
-                @endif
+
             </div>
         </div>
     </section>
+    @endif
+    @if($latest->isNotEmpty())
     <section class="section-4 pt-5">
         <div class="container">
+
             <div class="section-title">
                 <h4>Latest Product</h4>
             </div>
             <div class="row pb-2 slider2">
-                @if($latest->isNotEmpty())
+
                     @foreach($latest as $latestItem)
                         <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                            <div class="card product-card">
-                                <div class="product-image position-relative" style="height: 300px !important; overflow: hidden">
-                                    @if($latestItem->images !== null && $latestItem->images->isNotEmpty() && $latestItem->images->first() !== null)
-                                        <a href="{{route('front.product',$latestItem->slug)}}" class="product-img " title="{{$latestItem->title}}">
-                                            <img class="card-img-top img-fluid h-100" src="{{ asset('products/' . $latestItem->images->first()->image) }}" alt="">
-                                        </a>
-                                            @else
-                                                <a href="{{route('front.product',$latestItem->slug)}}" class="product-img " title="{{$latestItem->title}}">
-                                                    <img class="card-img-top img-fluid" src="{{ asset('products/di.jpg') }}" alt="">
-                                                </a>
-                                    @endif
-
-                                </div>
-                                <div class="card-body mt-2 p-1">
-                                    <a class="h6 link mt-0" href="{{route('front.product',$latestItem->slug)}}" title="{{$latestItem->title}}"><strong>{{ strlen($latestItem->title) > 15 ? substr($latestItem->title, 0, 15) . ' ...' : $latestItem->title }}</strong></a>
-                                    <p class="text-muted text-left">Ram Bahadur</p>
-                                    <div class="d-flex justify-content-between px-1">
-                                        <div>
-                                            <span class="h6 me-2"><strong>${{$latestItem->price}}</strong></span>
-                                            @if($latestItem->compare_price !== '')
-                                                <span class="h6 text-underline"><del>${{$latestItem->compare_price}}</del></span>
-                                            @endif
-                                        </div>
-                                        @if(getwishlist($latestItem->id))
-                                            <a class="wishlist" href="javascript:void(0);"><i class="fas fa-heart text-primary"></i></a>
-                                        @else
-                                            <a onclick="addToWishList({{$latestItem->id}})" class="wishlist" href="javascript:void(0);"><i class="far fa-heart text-primary"></i></a>
-                                        @endif
-
-                                    </div>
-                                </div>
-                                <div>
-                                    @if($latestItem->track_qty =='Yes')
-                                        @if($latestItem->qty > 0)
-                                            <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$latestItem->id}})">
-                                                <i class="fa fa-shopping-cart"></i> Add To Cart
-                                            </a>
-                                        @else
-                                            <a class="btn btn-dark w-100" style="background-color: white !important;color: red; border: none !important" href="javascript:void(0);">
-                                                <i class="fas fa-exclamation-circle"></i> Out Of Stock
-                                            </a>
-                                        @endif
+                            <div class="card product-card position-relative">
+                                <!-- Wishlist Icon -->
+                                <div class="wishlist-icon position-absolute top-0 end-0">
+                                    @if (getwishlist($latestItem->id))
+                                        <a href="javascript:void(0);" class="text-primary"><i class="fas fa-heart"></i></a>
                                     @else
-                                        <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$latestItem->id}})">
-                                            <i class="fa fa-shopping-cart"></i> Add To Cart
-                                        </a>
-
+                                        <a href="javascript:void(0);" onclick="addToWishList({{ $latestItem->id }})" class="text-muted"><i class="far fa-heart"></i></a>
                                     @endif
+                                </div>
+
+                                <!-- Product Image -->
+                                <div class="product-image" style="height: 300px !important; overflow: hidden">
+                                    <a href="{{ route('front.product', $latestItem->slug) }}" class="product-img" title="{{ $latestItem->title }}">
+                                        <img class="card-img-top img-fluid h-100" src="{{ asset('products/' . $latestItem->images->first()->image) }}" alt="{{ $latestItem->title }}">
+                                    </a>
+                                </div>
+
+                                <div class="card-body mt-2 p-1">
+                                    <!-- Product Title -->
+                                    <a class="h6 link mt-0" href="{{ route('front.product', $latestItem->slug) }}" title="{{ $latestItem->title }}">
+                                        <strong>{{ strlen($latestItem->title) > 15 ? substr($latestItem->title, 0, 15) . ' ...' : $latestItem->title }}</strong>
+                                    </a>
+                                    <!-- Product Author -->
+                                    <p class="text-muted text-left">By: {{ $latestItem->author->name }}</p>
                                 </div>
                             </div>
                         </div>
                     @endforeach
-                @endif
+
             </div>
         </div>
     </section>
+    @endif
     <section class="bg-white section-4 pt-5">
         <div class="bg-white container ">
             <div class="row pb-4 p-5">

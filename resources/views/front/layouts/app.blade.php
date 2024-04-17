@@ -115,7 +115,7 @@
                         <a href="{{ route('front.shop') }}" class="nav-link text-primary">All Book</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('front.home') }}" class="nav-link text-primary">Ebook</a>
+                        <a href="{{ route('front.shop',['ebook'=>true]) }}" class="nav-link text-primary">Ebook</a>
                     </li>
                 <!-- Navigation Links -->
                     <!-- Categories -->
