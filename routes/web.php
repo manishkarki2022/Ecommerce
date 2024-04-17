@@ -36,7 +36,7 @@ use App\Http\Controllers\admin\HomeController;
 //    return view('welcome');
 //});
 Route::get('/', [FrontController::class, 'index'])->name('front.home');
-Route::get('/shop/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
+Route::get('/shop/{ebook?}/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
 Route::get('/product/{slug}', [ShopController::class, 'product'])->name('front.product');
 Route::get('/cart', [CartController::class, 'cart'])->name('front.cart');
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('front.addToCart');

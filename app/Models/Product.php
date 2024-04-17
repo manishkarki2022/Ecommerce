@@ -18,7 +18,7 @@ class Product extends Model
     {
         return $this->belongsTo(BookType::class);
     }
-    public function ebook()
+    public function ebookss()
     {
         return $this->hasOne(Ebook::class);
     }

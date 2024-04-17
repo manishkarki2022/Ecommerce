@@ -13,7 +13,7 @@ class ShopController extends Controller
 {
 
 
-    public function index(Request $request, $categorySlug = null, $subCategorySlug = null)
+    public function index(Request $request, $ebook = false, $categorySlug = null, $subCategorySlug = null)
     {
         $categorySelected = '';
         $subCategorySelected = '';
@@ -35,6 +35,10 @@ class ShopController extends Controller
             $subCategory = SubCategory::where('slug', $subCategorySlug)->first();
             $productsQuery->where('sub_category_id', $subCategory->id);
             $subCategorySelected = $subCategory->id;
+        }
+        if ($ebook) {
+            $productsQuery->whereNotNull('ebook')
+            ->orWhereNotNull('ebook_price');
         }
 
         // Price range filter
@@ -70,6 +74,7 @@ class ShopController extends Controller
 
             $productsQuery->where(function ($query) use ($searchTerm) {
                 $query->where('title', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('ebook', 'like', '%' . $searchTerm . '%')
                     ->orWhereHas('category', function ($query) use ($searchTerm) {
                         $query->where('name', 'like', '%' . $searchTerm . '%');
                     })
@@ -77,6 +82,8 @@ class ShopController extends Controller
                         $query->where('name', 'like', '%' . $searchTerm . '%');
                     })
                     ->orWhere('price', 'like', '%' . $searchTerm . '%');
+
+
             });
         }
 
