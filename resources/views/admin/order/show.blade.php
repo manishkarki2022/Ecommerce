@@ -110,24 +110,25 @@
                 <div class="col-md-3">
                     <div class="card">
                         <form action="" method="post" id="changeOrderStatusForm" name="changeOrderStatusForm">
-                        <div class="card-body">
-                            <h2 class="h4 mb-3">Order Status</h2>
-                            <div class="mb-3">
-                                <select name="status" id="status" class="form-control">
-                                    <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Shipped</option>
-                                    <option value="delivered" {{ $order->status == 'delivered' ? 'selected' : '' }}>Delivered</option>
-                                    <option value="canceled" {{ $order->status == 'canceled' ? 'selected' : '' }}>Canceled</option>
-                                </select>
+                            @csrf
+                            <div class="card-body">
+                                <h2 class="h4 mb-3">Order Status</h2>
+                                <div class="mb-3">
+                                    <select name="status" id="status" class="form-control">
+                                        <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                        <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Shipped</option>
+                                        <option value="delivered" {{ $order->status == 'delivered' ? 'selected' : '' }}>Delivered</option>
+                                        <option value="canceled" {{ $order->status == 'canceled' ? 'selected' : '' }}>Canceled</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3" id="shippedDateField">
+                                    <label for="shipped_date">Shipped Date</label>
+                                    <input placeholder="Choose Shipped Date" type="text" name="shipped_date" id="shipped_date" class="form-control" value="{{$order->shipped_date}}">
+                                </div>
+                                <div class="mb-3">
+                                    <button class="btn btn-primary">Update</button>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="shipped_date">Shipped Date</label>
-                                <input placeholder="Choose Shipped Date" type="text" name="shipped_date" id="shipped_date" class="form-control" value="{{$order->shipped_date}}">
-                            </div>
-                            <div class="mb-3">
-                                <button class="btn btn-primary">Update</button>
-                            </div>
-                        </div>
                         </form>
                     </div>
                     <div class="card">
@@ -214,6 +215,22 @@
                 });
             });
         });
+        // Function to toggle visibility of the shipped date field
+        function toggleShippedDateField() {
+            var status = document.getElementById('status').value;
+            var shippedDateField = document.getElementById('shippedDateField');
+
+            // If the status is 'delivered', hide the shipped date field; otherwise, show it
+            if (status === 'delivered') {
+                shippedDateField.style.display = 'none';
+            } else {
+                shippedDateField.style.display = 'block';
+            }
+        }
+
+        // Call the function initially and whenever the status selection changes
+        toggleShippedDateField();
+        document.getElementById('status').addEventListener('change', toggleShippedDateField);
     </script>
 @endsection
 

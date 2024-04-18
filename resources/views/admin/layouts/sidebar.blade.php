@@ -1,8 +1,8 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="#" class="brand-link">
-        <img src="{{asset('admin-assets/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">BOOK SHOP</span>
+    <a href="{{route('admin.dashboard')}}" class="brand-link">
+        <img src="{{asset('company_icon.png')}}" alt="All book store Icon" class="brand-image img-circle elevation-4" style="opacity: .8">
+        <span class="brand-text font-weight-light">All Book Store</span>
     </a>
     <!-- Sidebar -->
     <div class="sidebar">
@@ -15,6 +15,12 @@
                     <a href="{{route('admin.dashboard')}}" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('highlights.index')}}" class="nav-link">
+                        <i class="nav-icon fas fa-file-alt"></i>
+                        <p>HighLight</p>
                     </a>
                 </li>
                 <li class="nav-item">
