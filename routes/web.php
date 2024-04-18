@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\DiscountCodeController;
+use App\Http\Controllers\admin\HighlightController;
 use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\admin\PageController;
 use App\Http\Controllers\admin\ProductController;
@@ -205,6 +206,12 @@ Route::get('/change-rating-status}', [ProductController::class, 'changeRatingSta
         Route::delete('/delete-authorImage', [AuthorController::class, 'deleteImage'])->name('delete-authorImage');
         Route::put('authors/update/{id}',[AuthorController::class,'update'])->name('authors.update');
         Route::delete('authors/delete/{id}',[AuthorController::class,'destroy'])->name('authors.destroy');
+
+
+        //Highlight Route
+        Route::delete('/delete-highlightImage', [HighlightController::class, 'deleteImage'])->name('delete-highlightImage');
+        Route::resource('highlights', HighlightController::class);
+
 
 
 
