@@ -72,6 +72,11 @@ Route::post('/process-reset-password', [AuthController::class, 'processResetPass
 Route::post('/product-rating/', [ShopController::class, 'productRating'])->name('front.productRating');
 
 
+//Front Author Route
+Route::get('/authors', [FrontController::class, 'authorIndex'])->name('front.author');
+Route::get('/authors/{id}', [FrontController::class, 'authorShow'])->name('front.author.show');
+
+
 Route::group(['prefix'=>'account'], function () {
     Route::group(['middleware'=>'guest'], function () {
         Route::get('/login', [AuthController::class, 'login'])->name('account.login');

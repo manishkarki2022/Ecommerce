@@ -57,39 +57,79 @@
                             </div>
                             <small class="pt-1">({{$product->ratings_count}} Reviews)</small>
                         </div>
-                        @if($product->compare_price)
-                            <h2 class="price "><del>${{$product->compare_price}}</del></h2>
-                        @endif
-                        <h2 class="price ">${{$product->price}}</h2>
+                        By <a href="{{route('front.author.show',$product->author->id)}}" class="text-primary">{{$product->author->name}}</a>
+                        <div>
+                            @if($product->isbn_number != null)
+                                <p>ISBN Number: {{$product->isbn_number}}</p>
+                            @endif
+                            @if($product->publisher_name != null)
+                                <p>Published By {{$product->publisher_name}} In {{$product->published_year}}</p>
+                            @endif
+
+                        </div>
 
                         {!! $product->short_description !!}
-                        @if($product->track_qty =='Yes')
-                            @if($product->qty > 0)
-                                <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$product->id}})">
-                                    <i class="fa fa-shopping-cart"></i> Add To Cart
-                                </a>
-                            @else
-                                <a class="btn btn-dark w-100" style="background-color: white !important;color: red; border: none !important" href="javascript:void(0);">
-                                    <i class="fas fa-exclamation-circle"></i> Out Of Stock
-                                </a>
-                            @endif
-                        @else
-                            <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$product->id}})">
-                                <i class="fa fa-shopping-cart"></i> Add To Cart
-                            </a>
 
-                        @endif
+                        <div class="row">
+                            @if($product->ebook_price !=null)
+                                <div class="col-md-6 mb-3 mb-md-5">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <p class="h5">Ebook</p>
+                                            <div class="d-flex align-content-center">
+                                                <span class="h5 me-2"><strong>Rs{{$product->ebook_price}}</strong></span>
+                                                @if($product->ebook_compare_price !== '')
+                                                    <span class="h6 text-underline"><del>Rs{{$product->ebook_compare_price}}</del></span>
+                                                @endif
+                                            </div>
+                                            <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$product->id}}, 'ebook')">
+                                                <i class="fa fa-shopping-cart"></i> Add To Cart
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            @endif
+                            @if($product->price != null)
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <p class="h5">Paperback</p>
+                                            <div class="d-flex align-content-center">
+                                                <span class="h5 me-2"><strong>Rs{{$product->price}}</strong></span>
+                                                @if($product->compare_price !== '')
+                                                    <span class="h6 text-underline"><del>Rs{{$product->compare_price}}</del></span>
+                                                @endif
+                                            </div>
+                                            @if($product->track_qty == 'Yes')
+                                                @if($product->qty > 0)
+                                                    <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);"  onclick="addToCart({{$product->id}}, 'paperback')">
+                                                        <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                    </a>
+                                                @else
+                                                    <span class="btn btn-dark w-100" style="background-color: white !important;color: red; border: none !important" href="javascript:void(0);">
+                                                            <i class="fas fa-exclamation-circle"></i> Out Of Stock
+                                                        </span>
+                                                @endif
+                                            @else
+                                                <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$product->id}})">
+                                                    <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div
+                            @endif
+                        </div>
                     </div>
                 </div>
-
+            </div>
+            <div class="row">
                 <div class="col-md-12 mt-5">
                     <div class="bg-light">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping" type="button" role="tab" aria-controls="shipping" aria-selected="false">Shipping & Returns</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">Reviews</button>
@@ -107,12 +147,12 @@
 
                             </div>
                             <div class="tab-pane fade" id="shipping" role="tabpanel" aria-labelledby="shipping-tab">
-                                    @if($product->shipping_returns==!null)
-                                        <p>
-                                            {!! $product->shipping_returns !!}
-                                        </p>
-                                    @else<p>No Shipping and Returns</p>
-                                    @endif
+                                @if($product->shipping_returns==!null)
+                                    <p>
+                                        {!! $product->shipping_returns !!}
+                                    </p>
+                                @else<p>No Shipping and Returns</p>
+                                @endif
                             </div>
                             <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
                                 <div class="col-md-8">
@@ -189,32 +229,32 @@
                                     </div>
                                     @if($product->ratings->isNotEmpty())
                                         @foreach($product->ratings as $rating)
-                                        @php
-                                            $ratingPer = ($rating->rating*100) / 5;
-                                        @endphp
+                                            @php
+                                                $ratingPer = ($rating->rating*100) / 5;
+                                            @endphp
                                             <div class="rating-group mb-4">
-                                        <span> <strong>{{$rating->username}} </strong></span>
-                                        <div class="star-rating mt-2" title="">
-                                            <div class="back-stars">
-                                                <i class="fa fa-star" aria-hidden="true"></i>
-                                                <i class="fa fa-star" aria-hidden="true"></i>
-                                                <i class="fa fa-star" aria-hidden="true"></i>
-                                                <i class="fa fa-star" aria-hidden="true"></i>
-                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <span> <strong>{{$rating->username}} </strong></span>
+                                                <div class="star-rating mt-2" title="">
+                                                    <div class="back-stars">
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <i class="fa fa-star" aria-hidden="true"></i>
 
-                                                <div class="front-stars" style="width: {{$ratingPer}}%">
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                                        <div class="front-stars" style="width: {{$ratingPer}}%">
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="my-3">
+                                                    <p>{{$rating->comment}}</p>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="my-3">
-                                            <p>{{$rating->comment}}</p>
-                                        </div>
-                                    </div>
                                         @endforeach
                                     @else
                                         <p>No Review</p>
@@ -230,66 +270,51 @@
         </div>
     </section>
 
-    <section class="pt-5 section-8">
-        <div class="container">
+    <section class="pt-5 section-8 ">
+        <div class="container mb-5">
             <div class="section-title">
                 <h2>Related Products</h2>
             </div>
-            <div class="row pb-3 slider3 ">
+            <div class="row slider3 d-flex">
+                @php
+                    $counter = 0;
+                @endphp
                 @if(!$relatedProducts==null)
                     @foreach($relatedProducts as $relatedProduct)
-                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                            <div class="card product-card">
-                                <div class="product-image position-relative" style="height: 300px !important; overflow: hidden">
-                                    @if($relatedProduct->images !== null && $relatedProduct->images->isNotEmpty() && $relatedProduct->images->first() !== null)
-                                        <a href="{{route('front.product',$relatedProduct->slug)}}" class="product-img ">
-                                            <img class="card-img-top img-fluid h-100" src="{{ asset('products/' . $relatedProduct->images->first()->image) }}" alt="{{$relatedProduct->litle}}">
-                                        </a>
-                                    @else
-                                        <a href="{{route('front.product',$relatedProduct->slug)}}" class="product-img " alt="{{$relatedProduct->litle}}">
-                                            <img class="card-img-top img-fluid" src="{{ asset('products/di.jpg') }}" alt="{{$relatedProduct->litle}}">
-                                        </a>
-                                    @endif
-
-                                </div>
-                                <div class="card-body mt-2 p-1">
-                                    <a class="h4 link mt-0" href="{{route('front.product',$relatedProduct->slug)}}" title="{{$relatedProduct->title}}">{{ strlen($relatedProduct->title) > 15 ? substr($relatedProduct->title, 0, 15) . ' ...' : $relatedProduct->title }}</a>
-                                    <p class="text-muted text-left">Ram Bahadur</p>
-                                    <div class="d-flex justify-content-between px-1">
-                                        <div>
-                                            <span class="h5 me-2"><strong>${{$relatedProduct->price}}</strong></span>
-                                            @if($relatedProduct->compare_price !== '')
-                                                <span class="h6 text-underline"><del>${{$relatedProduct->compare_price}}</del></span>
-                                            @endif
-                                        </div>
-                                        <a class="" href="#"><i class="far fa-heart text-primary"></i></a>
-                                    </div>
-                                </div>
-                                <div>
-                                    @if($relatedProduct->track_qty =='Yes')
-                                        @if($relatedProduct->qty > 0)
-                                            <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$featuredItem->id}})">
-                                                <i class="fa fa-shopping-cart"></i> Add To Cart
+                        @if($counter < 4)
+                            <div class="col-lg-4 col-xl-3 mb-4 px-5">
+                                <div class="card items-center" style="width: 230px;">
+                                    <div class="product product-image position-relative" style="height:auto; overflow: hidden;">
+                                        @if($relatedProduct->images !== null && $relatedProduct->images->isNotEmpty() && $relatedProduct->images->first() !== null)
+                                            <a href="{{ route('front.product', $relatedProduct->slug) }}" class="product-img d-block">
+                                                <img class="card-img-top img-fluid h-100 w-100 object-fit-cover zoom-on-hover" src="{{ asset('products/' . $relatedProduct->images->first()->image) }}" alt="{{ $product->title }}">
                                             </a>
                                         @else
-                                            <a class="btn btn-dark w-100" style="background-color: white !important;color: red; border: none !important" href="javascript:void(0);">
-                                                <i class="fas fa-exclamation-circle"></i> Out Of Stock
+                                            <a href="{{ route('front.product', $relatedProduct->slug) }}" class="product-img d-block">
+                                                <img class="card-img-top img-fluid h-100 w-100 object-fit-cover zoom-on-hover" src="{{ asset('products/di.jpg') }}" alt="{{ $relatedProduct->title }}">
                                             </a>
                                         @endif
-                                    @else
-                                        <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$featuredItem->id}})">
-                                            <i class="fa fa-shopping-cart"></i> Add To Cart
+                                    </div>
+                                    <div class="card-body p-1">
+                                        <a class="h6 link mt-0 mb-1" href="{{route('front.product',$relatedProduct->slug)}}" alt="{{$relatedProduct->title}}" title="{{$relatedProduct->title}}">
+                                            {{ strlen($relatedProduct->title) > 20 ? substr($relatedProduct->title, 0, 20) . ' ...' : $relatedProduct->title }}
                                         </a>
-
-                                    @endif
+                                        @if($relatedProduct->author_id)
+                                            <p class="text-muted text-left mb-0">By: {{$relatedProduct->author->name}}</p>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
+                        @php
+                            $counter++;
+                        @endphp
                     @endforeach
-                @else <p class="error">No Related Product </p>
+                @else
+                    <p class="error">No Related Product</p>
                 @endif
-
             </div>
+
         </div>
     </section>
 @endsection

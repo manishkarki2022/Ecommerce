@@ -5,14 +5,22 @@
             <div class="light-font">
                 <ol class="breadcrumb primary-color mb-0">
                     <li class="breadcrumb-item"><a class="white-text" href="{{route('front.home')}}">Home</a></li>
-                    <li class="breadcrumb-item active"><a class="white-text" href="{{route('front.shop')}}">Shop</a></li>
+                    <li class="breadcrumb-item active">Shop</li>
                 </ol>
             </div>
         </div>
     </section>
-
     <section class="section-6 pt-5">
         <div class="container px-5 ">
+            <div class="row">
+                <div class="col-md-7 col-sm-8">
+                </div>
+                <div class="col-md-5 col-sm-4">
+                    <div class="text-md-end">
+                        <a href="{{ route('front.shop') }}" class="btn btn-primary mt-2">Clear Filter</a>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-3 sidebar">
                     <div class="sub-title">
@@ -52,38 +60,6 @@
                         </div>
                     </div>
 
-{{--                    <div class="sub-title mt-5">--}}
-{{--                        <h2>Brand</h3>--}}
-{{--                    </div>--}}
-
-{{--                    <div class="card">--}}
-{{--                        <div class="card-body">--}}
-{{--                            <div class="form-check mb-2">--}}
-{{--                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">--}}
-{{--                                <label class="form-check-label" for="flexCheckDefault">--}}
-{{--                                    Canon--}}
-{{--                                </label>--}}
-{{--                            </div>--}}
-{{--                            <div class="form-check mb-2">--}}
-{{--                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">--}}
-{{--                                <label class="form-check-label" for="flexCheckChecked">--}}
-{{--                                    Sony--}}
-{{--                                </label>--}}
-{{--                            </div>--}}
-{{--                            <div class="form-check mb-2">--}}
-{{--                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">--}}
-{{--                                <label class="form-check-label" for="flexCheckChecked">--}}
-{{--                                    Oppo--}}
-{{--                                </label>--}}
-{{--                            </div>--}}
-{{--                            <div class="form-check mb-2">--}}
-{{--                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">--}}
-{{--                                <label class="form-check-label" for="flexCheckChecked">--}}
-{{--                                    Vivo--}}
-{{--                                </label>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
 
                     <div class="sub-title mt-5">
                         <h3>Price</h3>
@@ -111,56 +87,36 @@
                         </div>
                         @if($products->isNotEmpty())
                             @foreach($products as $product)
-                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                                    <div class="card product-card">
-                                        <div class="product-image position-relative" style="height: 300px !important; overflow: hidden">
+                                <div class="col-lg-4 col-xl-3 mb-4 px-5">
+                                    <div class="card items-center" style="width: 200px; height:350px">
+                                        <div class="product product-image position-relative" style="height:auto; overflow: hidden;">
                                             @if($product->images !== null && $product->images->isNotEmpty() && $product->images->first() !== null)
-                                                <a href="{{route('front.product',$product->slug)}}" class="product-img " alt="{{$product->title}}" title="{{$product->title}}">
-                                                    <img class="card-img-top img-fluid h-100" src="{{ asset('products/' . $product->images->first()->image) }}" alt="">
+                                                <a href="{{ route('front.product', $product->slug) }}" class="product-img d-block">
+                                                    <img class="card-img-top img-fluid h-100 w-100 object-fit-cover zoom-on-hover" src="{{ asset('products/' . $product->images->first()->image) }}" alt="{{ $product->title }}">
                                                 </a>
                                             @else
-                                                <a href="{{route('front.product',$product->slug)}}" class="product-img ">
-                                                <img class="card-img-top img-fluid" src="{{ asset('products/di.jpg') }}" alt="{{$product->title}}" title="{{$product->title}}">
+                                                <a href="{{ route('front.product', $product->slug) }}" class="product-img d-block">
+                                                    <img class="card-img-top img-fluid h-100 w-100 object-fit-cover zoom-on-hover" src="{{ asset('products/di.jpg') }}" alt="{{ $product->title }}">
                                                 </a>
                                             @endif
-
                                         </div>
-                                        <div class="card-body mt-2 p-1">
-                                            <a class="h6 link mt-0" href="{{route('front.product',$product->slug)}}" alt="{{$product->title}}" title="{{$product->title}}">
+                                        <div class="card-body p-1">
+                                            <a class="h6 link mt-0 mb-1" href="{{route('front.product',$product->slug)}}" alt="{{$product->title}}" title="{{$product->title}}">
                                                 {{ strlen($product->title) > 20 ? substr($product->title, 0, 20) . ' ...' : $product->title }}
                                             </a>
-                                            <p class="text-muted text-left">Ram Bahadur</p>
-                                            <div class="d-flex justify-content-between px-1">
-                                                <div>
-                                                    <span class="h5 me-2"><strong>${{$product->price}}</strong></span>
-                                                    @if($product->compare_price !== '')
-                                                        <span class="h6 text-underline"><del>${{$product->compare_price}}</del></span>
-                                                    @endif
-                                                </div>
-                                            <a class="" href="#"><i class="far fa-heart text-primary"></i></a>
-                                            </div>
+                                            @if($product->author_id)
+                                                <p class="text-muted text-left mb-0">By: {{$product->author->name}}</p>
+                                            @endif
                                         </div>
-                                            <div>
-                                                @if($product->track_qty =='Yes')
-                                                    @if($product->qty > 0)
-                                                        <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$product->id}})">
-                                                            <i class="fa fa-shopping-cart"></i> Add To Cart
-                                                        </a>
-                                                    @else
-                                                        <a class="btn btn-dark w-100" style="background-color: white !important;color: red; border: none !important" href="javascript:void(0);">
-                                                            <i class="fas fa-exclamation-circle"></i> Out Of Stock
-                                                        </a>
-                                                    @endif
-                                                @else
-                                                    <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$product->id}})">
-                                                        <i class="fa fa-shopping-cart"></i> Add To Cart
-                                                    </a>
-
-                                                @endif
-                                            </div>
                                     </div>
                                 </div>
                             @endforeach
+                        @else
+                            <div class="col-md-12">
+                                <div class="alert  text-center text-danger" role="alert">
+                                    <i class="fas fa-exclamation-circle"></i> No products found!
+                                </div>
+                            </div>
                         @endif
                         <div class="col-md-12 pt-5">
                             <nav aria-label="Page navigation example">
