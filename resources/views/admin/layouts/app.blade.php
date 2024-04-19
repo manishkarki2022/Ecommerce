@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Laravel Shop :: Administrative Panel</title>
+    <title>All Book Store :: Administrative Panel</title>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -19,6 +19,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('admin-assets/plugins/toastr/toastr.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('admin-assets/plugins/sweetalert2/sweetalert2.min.css') }}">
     <meta name="csrf-token" content="{{csrf_token()}}">
+    <!-- Icon for browser tab -->
+    <link rel="icon" type="image/png" href="{{ asset('company_icon.png') }}">
 </head>
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->

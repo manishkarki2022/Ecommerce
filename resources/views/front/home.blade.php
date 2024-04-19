@@ -20,9 +20,9 @@
                             <img src="{{ asset($highlight->image) }}" alt="" />
                         </picture>
                         <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                            <div class="py-5">
+                            <div class="p-1">
                                 <h4 class="display-5 text-white " style="font-size: 1.4rem !important;">{{ $highlight->name }}</h4>
-                                <div style="font-size:1rem !important;padding-bottom: 0.2rem">
+                                <div style="font-size:0.9rem !important;padding-bottom: 0.2rem">
                                     {!! $highlight->description !!}
                                 </div>
 
@@ -45,7 +45,7 @@
     @endif
 {{--    Category Section--}}
     @if(getCategories()->isNotEmpty())
-    <section class="section-3 p-3">
+    <section class="section-3  p-5 pt-5">
         <div class="container ">
             <div class="section-title">
                 <h4>Book Categories</h4>
@@ -115,7 +115,6 @@
                         </div>
                     </div>
                 @endforeach
-
             </div>
         </div>
     </section>

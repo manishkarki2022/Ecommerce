@@ -45,7 +45,7 @@
 
 
     <!-- Fav Icon -->
-    <link rel="shortcut icon" type="image/x-icon" href="#" />
+    <link rel="icon" type="image/png" href="{{ asset('company_icon.png') }}">
     <meta name="csrf-token" content="{{csrf_token()}}">
 </head>
 <body data-instant-intensity="mousedown" class="bg-white">
@@ -54,9 +54,9 @@
     <div class="container">
         <div class="row align-items-center py-3 d-none d-lg-flex justify-content-between">
             <div class="col-lg-4 logo">
-                <a href="{{route('front.home')}}" class="text-decoration-none">
-                    <span class="h3 text-uppercase text-primary bg-dark px-2">All Book</span>
-                    <span class="h3 text-uppercase text-dark bg-primary px-2 ml-n1">Store</span>
+                <a href="{{ route('front.home') }}" class="text-decoration-none">
+                    <img src="{{ asset('company_icon.png') }}" alt="Company Logo" class="img-fluid" style="max-width:70px;">
+                    <span class="h3 text-uppercase text-primary bg-dark px-2">All Book Store</span>
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left  d-flex justify-content-end align-items-center">
@@ -94,7 +94,7 @@
         left: 1px;
     }
     [data-controls="next"] {
-        right: 1px;
+        right: 0px;
     }
 
 </style>
@@ -103,8 +103,8 @@
     <div class="container">
         <nav class="navbar navbar-expand-xl" id="navbar">
             <a href="{{ route('front.home') }}" class="text-decoration-none mobile-logo">
-                <span class="h2 text-uppercase text-primary bg-dark">All store</span>
-                <span class="h2 text-uppercase text-white px-2">Shop</span>
+                <img src="{{ asset('company_icon.png') }}" alt="Company Logo" class="img-circle" style="max-width:45px;">
+                <span class="h4 text-uppercase text-primary bg-dark">All Book store</span>
             </a>
             <button class="navbar-toggler menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="navbar-toggler-icon fas fa-bars"></i>
@@ -116,6 +116,9 @@
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('front.shop',['ebook'=>true]) }}" class="nav-link text-primary">Ebook</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('front.author') }}" class="nav-link text-primary">Authors</a>
                     </li>
                 <!-- Navigation Links -->
                     <!-- Categories -->
@@ -380,6 +383,7 @@
             }
         });
     }
+
 
 
 </script>
