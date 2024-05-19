@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EmailVerifyEmail;
 use App\Mail\ResetPasswordEmail;
 use App\Models\City;
 use App\Models\CustomerAddress;
@@ -42,42 +43,78 @@ class AuthController extends Controller
         $user->phone = $request->phone;
         $user->password = Hash::make($request->password);
         $user->save();
-        session()->flash('success', $request->name.' User created successfully');
-        return redirect()->route('account.login');
+        // Generate a unique token
+        $token = Str::random(60);
+        //Delete any existing tokens for this user
+        DB::table('email_verifications')->where('email', $request->email)->delete();
+        DB::table('email_verifications')->insert([
+            'email' => $request->email,
+            'token' => $token,
+        ]);
+        $user = User::where('email', $request->email)->first();
+        $formData = [
+            'token' => $token,
+            'name' => $user,
+            'mailSubject' => 'Verify Email Address',
+        ];
+        Mail::to($request->email)->send(new EmailVerifyEmail($formData));
 
+        return redirect()->route('account.login')->with('success', 'We have send email verification link sent to your email.');
 
     }
-    public function authenticate(Request $request){
-       $validator= $request->validate([
+   public function verifyEmail($token){
+        //Find the token in the database
+        $emailVerification = DB::table('email_verifications')->where('token', $token)->first();
+        //Check if the token exists
+        if(!$emailVerification){
+            return redirect()->route('account.login')->with('error', 'Invalid token');
+        }
+        //Find the user by email
+        $user = User::where('email', $emailVerification->email)->first();
+        //Update the user's email_verified_at field
+        $user->email_verified_at = now();
+        $user->save();
+        //Delete the email verification token
+        DB::table('email_verifications')->where('token', $token)->delete();
+        //Redirect to the login page with success message
+        return redirect()->route('account.login')->with('success', 'Email verified successfully');
+   }
+
+
+
+    public function authenticate(Request $request)
+    {
+        $validator = $request->validate([
             'email' => 'required|email',
             'password' => 'required'
         ]);
-       if($validator){
-          if(Auth::attempt(['email'=>$request->email, 'password'=>$request->password],$request->get('remember'))){
-              if (session()->has('url.intended')) {
-                  $intendedUrl = session()->get('url.intended');
-                  session()->forget('url.intended'); // Delete the intended URL from session
-                  return redirect($intendedUrl);
-              }
-                session()->flash('success', 'User logged in successfully');
-                return redirect()->route('account.profile');
 
-          }else{
-              session()->flash('error', 'Invalid email or password');
-              return redirect()->route('account.login')->withInput($request->only('email', 'remember'));
-
-
-          }
-
-       }else{
-           session()->flash('error', 'Invalid email or password');
-              return redirect()->route('account.login')->withInput($request->only('email', 'remember'));
-
-       }
-
-
-
+        if ($validator) {
+            if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
+                // Check if the user's email is verified
+                if (Auth::user()->email_verified_at) {
+                    if (session()->has('url.intended')) {
+                        $intendedUrl = session()->get('url.intended');
+                        session()->forget('url.intended'); // Delete the intended URL from session
+                        return redirect($intendedUrl);
+                    }
+                    session()->flash('success', 'User logged in successfully');
+                    return redirect()->route('account.profile');
+                } else {
+                    Auth::logout();
+                    session()->flash('error', 'Your email address is not verified. Please verify your email before logging in.');
+                    return redirect()->route('account.login')->withInput($request->only('email', 'remember'));
+                }
+            } else {
+                session()->flash('error', 'Invalid email or password');
+                return redirect()->route('account.login')->withInput($request->only('email', 'remember'));
+            }
+        } else {
+            session()->flash('error', 'Invalid email or password');
+            return redirect()->route('account.login')->withInput($request->only('email', 'remember'));
+        }
     }
+
     public function profile(){
         $cities = City::orderBy('name')->get();
         $customerInfo = CustomerAddress::where('user_id', Auth::id())->first();
@@ -252,6 +289,8 @@ class AuthController extends Controller
         if (now() > Carbon::parse($passwordResetToken->created_at)->addMinutes(10)) {
             return redirect()->route('front.forgotPassword')->with('error', 'Token expired.');
         }
+        //delete the token
+        DB::table('password_reset_tokens')->where('token', $token)->delete();
 
         // Render the reset password form
         return view('front.account.reset-password',compact('token'));
