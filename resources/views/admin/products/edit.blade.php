@@ -1,5 +1,7 @@
 @extends('admin.layouts.app')
 @section('content')
+        <link rel="stylesheet" href="{{asset('admin-assets/plugins/select2/css/select2.min.css')}}">
+
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid my-2">
@@ -385,6 +387,7 @@
 @endsection
 
 @section('customJs')
+    <script src="{{asset('admin-assets/plugins/select2/js/select2.min.js')}}"></script>
 
     <script>
         $('.related-product').select2({
