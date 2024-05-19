@@ -76,13 +76,7 @@
                                         <span class="text-danger">{{$message}}</span>
                                         @enderror
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="email">Email</label>
-                                        <input readonly type="text" name="email" id="email" placeholder="Enter Your Email" class="form-control" value="{{ $customerInfo ? $customerInfo->email : '' }}">
-                                        @error('email')
-                                        <span class="text-danger">{{$message}}</span>
-                                        @enderror
-                                    </div>
+                                        <input readonly hidden type="text" name="email" id="email" placeholder="Enter Your Email" class="form-control" value="{{$userinfo->email}}">
                                     <div class="col-md-6 mb-3">
                                         <label for="Mobile">Mobile</label>
                                         <input type="text" name="mobile" id="mobile" placeholder="Enter Your Mobile" class="form-control" value="{{ $customerInfo ? $customerInfo->mobile : '' }}">
