@@ -71,54 +71,59 @@
                         {!! $product->short_description !!}
 
                         <div class="row">
-                            @if($product->ebook_price !=null)
-                                <div class="col-md-6 mb-3 mb-md-5">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <p class="h5">Ebook</p>
-                                            <div class="d-flex align-content-center">
-                                                <span class="h5 me-2"><strong>Rs{{$product->ebook_price}}</strong></span>
-                                                @if($product->ebook_compare_price !== '')
-                                                    <span class="h6 text-underline"><del>Rs{{$product->ebook_compare_price}}</del></span>
-                                                @endif
-                                            </div>
-                                            <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$product->id}}, 'ebook')">
-                                                <i class="fa fa-shopping-cart"></i> Add To Cart
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            @endif
-                            @if($product->price != null)
-                                <div class="col-md-6 mb-3 mb-md-0">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <p class="h5">Paperback</p>
-                                            <div class="d-flex align-content-center">
-                                                <span class="h5 me-2"><strong>Rs{{$product->price}}</strong></span>
-                                                @if($product->compare_price !== '')
-                                                    <span class="h6 text-underline"><del>Rs{{$product->compare_price}}</del></span>
-                                                @endif
-                                            </div>
-                                            @if($product->track_qty == 'Yes')
-                                                @if($product->qty > 0)
-                                                    <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);"  onclick="addToCart({{$product->id}}, 'paperback')">
-                                                        <i class="fa fa-shopping-cart"></i> Add To Cart
-                                                    </a>
-                                                @else
-                                                    <span class="btn btn-dark w-100" style="background-color: white !important;color: red; border: none !important" href="javascript:void(0);">
-                                                            <i class="fas fa-exclamation-circle"></i> Out Of Stock
-                                                        </span>
-                                                @endif
-                                            @else
-                                                <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$product->id}})">
+                            @if($product->book_type_id != null)
+                                @if($product->book_type_id == 1 || $product->book_type_id == 3) <!-- Check if digital or both -->
+                                @if($product->ebook_price != null)
+                                    <div class="col-md-6 mb-3 mb-md-5">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <p class="h5">Ebook</p>
+                                                <div class="d-flex align-content-center">
+                                                    <span class="h5 me-2"><strong>Rs{{$product->ebook_price}}</strong></span>
+                                                    @if($product->ebook_compare_price !== '')
+                                                        <span class="h6 text-underline"><del>Rs{{$product->ebook_compare_price}}</del></span>
+                                                    @endif
+                                                </div>
+                                                <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$product->id}}, 'ebook')">
                                                     <i class="fa fa-shopping-cart"></i> Add To Cart
                                                 </a>
-                                            @endif
+                                            </div>
                                         </div>
                                     </div>
-                                </div
+                                @endif
+                                @endif
+                                @if($product->book_type_id == 2 || $product->book_type_id == 3) <!-- Check if paper or both -->
+                                @if($product->price != null)
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <p class="h5">Paperback</p>
+                                                <div class="d-flex align-content-center">
+                                                    <span class="h5 me-2"><strong>Rs{{$product->price}}</strong></span>
+                                                    @if($product->compare_price !== '')
+                                                        <span class="h6 text-underline"><del>Rs{{$product->compare_price}}</del></span>
+                                                    @endif
+                                                </div>
+                                                @if($product->track_qty == 'Yes')
+                                                    @if($product->qty > 0)
+                                                        <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);"  onclick="addToCart({{$product->id}}, 'paperback')">
+                                                            <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                        </a>
+                                                    @else
+                                                        <span class="btn btn-dark w-100" style="background-color: white !important;color: red; border: none !important" href="javascript:void(0);">
+                                        <i class="fas fa-exclamation-circle"></i> Out Of Stock
+                                    </span>
+                                                    @endif
+                                                @else
+                                                    <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$product->id}})">
+                                                        <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                                @endif
                             @endif
                         </div>
                     </div>
