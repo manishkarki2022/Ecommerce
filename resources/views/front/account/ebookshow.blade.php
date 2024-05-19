@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EPUB Viewer</title>
     <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/main.css')}}" />
-
-
 </head>
 <body>
 <div id="main">
@@ -29,10 +27,16 @@
 
 <script type="text/javascript">
     window.onload = function () {
-        ePubReader("{{ $fileUrl }}");
+        var fileUrl = "{{ $fileUrl }}";
+        var fileExtension = fileUrl.split('.').pop().toLowerCase();
+        if (fileExtension === 'epub') {
+            ePubReader(fileUrl);
+        } else {
+            // If the file is not an EPUB, open it in the browser
+            window.location.href = fileUrl;
+        }
     };
 </script>
-
 
 </body>
 </html>
