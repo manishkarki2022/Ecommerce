@@ -201,36 +201,36 @@ class CartController extends Controller
             'state'=>'required',
 
         ]);
-        if($validator){
+        if($validator) {
             CustomerAddress::updateOrCreate(
 
-                ['user_id'=>Auth::id()],
+                ['user_id' => Auth::id()],
                 [
-                    'first_name'=>$request->first_name,
-                    'last_name'=>$request->last_name,
-                    'email'=>$request->email,
-                    'mobile'=>$request->mobile,
-                    'city_id'=>$request->city_id,
-                    'address'=>$request->address,
-                    'zip'=>$request->zip,
-                    'state'=>$request->state,
-                    'user_id'=>Auth::id(),
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'email' => $request->email,
+                    'mobile' => $request->mobile,
+                    'city_id' => $request->city_id,
+                    'address' => $request->address,
+                    'zip' => $request->zip,
+                    'state' => $request->state,
+                    'user_id' => Auth::id(),
                 ]
             );
             //If payment method is cod then create order
-            if($request->payment_method == 'esewa'){
+            if ($request->payment_method == 'esewa') {
                 // calculate shipping charges
-                $subTotal = Cart::subtotal(2,'.','');
+                $subTotal = Cart::subtotal(2, '.', '');
                 $shipping = 0;
                 $discount = 0;
-                $discount_code ='';
+                $discount_code = '';
                 $discountCodeId = null;
 
-                if(session()->has('code')){
+                if (session()->has('code')) {
                     $code = session()->get('code');
-                    if($code->type == 'percentage'){
-                        $discount = ($code->discount_amount/100)*$subTotal;
-                    }else{
+                    if ($code->type == 'percentage') {
+                        $discount = ($code->discount_amount / 100) * $subTotal;
+                    } else {
                         $discount = $code->discount_amount;
                     }
                     $discountCodeId = $code->id;
@@ -238,30 +238,30 @@ class CartController extends Controller
                 }
 
 
-                $shippingInfo = Shipping::where('city_id',$request->city_id)->first();
+                $shippingInfo = Shipping::where('city_id', $request->city_id)->first();
                 $totalQty = 0;
                 foreach (Cart::content() as $item) {
-                    if($item->options->type != 'ebook'){
+                    if ($item->options->type != 'ebook') {
                         $totalQty += $item->qty;
                     }
                 }
-                if($shippingInfo != null){
+                if ($shippingInfo != null) {
                     $shipping = $totalQty * $shippingInfo->amount;
-                    $grandTotal = ($subTotal-$discount) + $shipping;
+                    $grandTotal = ($subTotal - $discount) + $shipping;
 
-                }else{
-                    $shippingInfo = Shipping::where('city_id','rest_of_city')->first();
+                } else {
+                    $shippingInfo = Shipping::where('city_id', 'rest_of_city')->first();
                     $shipping = $totalQty * $shippingInfo->amount;
-                    $grandTotal = ($subTotal-$discount) + $shipping;
+                    $grandTotal = ($subTotal - $discount) + $shipping;
                 }
-                $oder= new Order();
+                $oder = new Order();
                 $oder->user_id = Auth::id();
                 $oder->coupon_code = $discount_code;
                 $oder->shipping = $shipping;
                 $oder->subtotal = $subTotal;
                 $oder->discount = $discount;
-                $oder->payment_status='not paid';
-                $oder->status='pending';
+                $oder->payment_status = 'not paid';
+                $oder->status = 'pending';
                 $oder->coupon_code_id = $discountCodeId;
                 $oder->grand_total = $grandTotal;
                 $oder->first_name = $request->first_name;
@@ -276,7 +276,7 @@ class CartController extends Controller
                 $oder->save();
 
                 //Save order items
-                foreach (Cart::content() as $item){
+                foreach (Cart::content() as $item) {
                     $orderItem = new OrderItem();
                     $orderItem->order_id = $oder->id;
                     $orderItem->product_id = $item->id;
@@ -288,7 +288,7 @@ class CartController extends Controller
 
                     //Update product qty
                     $product = Product::find($item->id);
-                    if($product->track_qty == "Yes"){
+                    if ($product->track_qty == "Yes") {
                         $product->qty = $product->qty - $item->qty;
                         $product->save();
                     }
@@ -309,10 +309,6 @@ class CartController extends Controller
                 $esewa->process($oder->id, $grandTotal, 0, 0, $shipping);
 
 
-
-
-
-
 //                //Send Email to
 //                orderEmail($oder->id,'customer');
 //                $type = 'success';
@@ -324,10 +320,49 @@ class CartController extends Controller
 //                return redirect()->route('front.thanks', ['orderId' => $order]);
 
 
-
-            }else{
             }
+            //If payment method is cod then create order
+            if ($request->payment_method == 'cod') {
+                $oder = new Order();
+                $oder->user_id = Auth::id();
+                $oder->shipping = 0;
+                $oder->discount = 0;
+                $oder->subtotal = Cart::subtotal(2, '.', '');
+                $oder->grand_total = $oder->subtotal + $oder->shipping - $oder->discount;
+                $oder->coupon_code = null;
 
+
+                $oder->first_name = $request->first_name;
+                $oder->last_name = $request->last_name;
+                $oder->email = $request->email;
+                $oder->mobile = $request->mobile;
+                $oder->city_id = $request->city_id;
+                $oder->address = $request->address;
+                $oder->zip = $request->zip;
+                $oder->state = $request->state;
+                $oder->notes = $request->notes;
+                $oder->save();
+
+                //Save order items
+                foreach (Cart::content() as $item) {
+                    $orderItem = new OrderItem();
+                    $orderItem->order_id = $oder->id;
+                    $orderItem->product_id = $item->id;
+                    $orderItem->name = $item->name;
+                    $orderItem->qty = $item->qty;
+                    $orderItem->price = $item->price;
+                    $orderItem->total = $item->price * $item->qty;
+                    $orderItem->save();
+                }
+                $type = 'success';
+                $message = 'Order placed successfully';
+                Cart::destroy();
+                session()->flash($type, $message);
+                $orderId = $oder->id;
+                // Pass the order ID to the view
+                return view('front.thanks', compact('orderId'));
+
+            }
         }
     }
     public function thankYou(Request $request){
