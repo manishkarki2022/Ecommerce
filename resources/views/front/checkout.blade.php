@@ -166,14 +166,14 @@
 
                     <div class="card payment-form ">
                         <h3 class="card-title h5 mb-3">Payment Method</h3>
-{{--                        <div class="">--}}
-{{--                            <input checked type="radio" name="payment_method" value="cod" id="payment_method_one">--}}
-{{--                            <label for="payment_method_one" class="form-check-label">Cash on Delivery</label>--}}
-{{--                        </div>--}}
                         <div class="">
-                            <input type="radio" name="payment_method" value="esewa" id="payment_method_two">
-                            <label for="payment_method_two" class="form-check-label">Esewa</label>
+                            <input checked type="radio" name="payment_method" value="cod" id="payment_method_one">
+                            <label for="payment_method_one" class="form-check-label">Cash on Delivery</label>
                         </div>
+{{--                        <div class="">--}}
+{{--                            <input type="radio" name="payment_method" value="esewa" id="payment_method_two">--}}
+{{--                            <label for="payment_method_two" class="form-check-label">Esewa</label>--}}
+{{--                        </div>--}}
                         <div class="pt-4">
 {{--                            <a href="#" >Pay Now</a>--}}
                             <button type="submit" class="btn-primary btn btn-block w-100">Pay Now</button>
