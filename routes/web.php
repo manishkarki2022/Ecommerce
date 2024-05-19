@@ -17,6 +17,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\ShopController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\AdminLoginController;
 use App\Http\Controllers\admin\CategoryController;
@@ -36,6 +37,7 @@ use App\Http\Controllers\admin\HomeController;
 //Route::get('/', function () {
 //    return view('welcome');
 //});
+Auth::routes(['verify' => true]);
 Route::get('/', [FrontController::class, 'index'])->name('front.home');
 Route::get('/shop/{ebook?}/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
 Route::get('/product/{slug}', [ShopController::class, 'product'])->name('front.product');
@@ -80,13 +82,14 @@ Route::get('/authors/{id}', [FrontController::class, 'authorShow'])->name('front
 Route::group(['prefix'=>'account'], function () {
     Route::group(['middleware'=>'guest'], function () {
         Route::get('/login', [AuthController::class, 'login'])->name('account.login');
+        Route::get('/verify-email/{token}', [AuthController::class, 'verifyEmail'])->name('verify.email');
         Route::post('/login', [AuthController::class, 'authenticate'])->name('account.authenticate');
         Route::get('/register', [AuthController::class, 'register'])->name('account.register');
         Route::post('/register', [AuthController::class, 'postRegister'])->name('account.postRegister');
 
 
     });
-    Route::group(['middleware'=>'auth'], function () {
+    Route::group(['middleware'=>'auth','verified'], function () {
         Route::get('/profile', [AuthController::class, 'profile'])->name('account.profile');
         Route::post('/update-profile', [AuthController::class, 'updateProfile'])->name('account.updateProfile');
         Route::post('/update-address', [AuthController::class, 'updateAddress'])->name('account.updateAddress');
@@ -100,12 +103,11 @@ Route::group(['prefix'=>'account'], function () {
         Route::get('/my-books', [AuthController::class, 'myBooks'])->name('account.myBooks');
         Route::get('/read/{ebook_id}', [AuthController::class, 'myBookShow'])->name('account.myBookShow');
 
-
     });
 
 });
 
-Route::group(['prefix'=>'admin'], function () {
+Route::group(['prefix'=>'admin',], function () {
     Route::group(['middleware'=>'admin.guest'], function () {
         Route::get('/login', [AdminLoginController::class, 'index'])->name('admin.login');
         Route::post('/authenticate', [AdminLoginController::class, 'authenticate'])->name('admin.authenticate');
