@@ -44,7 +44,7 @@
 
                                 <div class="col-md-12">
                                     <div class="mb-3">
-                                        <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="{{ !empty($user_info->email) ? $user_info->email : '' }}">
+                                        <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="{{ auth()->user()->email }}" readonly>
                                         @error('email')
                                         <span class="text-danger">{{$message}}</span>
                                         @enderror

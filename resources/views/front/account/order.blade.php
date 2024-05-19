@@ -65,7 +65,7 @@
                             @else
                                 <div class="alert alert-warning">
                                     No Orders Found
-                                </div>0
+                                </div>
                             @endif
                                 <div class="card-footer clearfix">
                                     {{$orders->links()}}
