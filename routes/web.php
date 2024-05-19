@@ -11,6 +11,7 @@ use App\Http\Controllers\admin\ShippingController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\TempImagesController;
 use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\admin\WebsiteController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CartController;
@@ -218,6 +219,10 @@ Route::get('/change-rating-status}', [ProductController::class, 'changeRatingSta
         //Highlight Route
         Route::delete('/delete-highlightImage', [HighlightController::class, 'deleteImage'])->name('delete-highlightImage');
         Route::resource('highlights', HighlightController::class);
+
+        //Website Route
+        Route::get('site-settings', [WebsiteController::class, 'index'])->name('site-settings.index');
+        Route::post('site-settings', [WebsiteController::class, 'store'])->name('site-settings.create');
 
 
 

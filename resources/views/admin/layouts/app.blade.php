@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>All Book Store :: Administrative Panel</title>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Admin' }} :: Administrative Panel</title>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -13,14 +14,14 @@
 
     <link rel="stylesheet" href="{{asset('admin-assets/plugins/dropzone/min/dropzone.min.css')}}">
     <link rel="stylesheet" href="{{asset('admin-assets/plugins/summernote/summernote.min.css')}}">
-    <link rel="stylesheet" href="{{asset('admin-assets/plugins/select2/css/select2.min.css')}}">
+
     <link rel="stylesheet" href="{{asset('admin-assets/css/custom.css')}}">
     <link rel="stylesheet" href="{{asset('admin-assets/css/datetimepicker.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('admin-assets/plugins/toastr/toastr.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('admin-assets/plugins/sweetalert2/sweetalert2.min.css') }}">
     <meta name="csrf-token" content="{{csrf_token()}}">
     <!-- Icon for browser tab -->
-    <link rel="icon" type="image/png" href="{{ asset('company_icon.png') }}">
+    <link rel="icon" type="image/png" href="{{ websiteInfo()->isNotEmpty() && websiteInfo()->first()->logo ? asset('logo/' . websiteInfo()->first()->logo) : asset('logo/d_logo.png') }}">
 </head>
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->
@@ -77,8 +78,11 @@
     </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
-
-        <strong>Copyright &copy; 2024 new Online BookShop.
+        <strong>Copyright &copy; {{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Company Name' }} 2024 </strong>
+        All rights reserved.
+        <div class="float-right d-none d-sm-inline-block">
+            <b>{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->quote) : 'Company Quotes' }}</b>
+        </div>
     </footer>
 
 </div>
@@ -88,12 +92,13 @@
 <!-- Bootstrap 4 -->
 <script src="{{asset('admin-assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- AdminLTE App -->
+
 <script src="{{asset('admin-assets/js/adminlte.min.js')}}"></script>
 <script src="{{asset('admin-assets/plugins/summernote/summernote.min.js')}}"></script>
 
 <script src="{{asset('admin-assets/plugins/dropzone/min/dropzone.min.js')}}"></script>
 
-<script src="{{asset('admin-assets/plugins/select2/js/select2.min.js')}}"></script>
+
 <script src="{{ asset('admin-assets/plugins/toastr/toastr.min.js') }}"></script>
 <script src="{{ asset('admin-assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('admin-assets/js/datetimepicker.js') }}"></script>

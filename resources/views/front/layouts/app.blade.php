@@ -2,7 +2,7 @@
 <html class="no-js" lang="en_AU" />
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Books Shop</title>
+    <title>{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Home' }}</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=no" />
 
@@ -45,7 +45,7 @@
 
 
     <!-- Fav Icon -->
-    <link rel="icon" type="image/png" href="{{ asset('company_icon.png') }}">
+    <link rel="icon" type="image/png" href="{{ websiteInfo()->isNotEmpty() && websiteInfo()->first()->logo ? asset('logo/' . websiteInfo()->first()->logo) : asset('logo/d_logo.png') }}">
     <meta name="csrf-token" content="{{csrf_token()}}">
 </head>
 <body data-instant-intensity="mousedown" class="bg-white">
@@ -55,8 +55,8 @@
         <div class="row align-items-center py-3 d-none d-lg-flex justify-content-between">
             <div class="col-lg-4 logo">
                 <a href="{{ route('front.home') }}" class="text-decoration-none">
-                    <img src="{{ asset('company_icon.png') }}" alt="Company Logo" class="img-fluid" style="max-width:70px;">
-                    <span class="h3 text-uppercase text-primary bg-dark px-2">All Book Store</span>
+                    <img src="{{ websiteInfo()->isNotEmpty() && websiteInfo()->first()->logo ? asset('logo/' . websiteInfo()->first()->logo) : asset('logo/d_logo.png') }}" alt="Company Logo" class="img-fluid rounded-circle" style="max-width:70px;">
+                    <span class="h3 text-uppercase text-primary bg-dark px-2">{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Admin' }}</span>
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left  d-flex justify-content-end align-items-center">
@@ -103,8 +103,8 @@
     <div class="container">
         <nav class="navbar navbar-expand-xl" id="navbar">
             <a href="{{ route('front.home') }}" class="text-decoration-none mobile-logo">
-                <img src="{{ asset('company_icon.png') }}" alt="Company Logo" class="img-circle" style="max-width:45px;">
-                <span class="h4 text-uppercase text-primary bg-dark">All Book store</span>
+                <img src="{{ websiteInfo()->isNotEmpty() && websiteInfo()->first()->logo ? asset('logo/' . websiteInfo()->first()->logo) : asset('logo/d_logo.png') }}" alt="Company Logo" class="img-circle  rounded-circle" style="max-width:45px;">
+                <span class="h4 text-uppercase text-primary bg-dark">{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Admin' }}</span>
             </a>
             <button class="navbar-toggler menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="navbar-toggler-icon fas fa-bars"></i>
@@ -177,10 +177,35 @@
             <div class="col-md-4">
                 <div class="footer-card">
                     <h3>Get In Touch</h3>
-                    <p>No dolore ipsum accusam no lorem. <br>
-                        123 Street, New York, USA <br>
-                        exampl@example.com <br>
-                        000 000 0000</p>
+                    <p>
+                        {{ websiteInfo()->isNotEmpty() ? websiteInfo()->first()->quote : 'Company Quote' }}
+                        <br>
+                        <i class="fas fa-map-marker-alt"></i>
+                        {{ websiteInfo()->isNotEmpty() ? websiteInfo()->first()->address : 'Company Address' }}
+                        <br>
+                        <i class="fas fa-envelope"></i>
+                        {{ websiteInfo()->isNotEmpty() ? websiteInfo()->first()->email : 'Company Email' }}
+                        <br>
+                        <i class="fas fa-phone"></i>
+                        {{ websiteInfo()->isNotEmpty() ? websiteInfo()->first()->phone : 'Company Phone' }}
+                    </p>
+
+                    <div class="d-flex align-items-center justify-content-center justify-content-lg-start mt-3">
+                        <p class="text-white me-3 d-lg-none">Follow us:</p>
+                        <ul class="list-unstyled d-flex mb-0">
+                            @foreach(['facebook', 'instagram', 'twitter', 'youtube', 'linkedin'] as $social)
+                                @php $socialLink = websiteInfo()->isNotEmpty() ? websiteInfo()->first()->$social : null; @endphp
+                                @if(!empty($socialLink))
+                                    <li class="me-2">
+                                        <a href="https:{{ $socialLink }}" class=" text-decoration-none" target="_blank" aria-label="{{ ucfirst($social) }}" title="Follow us {{$social}}">
+                                            <i class="fab fa-{{ $social }} fa-lg"></i>
+                                        </a>
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+
                 </div>
             </div>
 
@@ -204,9 +229,9 @@
                 <div class="footer-card">
                     <h3>My Account</h3>
                     <ul>
-                        <li><a href="{{route('account.login')}}" title="Sell">Login</a></li>
-                        <li><a href="{{route('account.register')}}" title="Advertise">Register</a></li>
-                        <li><a href="{{route('account.orders')}}" title="Contact Us">My Orders</a></li>
+                        <li><a href="{{ route('account.login') }}" title="Sell"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                        <li><a href="{{ route('account.register') }}" title="Advertise"><i class="fas fa-user-plus"></i> Register</a></li>
+                        <li><a href="{{ route('account.orders') }}" title="Contact Us"><i class="fas fa-shopping-cart"></i> My Orders</a></li>
                     </ul>
                 </div>
             </div>
@@ -217,7 +242,7 @@
             <div class="row">
                 <div class="col-12 mt-3">
                     <div class="copy-right text-center">
-                        <p>© All copyrights are reserved. All Book Store 2024. </p>
+                        <p>© All copyrights are reserved. {{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Company Name' }} 2024. </p>
                     </div>
                 </div>
             </div>

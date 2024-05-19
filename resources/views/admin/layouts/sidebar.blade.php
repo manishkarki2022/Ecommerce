@@ -1,8 +1,8 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="{{route('admin.dashboard')}}" class="brand-link">
-        <img src="{{asset('company_icon.png')}}" alt="All book store Icon" class="brand-image img-circle elevation-4" style="opacity: .8">
-        <span class="brand-text font-weight-light">All Book Store</span>
+        <img src="{{ websiteInfo()->isNotEmpty() && websiteInfo()->first()->logo ? asset('logo/' . websiteInfo()->first()->logo) : asset('logo/d_logo.png') }}" alt="All book store Icon" class="brand-image img-circle elevation-4" style="opacity: .8">
+        <span class="brand-text font-weight-light">{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Admin' }}</span>
     </a>
     <!-- Sidebar -->
     <div class="sidebar">
@@ -15,6 +15,14 @@
                     <a href="{{route('admin.dashboard')}}" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('site-settings.index')}}" class="nav-link">
+                        <i class="nav-icon fas fa-tools"></i>
+                        <p>
+                            Site Settings
+                        </p>
                     </a>
                 </li>
                 <li class="nav-item">
