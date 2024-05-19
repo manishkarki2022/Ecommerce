@@ -21,3 +21,4 @@ yarn-error.log
 /public/authorImage/*
 /public/ebook
 /public/highlightImage
+/public/admin-assets/img
