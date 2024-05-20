@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\BlogController;
 use App\Http\Controllers\admin\DiscountCodeController;
 use App\Http\Controllers\admin\HighlightController;
 use App\Http\Controllers\admin\OrderController;
@@ -78,6 +79,12 @@ Route::post('/product-rating/', [ShopController::class, 'productRating'])->name(
 //Front Author Route
 Route::get('/authors', [FrontController::class, 'authorIndex'])->name('front.author');
 Route::get('/authors/{id}', [FrontController::class, 'authorShow'])->name('front.author.show');
+
+//Front Blog Route
+Route::get('/blogs-list', [FrontController::class, 'blogIndex'])->name('front.blog');
+Route::get('/blog/{slug}', [FrontController::class, 'blogShow'])->name('front.blog.show');
+Route::post('blog/{blog}/like', [FrontController::class, 'blogLike'])->name('front.blogs.like');
+Route::post('blog/{blog}/comment', [FrontController::class, 'blogComment'])->name('front.blogs.comment');
 
 
 Route::group(['prefix'=>'account'], function () {
@@ -224,8 +231,9 @@ Route::get('/change-rating-status}', [ProductController::class, 'changeRatingSta
         Route::get('site-settings', [WebsiteController::class, 'index'])->name('site-settings.index');
         Route::post('site-settings', [WebsiteController::class, 'store'])->name('site-settings.create');
 
-
-
+        //Blog Route
+        Route::resource('blogs', BlogController::class);
+        Route::get('blogs-search', [BlogController::class, 'search'])->name('blogs.search');
 
 
 

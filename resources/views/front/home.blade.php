@@ -164,6 +164,42 @@
         </div>
     </section>
     @endif
+<section class="bg-white section-3 pt-5 border-bottom">
+    <div class="bg-white container">
+        <div class="section-title d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Our Recent Blogs</h4>
+            <a href="{{route('front.blog')}}" class="text-primary">View More</a>
+        </div>
+        <div class="row pb-4 p-2">
+            @if($blogs->isNotEmpty())
+                @foreach($blogs as $blog)
+                    <div class="col-md-3 mb-4">
+                        <div class="card h-100 hoverCard p-2 shadow">
+                            @if($blog->image)
+                                <img src="{{ asset('blogs/' . $blog->image) }}" class="card-img-top rounded-2" alt="{{ $blog->name }}" style="height: 150px; object-fit: cover;">
+                            @endif
+                            <div class="card-body">
+                                <h6 class="card-title">{{ $blog->name }}</h6>
+                                <p class="card-text text-muted small">Posted on {{ $blog->created_at->format('M d, Y') }}</p>
+                                <p class="card-text text-muted small">
+                                    <i class="fas fa-thumbs-up"></i> {{ $blog->likes_count }} Likes
+                                    <i class="fas fa-comments"></i> {{ $blog->comments->count() }} Comments
+                                </p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ route('front.blog.show', $blog->slug) }}" class="btn btn-primary btn-sm">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <p class="text-center">No blogs available.</p>
+            @endif
+        </div>
+    </div>
+</section>
+
+
 {{--    Newsletter Section--}}
     <section class="bg-white section-3 pt-5">
         <div class="bg-white container ">

@@ -95,6 +95,12 @@
                         <p>Review</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{route('blogs.index')}}" class="nav-link">
+                        <i class="nav-icon fas fa-pencil-alt"></i>
+                        <p>Blogs</p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

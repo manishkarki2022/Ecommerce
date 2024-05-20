@@ -88,7 +88,7 @@
                         @if($products->isNotEmpty())
                             @foreach($products as $product)
                                 <div class="col-lg-4 col-xl-3 mb-4 px-5">
-                                    <div class="card items-center" style="width: 200px; height:350px">
+                                    <div class="card items-center hoverCard" style="width: 200px; height:350px">
                                         <div class="product product-image position-relative" style="height:auto; overflow: hidden;">
                                             @if($product->images !== null && $product->images->isNotEmpty() && $product->images->first() !== null)
                                                 <a href="{{ route('front.product', $product->slug) }}" class="product-img d-block">

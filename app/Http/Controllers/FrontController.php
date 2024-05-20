@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Mail\ContactEmail;
 use App\Models\Author;
+use App\Models\Blog;
+use App\Models\Comment;
 use App\Models\Highlight;
 use App\Models\Page;
 use App\Models\Product;
@@ -22,7 +24,8 @@ class FrontController extends Controller
             ->get();
        $getFeatured=  Product::where('is_featured','Yes')->get();
        $highlights = Highlight::where('is_active',1)->get();
-       return view('front.home',compact('getFeatured','latest','highlights'));
+       $blogs = Blog::where('status','active')->take(8)->get();
+       return view('front.home',compact('getFeatured','latest','highlights','blogs'));
         }
     public function addWishlist(Request $request){
 
@@ -92,6 +95,49 @@ class FrontController extends Controller
         }
         $relatedProducts = Product::where('author_id',$id)->get();
         return view('front.author.show',compact('author','relatedProducts'));
+
+    }
+    public function blogIndex(){
+        $blogs = Blog::where('status','active')->paginate(12);
+        return view('front.blog.index',compact('blogs'));
+    }
+    public function blogShow($slug) {
+        $blog = Blog::where('slug', $slug)->first();
+
+        if (!$blog) {
+            return redirect()->back()->with('error', 'Blog not found.');
+        }
+
+        return view('front.blog.show', compact('blog'));
+    }
+    public function blogLike(Request $request,Blog $blog){
+        if ($request->ajax()) {
+            // Assuming you have a method to handle the like logic
+            $blog->likes_count += 1; // Increment the like count for demonstration
+            $blog->save();
+
+            return response()->json([
+                'success' => true,
+                'likes_count' => $blog->likes_count,
+            ]);
+        }
+
+        return response()->json(['success' => false], 400);
+    }
+
+    public function blogComment(Request $request, Blog $blog){
+        {
+            $request->validate([
+                'content' => 'required|max:255',
+            ]);
+            $comment = new Comment();
+            $comment->content = $request->input('content'); // Using input() method
+            $comment->blog_id = $blog->id;
+            $comment->user_id = auth()->id(); // Assuming users are authenticated
+            $comment->save();
+
+            return redirect()->back()->with('success', 'Comment added successfully');
+        }
 
     }
 

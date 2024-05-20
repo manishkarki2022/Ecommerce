@@ -1,0 +1,9 @@
+.hoverCard {
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+}
+
+.hoverCard:hover {
+    transition: all 0.5s;
+    transform: scale(1.1);
+}
