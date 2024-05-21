@@ -60,6 +60,30 @@ function getwishlist ($product_id){
 function getPages(){
     return \App\Models\Page::where('status',1)->get();
 }
+function giveSmoothText($text, $val, $number = false, $separator = ' '){
+    $text = strip_tags($text);
+    if($text == ''){
+        $return = 0;
+    }elseif(strlen($text) <= $val){
+        $return = $val;
+    }else{
+        $vt = 1;
+        $loop_counter = 1;
+        while($vt!=0){
+            if(substr($text,$val,1) != $separator){
+                $val--;
+                $vt = 1;
+            }else $vt = 0;
+            if($loop_counter++ == 30){break;}
+        }
+        $return = $val;
+    }
+    if($number == true){
+        return $return;
+    }else{
+        return str_split($text, $val)[0];
+    }
+}
 
 
 

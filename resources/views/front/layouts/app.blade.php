@@ -2,33 +2,9 @@
 <html class="no-js" lang="en_AU" />
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Home' }}</title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=no" />
-
-    <meta name="HandheldFriendly" content="True" />
-    <meta name="pinterest" content="nopin" />
-
-    <meta property="og:locale" content="en_AU" />
-    <meta property="og:type" content="website" />
-    <meta property="fb:admins" content="" />
-    <meta property="fb:app_id" content="" />
-    <meta property="og:site_name" content="" />
-    <meta property="og:title" content="" />
-    <meta property="og:description" content="" />
-    <meta property="og:url" content="" />
-    <meta property="og:image" content="" />
-    <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:width" content="" />
-    <meta property="og:image:height" content="" />
-    <meta property="og:image:alt" content="" />
-
-    <meta name="twitter:title" content="" />
-    <meta name="twitter:site" content="" />
-    <meta name="twitter:description" content="" />
-    <meta name="twitter:image" content="" />
-    <meta name="twitter:image:alt" content="" />
-    <meta name="twitter:card" content="summary_large_image" />
+{{--    <title>{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Home' }}</title>--}}
+    {!! SEO::generate() !!}
+    <base href="{{route('front.home')}}" />
 
 
     <link rel="stylesheet" type="text/css" href="{{asset('front-assets/css/slick.css')}}" />
@@ -56,8 +32,8 @@
         <div class="row align-items-center py-3 d-none d-lg-flex justify-content-between">
             <div class="col-lg-4 logo">
                 <a href="{{ route('front.home') }}" class="text-decoration-none">
-                    <img src="{{ websiteInfo()->isNotEmpty() && websiteInfo()->first()->logo ? asset('logo/' . websiteInfo()->first()->logo) : asset('logo/d_logo.png') }}" alt="Company Logo" class="img-fluid rounded-circle" style="max-width:70px;">
-                    <span class="h3 text-uppercase text-primary bg-dark px-2">{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Admin' }}</span>
+                    <img src="{{ websiteInfo()->isNotEmpty() && websiteInfo()->first()->logo ? asset('logo/' . websiteInfo()->first()->logo) : asset('logo/d_logo.png') }}" alt="{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Website Name' }}" class="img-fluid rounded-circle" style="max-width:70px;">
+                    <span class="h3 text-uppercase text-primary bg-dark px-2">{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Website Name' }}</span>
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left  d-flex justify-content-end align-items-center">
@@ -104,8 +80,8 @@
     <div class="container">
         <nav class="navbar navbar-expand-xl" id="navbar">
             <a href="{{ route('front.home') }}" class="text-decoration-none mobile-logo">
-                <img src="{{ websiteInfo()->isNotEmpty() && websiteInfo()->first()->logo ? asset('logo/' . websiteInfo()->first()->logo) : asset('logo/d_logo.png') }}" alt="Company Logo" class="img-circle  rounded-circle" style="max-width:45px;">
-                <span class="h4 text-uppercase text-primary bg-dark">{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Admin' }}</span>
+                <img src="{{ websiteInfo()->isNotEmpty() && websiteInfo()->first()->logo ? asset('logo/' . websiteInfo()->first()->logo) : asset('logo/d_logo.png') }}" alt="{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Website Name' }}" class="img-circle  rounded-circle" style="max-width:45px;">
+                <span class="h4 text-uppercase text-primary bg-dark">{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Website Name' }}</span>
             </a>
             <button class="navbar-toggler menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="navbar-toggler-icon fas fa-bars"></i>
@@ -115,9 +91,9 @@
                     <li class="nav-item">
                         <a href="{{ route('front.shop') }}" class="nav-link text-primary">All Book</a>
                     </li>
-                    <li class="nav-item">
-                        <a href="{{ route('front.shop',['ebook'=>true]) }}" class="nav-link text-primary">Ebook</a>
-                    </li>
+{{--                    <li class="nav-item">--}}
+{{--                        <a href="{{ route('front.shop',['ebook'=>true]) }}" class="nav-link text-primary">Ebook</a>--}}
+{{--                    </li>--}}
                     <li class="nav-item">
                         <a href="{{ route('front.author') }}" class="nav-link text-primary">Authors</a>
                     </li>
@@ -126,16 +102,20 @@
                     @if(getCategories()->isNotEmpty())
                         @foreach(getCategories() as $category)
                             <li class="nav-item dropdown">
-                                <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                    {{$category->name}}
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-dark">
-                                    @if($category->subCategories->isNotEmpty())
+                                @if($category->subCategories->isNotEmpty())
+                                    <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{$category->name}}
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark">
                                         @foreach($category->subCategories as $sub_category)
                                             <li><a class="dropdown-item nav-link" href="{{route('front.shop',[$category->slug,$sub_category->slug])}}">{{$sub_category->name}}</a></li>
                                         @endforeach
-                                    @endif
-                                </ul>
+                                    </ul>
+                                @else
+                                    <a class="btn btn-dark" href="{{ route('front.shop', $category->slug) }}">
+                                        {{$category->name}}
+                                    </a>
+                                @endif
                             </li>
                         @endforeach
                     @endif

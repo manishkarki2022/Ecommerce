@@ -17,7 +17,7 @@
                         <picture>
                             <source media="(max-width: 800px)" srcset="{{ asset('highlightImage/'.$highlight->image) }}" />
                             <source media="(min-width: 800px)" srcset="{{ asset('highlightImage/'.$highlight->image) }}" />
-                            <img src="{{ asset($highlight->image) }}" alt="" />
+                            <img src="{{ asset($highlight->image) }}" alt="{{$highlight->name}}" />
                         </picture>
                         <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                             <div class="p-1">
@@ -57,9 +57,8 @@
                             <div class="cat-card">
                                 <div class="left">
                                     @if($category->image =!'')
-                                        <img src="{{asset('dBook.png')}}" alt="" class="php " style="max-width: 80px;padding: 0.3rem">
+                                        <img src="{{asset('dBook.png')}}" alt="{{$category->name}}" class="php " style="max-width: 80px;padding: 0.3rem">
                                     @endif
-
                                 </div>
                                 <div class="right ">
                                     <div class="">
@@ -68,7 +67,6 @@
                                 </div>
                             </div>
                         </div>
-
                     @endforeach
                 @endif
             </div>

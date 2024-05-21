@@ -4,11 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class Author extends Model
 {
-    use HasFactory;
-    protected $fillable = ['name', 'description', 'status', 'created_by'];
+    use HasFactory, Sluggable;
+    protected $fillable = ['name', 'description', 'status', 'created_by','slug'];
+    protected $table ='authors';
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name',
+                'onUpdate' => true,
+            ]
+        ];
+    }
 
     public function authorImage()
     {

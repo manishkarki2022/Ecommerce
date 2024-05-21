@@ -41,7 +41,7 @@ use App\Http\Controllers\admin\HomeController;
 //});
 Auth::routes(['verify' => true]);
 Route::get('/', [FrontController::class, 'index'])->name('front.home');
-Route::get('/shop/{ebook?}/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
+Route::get('/shop/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
 Route::get('/product/{slug}', [ShopController::class, 'product'])->name('front.product');
 Route::get('/cart', [CartController::class, 'cart'])->name('front.cart');
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('front.addToCart');
@@ -78,7 +78,7 @@ Route::post('/product-rating/', [ShopController::class, 'productRating'])->name(
 
 //Front Author Route
 Route::get('/authors', [FrontController::class, 'authorIndex'])->name('front.author');
-Route::get('/authors/{id}', [FrontController::class, 'authorShow'])->name('front.author.show');
+Route::get('/author/{slug}', [FrontController::class, 'authorShow'])->name('front.author.show');
 
 //Front Blog Route
 Route::get('/blogs-list', [FrontController::class, 'blogIndex'])->name('front.blog');

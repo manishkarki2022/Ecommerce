@@ -21,9 +21,9 @@
                     @foreach($authors as $author)
                         <div class="col-md-3 mb-3">
                             <div class="card " style="max-width: 250px">
-                                <a href="{{route('front.author.show',$author->id)}}" ><img src="{{ asset('authorImage/' . $author->id . '/' . $author->authorImage->first()->image) }}" class="card-img-top img-fluid aspect-ratio" alt="{{$author->name}}" title="{{$author->names}}" style="height: 200px;"></a>
+                                <a href="{{route('front.author.show',$author->slug)}}" ><img src="{{ asset('authorImage/' . $author->id . '/' . $author->authorImage->first()->image) }}" class="card-img-top img-fluid aspect-ratio" alt="{{$author->name}}" title="{{$author->names}}" style="height: 200px;"></a>
                                 <div class="card-body">
-                                    <a href="{{route('front.author.show',$author->id)}}" class="text-primary"><h5 class="card-title text-center" title="{{$author->name}}">{{ $author->name }}</h5></a>
+                                    <a href="{{route('front.author.show',$author->slug)}}" class="text-primary"><h5 class="card-title text-center" title="{{$author->name}}">{{ $author->name }}</h5></a>
                                 </div>
                             </div>
                         </div>

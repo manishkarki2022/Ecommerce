@@ -8,12 +8,13 @@ use App\Models\ProductRating;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
+use Artesaos\SEOTools\Facades\SEOTools as SEO;
 
 class ShopController extends Controller
 {
 
 
-    public function index(Request $request, $ebook = false, $categorySlug = null, $subCategorySlug = null)
+    public function index(Request $request, $categorySlug = null, $subCategorySlug = null)
     {
         $categorySelected = '';
         $subCategorySelected = '';
@@ -29,16 +30,30 @@ class ShopController extends Controller
             $category = Category::where('slug', $categorySlug)->first();
             $productsQuery->where('category_id', $category->id);
             $categorySelected = $category->id;
+
+            // Set SEO for the category
+            SEO::setTitle($category->name . " Books");
+            SEO::setDescription("Explore a wide range of " . $category->name . " books available in our bookshop.");
+            SEO::metatags()->addMeta('keywords', $category->name . ' books, buy ' . $category->name . ' books, ' . $category->name . ' literature');
+            SEO::opengraph()->setUrl(route('front.shop', ['categorySlug' => $categorySlug]));
+            SEO::opengraph()->addProperty('type', 'website');
+//            SEO::opengraph()->addImage(asset('path/to/category/image.jpg'));
+            SEO::twitter()->setSite('@LuizVinicius73');
         }
 
         if (!empty($subCategorySlug)) {
             $subCategory = SubCategory::where('slug', $subCategorySlug)->first();
             $productsQuery->where('sub_category_id', $subCategory->id);
             $subCategorySelected = $subCategory->id;
-        }
-        if ($ebook) {
-            $productsQuery->whereNotNull('ebook')
-            ->orWhereNotNull('ebook_price');
+
+            // Set SEO for the sub-category
+            SEO::setTitle($subCategory->name . " Books");
+            SEO::setDescription("Explore a wide range of " . $subCategory->name . " books available in our bookshop.");
+            SEO::metatags()->addMeta('keywords', $subCategory->name . ' books, buy ' . $subCategory->name . ' books, ' . $subCategory->name . ' literature');
+            SEO::opengraph()->setUrl(route('front.shop', ['categorySlug' => $categorySlug, 'subCategorySlug' => $subCategorySlug]));
+            SEO::opengraph()->addProperty('type', 'website');
+//            SEO::opengraph()->addImage(asset('path/to/subcategory/image.jpg'));
+            SEO::twitter()->setSite('@LuizVinicius73');
         }
 
         // Price range filter
@@ -63,12 +78,13 @@ class ShopController extends Controller
                 case 'price_desc':
                     $productsQuery->orderBy('price', 'desc');
                     break;
-                // Add more sorting options if needed
                 default:
                     // Handle invalid sorting option
                     break;
             }
         }
+
+        // Search filter
         if (!empty($request->get('search'))) {
             $searchTerm = $request->input('search');
 
@@ -82,16 +98,26 @@ class ShopController extends Controller
                         $query->where('name', 'like', '%' . $searchTerm . '%');
                     })
                     ->orWhere('price', 'like', '%' . $searchTerm . '%');
-
-
             });
+
+            // Set SEO for search filter
+            SEO::setTitle('Search results for: ' . $searchTerm);
+            SEO::setDescription('Browse our books matching the search term: ' . $searchTerm);
+            SEO::metatags()->addMeta('keywords', $searchTerm . ' books, buy ' . $searchTerm . ' books');
+            SEO::opengraph()->setUrl(route('front.shop', ['search' => $searchTerm]));
+            SEO::opengraph()->addProperty('type', 'website');
+            SEO::twitter()->setSite('@LuizVinicius73');
         }
 
         $products = $productsQuery->latest()->paginate(12);
         $sortOption = $request->input('sort');
 
+        // Set canonical URL
+        SEO::metatags()->setCanonical(route('front.shop', $request->query()));
+
         return view('front.shop', compact('categories', 'products', 'categorySelected', 'subCategorySelected', 'sortOption'));
     }
+
 
 
     public function product($slug){
@@ -118,7 +144,13 @@ class ShopController extends Controller
             $productArray = explode(',',$product->related_products);
             $relatedProducts = Product::whereIn('id',$productArray)->with('images')->get();
         }
-           return view('front.product', compact('product','relatedProducts','avgRating','avgRatingPer'));
+        SEO::setTitle($product->title);
+        SEO::setDescription(giveSmoothText($product->short_description, 320));;
+        SEO::opengraph()->setUrl(route('front.product',$product->slug));
+        SEO::opengraph()->addProperty('type', 'website');
+        SEO::twitter()->setSite('@LuizVinicius73');//
+
+        return view('front.product', compact('product','relatedProducts','avgRating','avgRatingPer'));
 
 
 
