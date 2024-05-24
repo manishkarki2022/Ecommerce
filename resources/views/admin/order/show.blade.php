@@ -26,9 +26,9 @@
                                 <div class="col-sm-4 invoice-col">
                                     <h1 class="h5 mb-3">Shipping Address</h1>
                                     <address>
-                                        <strong>{{$order->first_name.' '.$order->last_name}}</strong><br>
-                                        {{$order->address}}<br>
-                                        {{$order->city->name}}, {{$order->zip}}<br>
+                                       Customer Name:<strong>{{$order->first_name.' '.$order->last_name}}</strong><br>
+                                        Address:{{$order->address}}<br>
+                                        City:{{$order->city->name}}, {{$order->zip}}<br>
                                         Phone: {{$order->mobile}}<br>
                                         Email: {{$order->user->email}}
                                     </address>
@@ -44,10 +44,9 @@
 
 
                                 <div class="col-sm-4 invoice-col">
-                                    <b>Invoice #007612</b><br>
                                     <br>
                                     <b>Order ID:</b> {{$order->id}}<br>
-                                    <b>Total:</b> ${{number_format($order->grand_total)}}<br>
+                                    <b>Total:</b> Rs{{number_format($order->grand_total)}}<br>
                                     <b>Status:</b>
                                     <span id="orderStatusElement">
                                         @if($order->status == 'pending')
@@ -78,29 +77,29 @@
                                 @foreach($orderItems as $orderItem)
                                 <tr>
                                     <td>{{$orderItem->product->title}}</td>
-                                    <td>${{$orderItem->price}}</td>
+                                    <td>Rs{{$orderItem->price}}</td>
                                     <td>{{$orderItem->qty}}</td>
-                                    <td>${{$orderItem->total}}</td>
+                                    <td>Rs{{$orderItem->total}}</td>
                                 </tr>
                                 @endforeach
 
 
                                 <tr>
                                     <th colspan="3" class="text-right">Subtotal:</th>
-                                    <td>${{number_format($order->subtotal,2)}}</td>
+                                    <td>Rs{{number_format($order->subtotal,2)}}</td>
                                 </tr>
                                 <tr>
                                     <th colspan="3" class="text-right">Discount:</th>
-                                    <td>${{number_format($order->discount,2)}}</td>
+                                    <td>Rs{{number_format($order->discount,2)}}</td>
                                 </tr>
 
                                 <tr>
                                     <th colspan="3" class="text-right">Shipping:</th>
-                                    <td>${{number_format($order->shipping,2)}}</td>
+                                    <td>Rs{{number_format($order->shipping,2)}}</td>
                                 </tr>
                                 <tr>
                                     <th colspan="3" class="text-right">Grand Total:</th>
-                                    <td>${{number_format($order->grand_total,2)}}</td>
+                                    <td>Rs{{number_format($order->grand_total,2)}}</td>
                                 </tr>
                                 </tbody>
                             </table>

@@ -7,9 +7,6 @@
                 <div class="col-sm-6">
                     <h1>Orders</h1>
                 </div>
-                <div class="col-sm-6 text-right">
-                    <a href="#" class="btn btn-primary">New Category</a>
-                </div>
             </div>
         </div>
         <!-- /.container-fluid -->
@@ -126,7 +123,7 @@
                                             <span class="badge bg-danger"> <i class="fas fa-times-circle mr-1"></i> Cancelled</span>
                                         @endif
                                     </td>
-                                    <td>${{ $order->grand_total }}</td>
+                                    <td>Rs{{ $order->grand_total }}</td>
                                     <td>{{\Carbon\Carbon::parse($order->created_at)->format('d M, Y')}}</td>
                                 </tr>
                             @endforeach

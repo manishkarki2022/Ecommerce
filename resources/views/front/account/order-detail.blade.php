@@ -68,7 +68,7 @@
                                             <h6 class="heading-xxxs text-muted">Order Amount:</h6>
                                             <!-- Text -->
                                             <p class="mb-0 fs-sm fw-bold">
-                                                ${{number_format($order->grand_total,2)}}
+                                                Rs{{number_format($order->grand_total,2)}}
                                             </p>
                                         </div>
                                     </div>
@@ -108,7 +108,7 @@
                                             <!-- Title -->
                                             <p class="mb-4 fs-sm fw-bold">
                                                 <a class="text-body" href="product.html">{{$orderItem->name}} x {{$orderItem->qty}}</a> <br>
-                                                <span class="text-muted">${{number_format($orderItem->price)}}</span>
+                                                <span class="text-muted">Rs{{number_format($orderItem->price)}}</span>
                                             </p>
                                         </div>
                                     </div>
@@ -127,19 +127,19 @@
                             <ul>
                                 <li class="list-group-item d-flex">
                                     <span>Subtotal</span>
-                                    <span class="ms-auto">${{number_format($order->subtotal,2)}}</span>
+                                    <span class="ms-auto">Rs{{number_format($order->subtotal,2)}}</span>
                                 </li>
                                 <li class="list-group-item d-flex">
                                     <span>Discount {{(!empty($order->coupon_code))?'('.$order->coupon_code.')':''}}</span>
-                                    <span class="ms-auto">${{number_format($order->discount,2)}}</span>
+                                    <span class="ms-auto">Rs{{number_format($order->discount,2)}}</span>
                                 </li>
                                 <li class="list-group-item d-flex">
                                     <span>Shipping</span>
-                                    <span class="ms-auto">${{number_format($order->shipping,2)}}</span>
+                                    <span class="ms-auto">Rs{{number_format($order->shipping,2)}}</span>
                                 </li>
                                 <li class="list-group-item d-flex fs-lg fw-bold">
                                     <span>Total</span>
-                                    <span class="ms-auto">${{number_format($order->grand_total,2)}}</span>
+                                    <span class="ms-auto">Rs{{number_format($order->grand_total,2)}}</span>
                                 </li>
                             </ul>
                         </div>

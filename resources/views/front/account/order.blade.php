@@ -54,7 +54,7 @@
                                                     <span class="badge bg-danger"> <i class="fas fa-times-circle mr-1"></i> Cancelled</span>
                                                 @endif
                                             </td>
-                                            <td>${{number_format($order->grand_total,2)}}</td>
+                                            <td>Rs{{number_format($order->grand_total,2)}}</td>
                                         </tr>
                                             @endforeach
 
