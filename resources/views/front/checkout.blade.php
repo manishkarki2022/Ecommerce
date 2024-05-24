@@ -27,7 +27,8 @@
 
                                 <div class="col-md-12">
                                     <div class="mb-3">
-                                        <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name" value="{{ !empty($user_info->first_name) ? $user_info->first_name : '' }}">
+                                        <label for="first_name">First Name</label>
+                                        <input type="text" readonly name="first_name" id="first_name" class="form-control" placeholder="First Name" value="{{ !empty($user_info->first_name) ? $user_info->first_name : '' }}">
                                         @error('first_name')
                                         <span class="text-danger">{{$message}}</span>
                                         @enderror
@@ -35,7 +36,8 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="mb-3">
-                                        <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Last Name" value="{{ !empty($user_info->last_name) ? $user_info->last_name : '' }}" >
+                                        <label for="last_name"  >Last Name</label>
+                                        <input type="text" readonly name="last_name" id="last_name" class="form-control" placeholder="Last Name" value="{{ !empty($user_info->last_name) ? $user_info->last_name : '' }}" >
                                         @error('last_name')
                                         <span class="text-danger">{{$message}}</span>
                                         @enderror
@@ -44,6 +46,7 @@
 
                                 <div class="col-md-12">
                                     <div class="mb-3">
+                                        <label for="email">Email</label>
                                         <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="{{ auth()->user()->email }}" readonly>
                                         @error('email')
                                         <span class="text-danger">{{$message}}</span>
@@ -53,6 +56,7 @@
 
                                 <div class="col-md-12">
                                     <div class="mb-3">
+                                        <label for="city">Delivery City</label>
                                         <select name="city_id" id="city" class="form-control">
                                             <option value="">Select a City</option>
                                             @foreach($cities as $city)
@@ -70,6 +74,7 @@
 
                                 <div class="col-md-12">
                                     <div class="mb-3">
+                                        <label for="address">Delivery Address</label>
                                         <textarea name="address" id="address" cols="30" rows="3" placeholder="Address" class="form-control">{{ !empty($user_info->address) ? $user_info->address : '' }}</textarea>
                                         @error('address')
                                         <span class="text-danger">{{$message}}</span>
@@ -78,6 +83,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="mb-3">
+                                        <label for="state">Delivery State</label>
                                         <input type="text" name="state" id="state" class="form-control" placeholder="State" value="{{ !empty($user_info->state) ? $user_info->state : '' }}" >
                                         @error('state')
                                         <span class="text-danger">{{$message}}</span>
@@ -87,6 +93,7 @@
 
                                 <div class="col-md-4">
                                     <div class="mb-3">
+                                        <label for="zip">Zip Code</label>
                                         <input type="text" name="zip" id="zip" class="form-control" placeholder="Zip" value="{{ !empty($user_info->zip) ? $user_info->zip : '' }}" >
                                         @error('zip')
                                         <span class="text-danger">{{$message}}</span>
@@ -96,6 +103,7 @@
 
                                 <div class="col-md-12">
                                     <div class="mb-3">
+                                        <label for="mobile">Mobile No.</label>
                                         <input type="text" name="mobile" id="mobile" class="form-control" placeholder="Mobile No." value="{{ !empty($user_info->mobile) ? $user_info->mobile : '' }}" >
                                         @error('mobile')
                                         <span class="text-danger">{{$message}}</span>
@@ -106,6 +114,7 @@
 
                                 <div class="col-md-12">
                                     <div class="mb-3">
+                                        <label for="order_notes">Order Notes</label>
                                         <textarea name="notes" id="order_notes" cols="30" rows="2" placeholder="Order Notes (optional)" class="form-control"></textarea>
                                     </div>
                                 </div>
