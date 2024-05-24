@@ -11,7 +11,7 @@
             </div>
         </div>
     </section>
-    <section class="section-7 pt-3 mb-3">
+    <section class="section-7 pt-1 mb-3">
         <div class="container">
             <div class="row ">
                 <div class="col-md-3 col-sm-6">
@@ -23,11 +23,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-7">
-                    <div class="bg-light right">
+                <div class="col-md-8 p-3">
+                    <div class="bg-light " style="text-justify: newspaper">
                         <h1>{{$author->name}}</h1>
 
-                        {!! $author->description !!}
+                        {!! $author->description  !!}
 
                     </div>
                 </div>
@@ -36,19 +36,20 @@
     </section>
     <section class="pt-5 section-8 bg-white">
         <div class="container mb-5">
-            <div class="section-title bg-white">
-                <h2>Related Products</h2>
-            </div>
+            @if(!$author->products==null && $author->products->isNotEmpty())
+                <div class="section-title bg-white">
+                    <h5>Books my {{$author->name}}</h5>
+                </div>
             <div class="row slider3 d-flex">
                 @php
                     $counter = 0;
                 @endphp
-                @if(!$relatedProducts==null)
-                    @foreach($relatedProducts as $relatedProduct)
+
+                    @foreach($author->products as $relatedProduct)
                         @if($counter < 4)
-                            <div class="col-lg-4 col-xl-3 mb-4 px-5">
-                                <div class="card items-center" style="width: 230px;">
-                                    <div class="product product-image position-relative" style="height:auto; overflow: hidden;">
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-3">
+                            <div class="card product-card position-relative hoverCard" style="max-width: 80% !important;">
+                                <div class="product-image  " style="height: 300px !important; overflow: hidden">
                                         @if($relatedProduct->images !== null && $relatedProduct->images->isNotEmpty() && $relatedProduct->images->first() !== null)
                                             <a href="{{ route('front.product', $relatedProduct->slug) }}" class="product-img d-block">
                                                 <img class="card-img-top img-fluid h-100 w-100 object-fit-cover zoom-on-hover" src="{{ asset('products/' . $relatedProduct->images->first()->image) }}" alt="{{ $relatedProduct->title }}">

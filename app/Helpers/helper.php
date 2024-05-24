@@ -17,6 +17,8 @@ function getCategories()
     return Category::orderBy('name', 'asc')
         ->where('showHome','Yes')
         ->where('status',1)
+        ->with('products')
+        ->take(4)
         ->get();
 }
 function getProductImage($id){

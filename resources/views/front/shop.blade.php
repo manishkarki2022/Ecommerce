@@ -11,13 +11,15 @@
         </div>
     </section>
     <section class="section-6 pt-5">
-        <div class="container px-5 ">
+        <div class="container px-3 ">
             <div class="row">
                 <div class="col-md-7 col-sm-8">
                 </div>
                 <div class="col-md-5 col-sm-4">
                     <div class="text-md-end">
-                        <a href="{{ route('front.shop') }}" class="btn btn-primary mt-2">Clear Filter</a>
+                        <a href="{{ route('front.shop') }}" class="btn btn-primary mt-2">
+                            <i class="fas fa-filter"></i> Clear Filter
+                        </a>
                     </div>
                 </div>
             </div>
@@ -29,7 +31,6 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="accordion accordion-flush" id="accordionExample">
-
                                 @if($categories->isNotEmpty())
                                     @foreach($categories as $key => $category)
                                         <div class="accordion-item">
@@ -87,11 +88,11 @@
                         </div>
                         @if($products->isNotEmpty())
                             @foreach($products as $product)
-                                <div class="col-lg-4 col-xl-3 mb-4 px-5">
-                                    <div class="card items-center hoverCard" style="width: 200px; height:350px">
-                                        <div class="product product-image position-relative" style="height:auto; overflow: hidden;">
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-3">
+                                    <div class="card items-center shadow " style="width: 200px; height:350px">
+                                        <div class="product-image hover " style="height: 300px !important; overflow: hidden">
                                             @if($product->images !== null && $product->images->isNotEmpty() && $product->images->first() !== null)
-                                                <a href="{{ route('front.product', $product->slug) }}" class="product-img d-block">
+                                                <a href="{{ route('front.product', $product->slug) }}" class="product-img d-block hoverCard">
                                                     <img class="card-img-top img-fluid h-100 w-100 object-fit-cover zoom-on-hover" src="{{ asset('products/' . $product->images->first()->image) }}" alt="{{ $product->title }}">
                                                 </a>
                                             @else

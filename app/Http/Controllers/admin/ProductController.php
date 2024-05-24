@@ -143,6 +143,10 @@ class ProductController extends Controller
             $productEbook->save();
             $request->session()->flash('success', 'Product created successfully.');
             return redirect()->route('products.index');
+        } else {
+            // If the book is not an ebook, show success message and redirect
+            $request->session()->flash('success', 'Product created successfully.');
+            return redirect()->route('products.index');
         }
 
 

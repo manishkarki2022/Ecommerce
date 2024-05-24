@@ -24,7 +24,7 @@ class FrontController extends Controller
             ->take(6)
             ->get();
        $getFeatured=  Product::where('is_featured','Yes')->get();
-       $highlights = Highlight::where('is_active',1)->get();
+        $highlights = Highlight::where('is_active',1)->get();
        $blogs = Blog::where('status','active')->take(8)->get();
         SEO::setTitle(websiteInfo()->first()->name);
         SEO::setDescription(giveSmoothText(websiteInfo()->first()->description, 320));;

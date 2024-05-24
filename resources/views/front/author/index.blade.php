@@ -17,11 +17,11 @@
                         <h2 class="text-center  mb-5">Authors</h2>
                     </div>
                 </div>
-                <div class="row gx-3 justify-content-center">
+                <div class="row gx-3 ">
                     @foreach($authors as $author)
-                        <div class="col-md-3 mb-3">
-                            <div class="card " style="max-width: 250px">
-                                <a href="{{route('front.author.show',$author->slug)}}" ><img src="{{ asset('authorImage/' . $author->id . '/' . $author->authorImage->first()->image) }}" class="card-img-top img-fluid aspect-ratio" alt="{{$author->name}}" title="{{$author->names}}" style="height: 200px;"></a>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="card h-100 hoverCard p-2 shadow">
+                                <a href="{{route('front.author.show',$author->slug)}}" ><img src="{{ asset('authorImage/' . $author->id . '/' . $author->authorImage->first()->image) }}" class="card-img-top rounded-2" alt="{{$author->name}}" title="{{$author->names}}"  style="height: auto; object-fit: cover;" ></a>
                                 <div class="card-body">
                                     <a href="{{route('front.author.show',$author->slug)}}" class="text-primary"><h5 class="card-title text-center" title="{{$author->name}}">{{ $author->name }}</h5></a>
                                 </div>
