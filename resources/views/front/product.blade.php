@@ -57,7 +57,7 @@
                             </div>
                             <small class="pt-1">({{$product->ratings_count}} Reviews)</small>
                         </div>
-                        By <a href="{{route('front.author.show',$product->author->id)}}" class="text-primary">{{$product->author->name}}</a>
+                        By <a href="{{route('front.author.show',$product->author->slug)}}" class="text-primary">{{$product->author->name}}</a>
                         <div>
                             @if($product->isbn_number != null)
                                 <p>ISBN Number: {{$product->isbn_number}}</p>
