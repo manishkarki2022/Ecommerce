@@ -19,15 +19,22 @@
                 </div>
                 <div class="row gx-3 ">
                     @foreach($authors as $author)
-                        <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="col-md-3 col-sm-6 mb-4">
                             <div class="card h-100 hoverCard p-2 shadow">
-                                <a href="{{route('front.author.show',$author->slug)}}" ><img src="{{ asset('authorImage/' . $author->id . '/' . $author->authorImage->first()->image) }}" class="card-img-top rounded-2" alt="{{$author->name}}" title="{{$author->names}}"  style="height: auto; object-fit: cover;" ></a>
+                                <a href="{{route('front.author.show',$author->slug)}}" >
+                                    <img src="{{ asset('authorImage/' . $author->id . '/' . $author->authorImage->first()->image) }}" class="card-img-top rounded-2" alt="{{$author->name}}" title="{{$author->names}}" style="height: 150px; object-fit: contain;"></a>
                                 <div class="card-body">
                                     <a href="{{route('front.author.show',$author->slug)}}" class="text-primary"><h5 class="card-title text-center" title="{{$author->name}}">{{ $author->name }}</h5></a>
                                 </div>
                             </div>
                         </div>
                     @endforeach
+                        <div class="col-md-12 pt-5 mb-2">
+                            <nav aria-label="Page navigation example">
+                                {{$authors->withQueryString()->links()}}
+
+                            </nav>
+                        </div>
                 </div>
             </div>
         </section>

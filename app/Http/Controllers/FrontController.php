@@ -104,7 +104,7 @@ class FrontController extends Controller
     }
 
     public function authorIndex(){
-        $authors = Author::where('status','active')->get();
+        $authors = Author::where('status','active')->paginate(8);
         // Set SEO metadata for the author index page
         SEO::setTitle('Authors'); //
         SEO::setDescription('Explore our collection of talented authors.'); // Update with a relevant description
