@@ -7,3 +7,24 @@
     transition: all 0.5s;
     transform: scale(1.1);
 }
+.posterName {
+    /* Clamping the font size */
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    /* Multi-line ellipsis */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limits to 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.posterDescription {
+    /* Clamping the font size */
+    font-size: clamp(1.1rem, 2vw, 1.2rem);
+    /* Multi-line ellipsis */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limits to 3 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
