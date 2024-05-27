@@ -15,17 +15,17 @@
         <div class="container">
             <div class="row ">
                 <div class="col-md-3 col-sm-6">
-                    <div   >
+                    <div>
                         <div class="bg-light">
-                                    <div class="">
-                                        <img class="card-img-top img-fluid h-100" src="{{ asset('authorImage/' . $author->id . '/' . $author->authorImage->first()->image) }}" alt="{{ $author->name }}" title="{{ $author->name }}">
-                                    </div>
+                            <div class="d-flex justify-content-center p-3">
+                                <img class="img-fluid" src="{{ asset('authorImage/' . $author->id . '/' . $author->authorImage->first()->image) }}" alt="{{ $author->name }}" title="{{ $author->name }}" style="max-width: 150px; max-height: 150px;">
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-8 p-3">
                     <div class="bg-light " style="text-justify: newspaper">
-                        <h1>{{$author->name}}</h1>
+                        <h3>{{$author->name}}</h3>
 
                         {!! $author->description  !!}
 
@@ -47,29 +47,26 @@
 
                     @foreach($author->products as $relatedProduct)
                         @if($counter < 4)
-                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-3">
-                            <div class="card product-card position-relative hoverCard" style="max-width: 80% !important;">
-                                <div class="product-image  " style="height: 300px !important; overflow: hidden">
-                                        @if($relatedProduct->images !== null && $relatedProduct->images->isNotEmpty() && $relatedProduct->images->first() !== null)
-                                            <a href="{{ route('front.product', $relatedProduct->slug) }}" class="product-img d-block">
-                                                <img class="card-img-top img-fluid h-100 w-100 object-fit-cover zoom-on-hover" src="{{ asset('products/' . $relatedProduct->images->first()->image) }}" alt="{{ $relatedProduct->title }}">
-                                            </a>
-                                        @else
-                                            <a href="{{ route('front.product', $relatedProduct->slug) }}" class="product-img d-block">
-                                                <img class="card-img-top img-fluid h-100 w-100 object-fit-cover zoom-on-hover" src="{{ asset('products/di.jpg') }}" alt="{{ $relatedProduct->title }}">
-                                            </a>
-                                        @endif
-                                    </div>
-                                    <div class="card-body p-1">
-                                        <a class="h6 link mt-0 mb-1" href="{{route('front.product',$relatedProduct->slug)}}" alt="{{$relatedProduct->title}}" title="{{$relatedProduct->title}}">
-                                            {{ strlen($relatedProduct->title) > 20 ? substr($relatedProduct->title, 0, 20) . ' ...' : $relatedProduct->title }}
-                                        </a>
-                                        @if($relatedProduct->author_id)
-                                            <p class="text-muted text-left mb-0">By: {{$relatedProduct->author->name}}</p>
-                                        @endif
-                                    </div>
+                        <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4">
+                            <div class="h-100 position-relative p-2 shadow-sm rounded-3 d-flex flex-column hover-effect">
+                                <!-- Product Image -->
+                                <div class="product-image flex-grow-1 d-flex align-items-center justify-content-center overflow-hidden rounded">
+                                    <a href="{{ route('front.product', $relatedProduct->slug) }}" class="w-100 h-100 d-block hoverCard">
+                                        <img class="card-img-top img-fluid h-100 w-100" src="{{ asset('products/' . $relatedProduct->images->first()->image) }}" alt="{{ $relatedProduct->title }}" style="object-fit: cover;">
+                                    </a>
+                                </div>
+
+                                <!-- Card Body -->
+                                <div class="card-body mt-3 p-2 d-flex flex-column">
+                                    <!-- Product Title -->
+                                    <a class="h6 link mt-0 product-title text-dark text-decoration-none" href="{{ route('front.product', $relatedProduct->slug) }}" title="{{ $relatedProduct->title }}">
+                                        <strong class="d-block text-truncate">{{ $relatedProduct->title }}</strong>
+                                    </a>
+                                    <!-- Product Author -->
+                                    <p class="text-muted text-left mt-auto mb-0">By: {{ $relatedProduct->author->name }}</p>
                                 </div>
                             </div>
+                        </div>
                         @endif
                         @php
                             $counter++;

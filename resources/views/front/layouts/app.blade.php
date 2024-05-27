@@ -2,6 +2,7 @@
 <html class="no-js" lang="en_AU" />
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 {{--    <title>{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Home' }}</title>--}}
     {!! SEO::generate() !!}
     <base href="{{route('front.home')}}" />
@@ -77,6 +78,7 @@
 
 </style>
 
+
 <header class="bg-dark">
     <div class="container">
         <nav class="navbar navbar-expand-xl" id="navbar">
@@ -150,8 +152,6 @@
 <main>
 @yield('content')
 
-
-
 </main>
 <footer class="text-primay mt-5">
     <div class="container pb-5 pt-3">
@@ -176,10 +176,12 @@
                         <p class="text-white me-3 d-lg-none">Follow us:</p>
                         <ul class="list-unstyled d-flex mb-0">
                             @foreach(['facebook', 'instagram', 'twitter', 'youtube', 'linkedin'] as $social)
-                                @php $socialLink = websiteInfo()->isNotEmpty() ? websiteInfo()->first()->$social : null; @endphp
+                                @php
+                                    $socialLink = websiteInfo()->isNotEmpty() ? websiteInfo()->first()->$social : null;
+                                @endphp
                                 @if(!empty($socialLink))
                                     <li class="me-2">
-                                        <a href="https:{{ $socialLink }}" class=" text-decoration-none" target="_blank" aria-label="{{ ucfirst($social) }}" title="Follow us {{$social}}">
+                                        <a href="{{ $socialLink }}" class="text-decoration-none" target="_blank" aria-label="{{ ucfirst($social) }}" title="Follow us on {{ ucfirst($social) }}">
                                             <i class="fab fa-{{ $social }} fa-lg"></i>
                                         </a>
                                     </li>
@@ -264,15 +266,15 @@
             var viewportWidth = window.innerWidth;
 
             // Adjust the number of items based on viewport width
-            var itemsToShow = 5; // Default number of items
-            if (viewportWidth < 1200) {
-                itemsToShow = 3; // Decrease number of items for smaller screens
-            }
-            if (viewportWidth < 992) {
-                itemsToShow = 2; // Further decrease for even smaller screens
-            }
-            if (viewportWidth < 768) {
-                itemsToShow = 1; // Only 1 item for very small screens
+            var itemsToShow = 2; // Default number of items for smallest screens
+            if (viewportWidth >= 1200) {
+                itemsToShow = 5; // 4 items for extra large screens
+            } else if (viewportWidth >= 992) {
+                itemsToShow = 4; // 3 items for large screens
+            } else if (viewportWidth >= 768) {
+                itemsToShow = 3; // 2 items for medium screens
+            } else if (viewportWidth >= 576) {
+                itemsToShow = 3; // 2 items for small screens
             }
 
             // Initialize Tiny Slider with updated configuration
@@ -284,7 +286,6 @@
                 slideBy: 'page',
                 autoplay: true,
                 controlsText: ['<span class="fas fa-chevron-circle-left"></span>', '<span class="fas fa-chevron-circle-right"></span>'],
-
                 loop: true,
                 items: itemsToShow, // Use the calculated number of items
                 nav: false
@@ -314,15 +315,15 @@
             var viewportWidth = window.innerWidth;
 
             // Adjust the number of items based on viewport width
-            var itemsToShow = 5; // Default number of items
-            if (viewportWidth < 1200) {
-                itemsToShow = 3; // Decrease number of items for smaller screens
-            }
-            if (viewportWidth < 992) {
-                itemsToShow = 2; // Further decrease for even smaller screens
-            }
-            if (viewportWidth < 768) {
-                itemsToShow = 1; // Only 1 item for very small screens
+            var itemsToShow = 2; // Default number of items for smallest screens
+            if (viewportWidth >= 1200) {
+                itemsToShow = 5; // 4 items for extra large screens
+            } else if (viewportWidth >= 992) {
+                itemsToShow = 4; // 3 items for large screens
+            } else if (viewportWidth >= 768) {
+                itemsToShow = 3; // 2 items for medium screens
+            } else if (viewportWidth >= 576) {
+                itemsToShow = 3; // 2 items for small screens
             }
 
             // Initialize Tiny Slider with updated configuration

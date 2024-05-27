@@ -19,9 +19,9 @@
                 </div>
                 <div class="row gx-3 ">
                     @foreach($authors as $author)
-                        <div class="col-md-3 col-sm-6 mb-4">
-                            <div class="card h-100 hoverCard p-2 shadow">
-                                <a href="{{route('front.author.show',$author->slug)}}" >
+                        <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-3">
+                            <div class="card h-100  p-2 shadow">
+                                <a href="{{route('front.author.show',$author->slug)}}" class="hoverCard" >
                                     <img src="{{ asset('authorImage/' . $author->id . '/' . $author->authorImage->first()->image) }}" class="card-img-top rounded-2" alt="{{$author->name}}" title="{{$author->names}}" style="height: 150px; object-fit: contain;"></a>
                                 <div class="card-body">
                                     <a href="{{route('front.author.show',$author->slug)}}" class="text-primary"><h5 class="card-title text-center" title="{{$author->name}}">{{ $author->name }}</h5></a>

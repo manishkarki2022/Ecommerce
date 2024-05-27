@@ -14,17 +14,32 @@
     <section class="section-7 pt-3 mb-3">
         <div class="container">
             <div class="row ">
-                <div class="col-md-3 col-sm-6">
+                <style>
+                    /* Set a fixed height for the carousel container */
+                    #product-carousel {
+                        max-height: 300px; /* Adjust this value to the desired height */
+                        overflow: hidden; /* Ensure any overflow is hidden */
+                    }
+
+                    /* Ensure the images fit within the carousel container */
+                    #product-carousel .carousel-item img {
+                        max-height: 300px; /* Match this value with the carousel height */
+                        object-fit: contain; /* Ensure images are scaled appropriately */
+                    }
+                </style>
+
+                <div class="col-md-3 col-sm-4">
                     <div id="product-carousel" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner bg-light">
                             @if($product->images)
                                 @foreach($product->images as $key => $image)
                                     <div class="carousel-item {{ ($key == 0) ? 'active' : '' }}">
-                                            <img class="card-img-top img-fluid h-100" src="{{ asset('products/' . $image->image) }}" alt="{{ $image->litle }}" title="{{ $product->title }}">
+                                        <img class="card-img-top img-fluid h-100" src="{{ asset('products/' . $image->image) }}" alt="{{ $image->litle }}" title="{{ $product->title }}">
                                     </div>
                                 @endforeach
-                            @endif
+                                @else
                                 <img class="card-img-top img-fluid" src="{{ asset('products/di.jpg') }}" alt="{{ $product->title }}" title="{{ $product->title }}">
+                            @endif
                         </div>
                         <a class="carousel-control-prev" href="#product-carousel" data-bs-slide="prev">
                             <i class="fa fa-2x fa-angle-left text-dark"></i>
@@ -34,9 +49,9 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-md-7">
-                    <div class="bg-light right">
-                        <h1>{{$product->title}}</h1>
+
+                <div class="col-md-9 col-sm-6">
+                    <h3>{{$product->title}}</h3>
                         <div class="d-flex mb-3">
                             <div class="star-rating product mt-2" title="">
                                 <div class="back-stars">
@@ -70,22 +85,23 @@
 
                         {!! $product->short_description !!}
 
-                        <div class="row">
+                    <div class="container py-2">
+                        <div class="row g-4">
                             @if($product->book_type_id != null)
                                 @if($product->book_type_id == 1 || $product->book_type_id == 3) <!-- Check if digital or both -->
                                 @if($product->ebook_price != null)
-                                    <div class="col-md-6 mb-3 mb-md-5">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <p class="h5">Ebook</p>
-                                                <div class="d-flex align-content-center">
-                                                    <span class="h5 me-2"><strong>Rs{{$product->ebook_price}}</strong></span>
+                                    <div class="col-lg-6 col-md-12">
+                                        <div class="card border-0 shadow-sm h-100">
+                                            <div class="card-body d-flex flex-column">
+                                                <h5 class="card-title text-primary">Ebook</h5>
+                                                <div class="d-flex align-items-center mb-1">
+                                                    <span class="h5 me-2 fw-bold">Rs{{$product->ebook_price}}</span>
                                                     @if($product->ebook_compare_price !== '')
-                                                        <span class="h6 text-underline"><del>Rs{{$product->ebook_compare_price}}</del></span>
+                                                        <span class="h6 text-muted text-decoration-line-through">Rs{{$product->ebook_compare_price}}</span>
                                                     @endif
                                                 </div>
-                                                <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$product->id}}, 'ebook')">
-                                                    <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                <a class="btn btn-outline-primary mt-auto" href="javascript:void(0);" onclick="addToCart({{$product->id}}, 'ebook')">
+                                                    <i class="fa fa-shopping-cart me-2"></i>Add To Cart
                                                 </a>
                                             </div>
                                         </div>
@@ -94,29 +110,29 @@
                                 @endif
                                 @if($product->book_type_id == 2 || $product->book_type_id == 3) <!-- Check if paper or both -->
                                 @if($product->price != null)
-                                    <div class="col-md-6 mb-3 mb-md-0">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <p class="h5">Paperback</p>
-                                                <div class="d-flex align-content-center">
-                                                    <span class="h5 me-2"><strong>Rs{{$product->price}}</strong></span>
+                                    <div class="col-lg-6 col-md-12">
+                                        <div class="card border-0 shadow-sm h-100">
+                                            <div class="card-body d-flex flex-column">
+                                                <h5 class="card-title text-primary">Paperback</h5>
+                                                <div class="d-flex align-items-center mb-1">
+                                                    <span class="h5 me-2 fw-bold">Rs{{$product->price}}</span>
                                                     @if($product->compare_price !== '')
-                                                        <span class="h6 text-underline"><del>Rs{{$product->compare_price}}</del></span>
+                                                        <span class="h6 text-muted text-decoration-line-through">Rs{{$product->compare_price}}</span>
                                                     @endif
                                                 </div>
                                                 @if($product->track_qty == 'Yes')
                                                     @if($product->qty > 0)
-                                                        <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);"  onclick="addToCart({{$product->id}}, 'paperback')">
-                                                            <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                        <a class="btn btn-outline-primary mt-auto" href="javascript:void(0);" onclick="addToCart({{$product->id}}, 'paperback')">
+                                                            <i class="fa fa-shopping-cart me-2"></i>Add To Cart
                                                         </a>
                                                     @else
-                                                        <span class="btn btn-dark w-100" style="background-color: white !important;color: red; border: none !important" href="javascript:void(0);">
-                                        <i class="fas fa-exclamation-circle"></i> Out Of Stock
-                                    </span>
+                                                        <span class="btn btn-outline-danger mt-auto disabled">
+                                            <i class="fas fa-exclamation-circle me-2"></i>Out Of Stock
+                                        </span>
                                                     @endif
                                                 @else
-                                                    <a class="btn btn-dark w-100" style="background-color: #937dc2 !important; border: none !important" href="javascript:void(0);" onclick="addToCart({{$product->id}})">
-                                                        <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                    <a class="btn btn-outline-primary mt-auto" href="javascript:void(0);" onclick="addToCart({{$product->id}})">
+                                                        <i class="fa fa-shopping-cart me-2"></i>Add To Cart
                                                     </a>
                                                 @endif
                                             </div>
@@ -127,10 +143,13 @@
                             @endif
                         </div>
                     </div>
+
+
+
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12 mt-5">
+                <div class="col-md-12 mt-3">
                     <div class="bg-light">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
@@ -275,10 +294,10 @@
         </div>
     </section>
 
-    <section class="pt-5 section-8 ">
+    <section class="pt-3 section-8 ">
         <div class="container mb-5">
             <div class="section-title">
-                <h2>Related Products</h2>
+                <h3>Related Products</h3>
             </div>
             <div class="row slider3 d-flex">
                 @php
@@ -287,26 +306,32 @@
                 @if(!$relatedProducts==null)
                     @foreach($relatedProducts as $relatedProduct)
                         @if($counter < 4)
-                            <div class="col-lg-4 col-xl-3 mb-4 px-5">
-                                <div class="card items-center" style="width: 230px;">
-                                    <div class="product product-image position-relative" style="height:auto; overflow: hidden;">
-                                        @if($relatedProduct->images !== null && $relatedProduct->images->isNotEmpty() && $relatedProduct->images->first() !== null)
-                                            <a href="{{ route('front.product', $relatedProduct->slug) }}" class="product-img d-block">
-                                                <img class="card-img-top img-fluid h-100 w-100 object-fit-cover zoom-on-hover" src="{{ asset('products/' . $relatedProduct->images->first()->image) }}" alt="{{ $product->title }}">
-                                            </a>
+                            <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4">
+                                <div class="h-100 position-relative p-2 shadow-sm rounded-3 d-flex flex-column hover-effect">
+                                    <!-- Wishlist Icon -->
+                                    <div class="wishlist-icon position-absolute top-0 end-0 p-2">
+                                        @if (getwishlist($product->id))
+                                            <a href="javascript:void(0);" class="text-primary"><i class="fas fa-heart"></i></a>
                                         @else
-                                            <a href="{{ route('front.product', $relatedProduct->slug) }}" class="product-img d-block">
-                                                <img class="card-img-top img-fluid h-100 w-100 object-fit-cover zoom-on-hover" src="{{ asset('products/di.jpg') }}" alt="{{ $relatedProduct->title }}">
-                                            </a>
+                                            <a href="javascript:void(0);" onclick="addToWishList({{ $relatedProduct->id }})" class="text-muted"><i class="far fa-heart"></i></a>
                                         @endif
                                     </div>
-                                    <div class="card-body p-1">
-                                        <a class="h6 link mt-0 mb-1" href="{{route('front.product',$relatedProduct->slug)}}" alt="{{$relatedProduct->title}}" title="{{$relatedProduct->title}}">
-                                            {{ strlen($relatedProduct->title) > 20 ? substr($relatedProduct->title, 0, 20) . ' ...' : $relatedProduct->title }}
+
+                                    <!-- Product Image -->
+                                    <div class="product-image flex-grow-1 d-flex align-items-center justify-content-center overflow-hidden rounded">
+                                        <a href="{{ route('front.product', $relatedProduct->slug) }}" class="w-100 h-100 d-block hoverCard">
+                                            <img class="card-img-top img-fluid h-100 w-100" src="{{ asset('products/' . $relatedProduct->images->first()->image) }}" alt="{{ $relatedProduct->title }}" style="object-fit: cover;">
                                         </a>
-                                        @if($relatedProduct->author_id)
-                                            <p class="text-muted text-left mb-0">By: {{$relatedProduct->author->name}}</p>
-                                        @endif
+                                    </div>
+
+                                    <!-- Card Body -->
+                                    <div class="card-body mt-3 p-2 d-flex flex-column">
+                                        <!-- Product Title -->
+                                        <a class="h6 link mt-0 product-title text-dark text-decoration-none" href="{{ route('front.product', $relatedProduct->slug) }}" title="{{ $relatedProduct->title }}">
+                                            <strong class="d-block text-truncate">{{ $relatedProduct->title }}</strong>
+                                        </a>
+                                        <!-- Product Author -->
+                                        <p class="text-muted text-left mt-auto mb-0">By: {{ $relatedProduct->author->name }}</p>
                                     </div>
                                 </div>
                             </div>
