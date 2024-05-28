@@ -9,6 +9,7 @@ use App\Models\Comment;
 use App\Models\Highlight;
 use App\Models\Page;
 use App\Models\Product;
+use App\Models\User;
 use App\Models\Wishlist;
 use Artesaos\SEOTools\Facades\SEOTools as SEO;
 use Illuminate\Http\Request;
@@ -93,9 +94,11 @@ class FrontController extends Controller
                 'email' => $request->email,
                 'subject' => $request->subject,
                 'message' => $request->message,
-                'mail_subject' => 'Contact Email'
+                'mail_subject' => 'You have received an Contact email from ' . $request->name . ' - ' . $request->subject,
             ];
-            $admin = env('MAIL_FROM_ADDRESS');
+
+
+            $admin = User::where('role', 2)->first()->email;
             Mail::to($admin)->send(new ContactEmail($mailData));
             return redirect()->back()->with('success', 'Email sent successfully');
         } else {

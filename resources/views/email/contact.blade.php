@@ -10,8 +10,8 @@
 <body style="font-family: Arial,Helvetica,sans-serif;font-size: 16px">
 <h2>You have received a contact email</h2>
 <p>Name: {{$mailData['name']}}</p>
-<p>Name: {{$mailData['email']}}</p>
-<p>Name: {{$mailData['subject']}}</p>
+<p>Email: {{$mailData['email']}}</p>
+<p>Subject: {{$mailData['subject']}}</p>
 
 
 <p>Message:</p>
