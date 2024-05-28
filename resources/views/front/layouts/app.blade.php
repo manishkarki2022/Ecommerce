@@ -173,22 +173,26 @@
                     </p>
 
                     <div class="d-flex align-items-center justify-content-center justify-content-lg-start mt-3">
-                        <p class="text-white me-3 d-lg-none">Follow us:</p>
-                        <ul class="list-unstyled d-flex mb-0">
-                            @foreach(['facebook', 'instagram', 'twitter', 'youtube', 'linkedin'] as $social)
-                                @php
-                                    $socialLink = websiteInfo()->isNotEmpty() ? websiteInfo()->first()->$social : null;
-                                @endphp
-                                @if(!empty($socialLink))
-                                    <li class="me-2">
-                                        <a href="{{ $socialLink }}" class="text-decoration-none" target="_blank" aria-label="{{ ucfirst($social) }}" title="Follow us on {{ ucfirst($social) }}">
-                                            <i class="fab fa-{{ $social }} fa-lg"></i>
-                                        </a>
-                                    </li>
-                                @endif
-                            @endforeach
-                        </ul>
-                    </div>
+    <p class="text-white me-3 d-lg-none">Follow us:</p>
+    <ul class="list-unstyled d-flex mb-0">
+        @foreach(['facebook', 'instagram', 'twitter', 'youtube', 'linkedin'] as $social)
+            @php
+                $socialLink = websiteInfo()->isNotEmpty() ? websiteInfo()->first()->$social : null;
+                // Check if the link already contains http or https, if not, prepend http
+                if ($socialLink && !preg_match('/^http(s)?:\/\//i', $socialLink)) {
+                    $socialLink = 'http://' . $socialLink;
+                }
+            @endphp
+            @if($socialLink)
+                <li class="me-2">
+                    <a href="{{ $socialLink }}" class="text-decoration-none" target="_blank" aria-label="{{ ucfirst($social) }}" title="Follow us on {{ ucfirst($social) }}">
+                        <i class="fab fa-{{ $social }} fa-lg"></i>
+                    </a>
+                </li>
+            @endif
+        @endforeach
+    </ul>
+</div>
 
                 </div>
             </div>
