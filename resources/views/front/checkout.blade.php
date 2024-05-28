@@ -28,7 +28,7 @@
                                 <div class="col-md-12">
                                     <div class="mb-3">
                                         <label for="first_name">First Name</label>
-                                        <input type="text" readonly name="first_name" id="first_name" class="form-control" placeholder="First Name" value="{{ !empty($user_info->first_name) ? $user_info->first_name : '' }}">
+                                        <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name" value="{{ $user_info->first_name ?? '' }}" @if(!empty($user_info->first_name)) readonly @endif>
                                         @error('first_name')
                                         <span class="text-danger">{{$message}}</span>
                                         @enderror
@@ -36,14 +36,13 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="mb-3">
-                                        <label for="last_name"  >Last Name</label>
-                                        <input type="text" readonly name="last_name" id="last_name" class="form-control" placeholder="Last Name" value="{{ !empty($user_info->last_name) ? $user_info->last_name : '' }}" >
+                                        <label for="last_name">Last Name</label>
+                                        <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Last Name" value="{{ $user_info->last_name ?? '' }}" @if(!empty($user_info->last_name)) readonly @endif>
                                         @error('last_name')
                                         <span class="text-danger">{{$message}}</span>
                                         @enderror
                                     </div>
                                 </div>
-
                                 <div class="col-md-12">
                                     <div class="mb-3">
                                         <label for="email">Email</label>
