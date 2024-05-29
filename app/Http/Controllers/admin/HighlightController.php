@@ -53,18 +53,22 @@ class HighlightController extends Controller
         $highlight->description = $validatedData['description'];
         $highlight->is_active = $validatedData['is_active'];
 
-        // Handle image upload
+        // Check if image file is present in the request
         if ($request->hasFile('image')) {
+            // Get the file
             $image = $request->file('image');
 
-            // Generate unique image name
-            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+            // Generate a unique name for the image file
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
 
-            // Save image to the highlight folder
-            $image->move(public_path('highlightImage/' ), $imageName);
+            // Define the storage path
+            $storagePath = public_path('highlightImage');
 
-            // Store image path in the database
-            $highlight->image = $imageName;
+            // Move the uploaded file to the storage path with the generated name
+            $image->move($storagePath, $imageName);
+
+            // Assign the image name to the validated data
+           $highlight->image = $imageName;
         }
 
         // Save highlight
@@ -89,10 +93,11 @@ class HighlightController extends Controller
     public function edit(string $id)
     {
         $highlight = Highlight::find($id);
+        $categories = Category::all()->where('status', 1);
         if(!$highlight){
             return redirect()->route('highlights.index')->with('error', 'Highlight not found');
         }
-        return view('admin.highlight.edit', compact('highlight'));
+        return view('admin.highlight.edit', compact('highlight','categories'));
     }
 
     /**
@@ -115,6 +120,7 @@ class HighlightController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image
         ]);
 
+
         // Update highlight attributes
         $highlight->name = $validatedData['name'];
         $highlight->slug = $validatedData['slug'];
@@ -122,20 +128,30 @@ class HighlightController extends Controller
         $highlight->description = $validatedData['description'];
         $highlight->is_active = $validatedData['is_active'];
 
-        // Handle image update
+        // Check if image file is present in the request
         if ($request->hasFile('image')) {
-            // Delete old image if it exists
-            if ($highlight->image) {
-                Storage::delete('highlightImage/' . $highlight->image);
+            // Get the file
+            $image = $request->file('image');
+
+            // Generate a unique name for the new image file
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+
+            // Define the storage path
+            $storagePath = public_path('highlightImage');
+
+            // Move the uploaded file to the storage path with the generated name
+            $image->move($storagePath, $imageName);
+
+            // Delete the older image file if it exists
+            if ($highlight->image != null) {
+                $oldImagePath = $storagePath . '/' . $highlight->image;
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
             }
 
-            // Upload new image
-            $image = $request->file('image');
-            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('highlightImage/' ), $imageName);
-
-            // Update image path in the database
-            $highlight->image = $imageName;
+            // Assign the new image name to the validated data
+           $highlight->image = $imageName;
         }
 
         // Save changes
@@ -151,23 +167,34 @@ class HighlightController extends Controller
      */
     public function destroy(string $id)
     {
-        // Find the highlight to delete
+        // Find the service by id or throw a ModelNotFoundException
         $highlight = Highlight::findOrFail($id);
-        if(!$highlight){
-            return redirect()->route('highlights.index')->with('error', 'Highlight not found');
+        if($highlight){
+            // Define the storage path
+            $storagePath = public_path('highlightImage');
+
+            // Delete the image file if it exists
+            if ($highlight->image != null) {
+                $imagePath = $storagePath . '/' . $highlight->image;
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
+
+            // Delete the service
+            $highlight->delete();
+
+            // Redirect with success message
+            return redirect()->route('highlights.index')->with('success', 'Highlight deleted successfully');
+        }
+        else{
+            // Redirect with success message
+            return redirect()->route('highlights.index')->with('success', 'Error deleting Highlight');
         }
 
-        // Delete the image if it exists
-        if ($highlight->image) {
-            Storage::delete('highlightImage/' . $highlight->image);
-        }
 
-        // Delete the highlight
-        $highlight->delete();
-
-        // Redirect with success message
-        return redirect()->route('highlights.index')->with('success', 'Highlight deleted successfully');
     }
+
     public function deleteImage(Request $request)
     {
         // Get the image id from the request

@@ -38,29 +38,29 @@
          @foreach($mailData['order']->items as $orderItem)
              <tr>
                  <td>{{$orderItem->product->title}}</td>
-                 <td>${{$orderItem->price}}</td>
+                 <td>Rs. {{$orderItem->price}}</td>
                  <td>{{$orderItem->qty}}</td>
-                 <td>${{$orderItem->total}}</td>
+                 <td>Rs.{{$orderItem->total}}</td>
              </tr>
          @endforeach
 
 
          <tr>
              <th colspan="3" align="right">Subtotal:</th>
-             <td>${{number_format($mailData['order']->subtotal,2)}}</td>
+             <td>Rs. {{number_format($mailData['order']->subtotal,2)}}</td>
          </tr>
          <tr>
              <th colspan="3" align="right">Discount:</th>
-             <td>${{number_format($mailData['order']->discount,2)}}</td>
+             <td>Rs. {{number_format($mailData['order']->discount,2)}}</td>
          </tr>
 
          <tr>
              <th colspan="3" align="right">Shipping:</th>
-             <td>${{number_format($mailData['order']->shipping,2)}}</td>
+             <td>Rs. {{number_format($mailData['order']->shipping,2)}}</td>
          </tr>
          <tr>
              <th colspan="3" align="right">Grand Total:</th>
-             <td>${{number_format($mailData['order']->grand_total,2)}}</td>
+             <td>Rs. {{number_format($mailData['order']->grand_total,2)}}</td>
          </tr>
          </tbody>
      </table>

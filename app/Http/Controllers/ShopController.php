@@ -91,7 +91,11 @@ class ShopController extends Controller
             $productsQuery->where(function ($query) use ($searchTerm) {
                 $query->where('title', 'like', '%' . $searchTerm . '%')
                     ->orWhere('ebook', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('isbn_number', 'like', '%' . $searchTerm . '%')
                     ->orWhereHas('category', function ($query) use ($searchTerm) {
+                        $query->where('name', 'like', '%' . $searchTerm . '%');
+                    })
+                    ->orWhereHas('author', function ($query) use ($searchTerm) {
                         $query->where('name', 'like', '%' . $searchTerm . '%');
                     })
                     ->orWhereHas('subCategory', function ($query) use ($searchTerm) {

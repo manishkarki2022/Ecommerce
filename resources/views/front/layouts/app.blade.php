@@ -33,16 +33,23 @@
     <div class="container">
         <div class="row align-items-center py-3 d-none d-lg-flex justify-content-between">
             <div class="col-lg-4 logo">
-                <a href="{{ route('front.home') }}" class="text-decoration-none">
-                    <img src="{{ websiteInfo()->isNotEmpty() && websiteInfo()->first()->logo ? asset('logo/' . websiteInfo()->first()->logo) : asset('logo/d_logo.png') }}" alt="{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Website Name' }}" class="img-fluid rounded-circle" style="max-width:70px;">
-                    <span class="h3 text-uppercase text-primary bg-dark px-2">{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Website Name' }}</span>
+                <a href="{{ route('front.home') }}" class="text-decoration-none d-flex align-items-center m-auto">
+                    <img src="{{ websiteInfo()->isNotEmpty() && websiteInfo()->first()->logo ? asset('logo/' . websiteInfo()->first()->logo) : asset('logo/d_logo.png') }}" alt="{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Website Name' }}" class="img-fluid rounded-circle" style="max-width:65px;">
+                    <span class="h3 text-uppercase text-dark bg-dark px-2 ml-2 mt-2" style="font-family: Arial, sans-serif; font-weight: bold;">
+        {{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Website Name' }}
+    </span>
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left  d-flex justify-content-end align-items-center">
                 @if(\Illuminate\Support\Facades\Auth::check())
-                <a href="{{route('account.profile')}}" class="nav-link text-dark">My Account</a>
+                    <a href="{{ route('account.profile') }}" class="nav-link btn-sm btn-primary text-white">
+                        <i class="fas fa-user me-2"></i> <!-- Font Awesome user icon -->
+                        My Account
+                    </a>
                 @else
-                    <a href="{{route('account.login')}}" class="nav-link text-dark">Login/Register</a>
+                    <a href="{{route('account.login')}}" class="nav-link btn-sm btn-primary text-white">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
                 @endif
             </div>
         </div>
@@ -84,46 +91,60 @@
         <nav class="navbar navbar-expand-xl" id="navbar">
             <a href="{{ route('front.home') }}" class="text-decoration-none mobile-logo">
                 <img src="{{ websiteInfo()->isNotEmpty() && websiteInfo()->first()->logo ? asset('logo/' . websiteInfo()->first()->logo) : asset('logo/d_logo.png') }}" alt="{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Website Name' }}" class="img-circle  rounded-circle" style="max-width:45px;">
-                <span class="h4 text-uppercase text-primary bg-dark">{{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Website Name' }}</span>
+                <span class="h4 text-uppercase text-dark bg-dark " style="font-family: Arial, sans-serif; font-weight: bold;">
+        {{ websiteInfo()->isNotEmpty() ? ucfirst(websiteInfo()->first()->name) : 'Website Name' }}
+    </span>
             </a>
             <button class="navbar-toggler menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="navbar-toggler-icon fas fa-bars"></i>
             </button>
             <div class="collapse navbar-collapse justify-content-around" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 mr-lg-0" style="margin: 0 !important;" >
-                    <li class="nav-item">
-                        <a href="{{ route('front.shop') }}" class="nav-link text-primary">All Book</a>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 mr-lg-0" style="margin: 0 !important;">
+                    <li class="nav-item d-inline-flex justify-content-between">
+                        <a href="{{ route('front.shop') }}" class="nav-link text-primary bookname">All Book</a>
+                        <div class="d-lg-none"> <!-- Show only on mobile (hidden on large screens) -->
+                            @if(\Illuminate\Support\Facades\Auth::check())
+                                <a href="{{ route('account.profile') }}" class="nav-link text-success fw-bold  bookname">
+                                    <i class="fas fa-user me-2"></i> <!-- Font Awesome user icon -->
+                                    My Account
+                                </a>
+                            @else
+                                <a href="{{route('account.login')}}" class="nav-link text-success fw-bold bookname">
+                                    <i class="fas fa-sign-in-alt"></i> Login
+                                </a>
+                            @endif
+                        </div>
                     </li>
-{{--                    <li class="nav-item">--}}
-{{--                        <a href="{{ route('front.shop',['ebook'=>true]) }}" class="nav-link text-primary">Ebook</a>--}}
-{{--                    </li>--}}
-                    <li class="nav-item">
-                        <a href="{{ route('front.author') }}" class="nav-link text-primary">Authors</a>
+                    <!-- <li class="nav-item">
+        <a href="{{ route('front.shop',['ebook'=>true]) }}" class="nav-link text-primary">Ebook</a>
+    </li> -->
+                    <li class="nav-item ">
+                        <a href="{{ route('front.author') }}" class="nav-link text-primary bookname ">Authors</a>
                     </li>
-                <!-- Navigation Links -->
                     <!-- Categories -->
                     @if(getCategories()->isNotEmpty())
                         @foreach(getCategories() as $category)
                             <li class="nav-item dropdown">
                                 @if($category->subCategories->isNotEmpty())
-                                    <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn btn-dark dropdown-toggle text-primary bookname" data-bs-toggle="dropdown" aria-expanded="false">
                                         {{$category->name}}
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-dark">
                                         @foreach($category->subCategories as $sub_category)
-                                            <li><a class="dropdown-item nav-link" href="{{route('front.shop',[$category->slug,$sub_category->slug])}}">{{$sub_category->name}}</a></li>
+                                            <li class="nav-item"><a class="dropdown-item   bookname" href="{{route('front.shop',[$category->slug,$sub_category->slug])}}">{{$sub_category->name}}</a></li>
                                         @endforeach
                                     </ul>
                                 @else
-                                    <a class="btn btn-dark" href="{{ route('front.shop', $category->slug) }}">
+                                    <a class="nav-link text-primary bookname " href="{{ route('front.shop', $category->slug) }}">
                                         {{$category->name}}
                                     </a>
                                 @endif
                             </li>
                         @endforeach
                     @endif
-
                 </ul>
+
+
                 <!-- Search Form -->
                 <form action="{{ route('front.shop') }}" method="get">
                     <div class="input-group">
@@ -133,16 +154,21 @@
                         </button>
                     </div>
                 </form>
+
+
             </div>
 
             <div class="right-nav py-0 ml-lg-4">
                 <a href="{{ route('front.cart') }}" class="nav-link text-white">
-            <span class="position-relative">
-                <i class="fas fa-shopping-cart text-primary"></i>
-                @if(Cart::count() > 0)
-                    <span class="badge text-danger position-absolute top-0 start-100 translate-middle">{{ Cart::count() }}</span>
-                @endif
-            </span>
+                    <span class="position-relative">
+    <i class="fas fa-shopping-cart b-secondary"></i>
+    @if(Cart::count() > 0)
+                            <span class="badge bg-danger rounded-circle position-absolute top-0 start-100 translate-middle d-flex align-items-center justify-content-center border border-2 border-white " style="width: 1rem; height: 1rem; font-size: 0.75rem;">
+            {{ Cart::count() }}
+        </span>
+                        @endif
+</span>
+
                 </a>
             </div>
         </nav>
@@ -158,19 +184,23 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="footer-card">
-                    <h3>Get In Touch</h3>
-                    <p>
-                        {{ websiteInfo()->isNotEmpty() ? websiteInfo()->first()->quote : 'Company Quote' }}
-                        <br>
-                        <i class="fas fa-map-marker-alt"></i>
-                        {{ websiteInfo()->isNotEmpty() ? websiteInfo()->first()->address : 'Company Address' }}
-                        <br>
-                        <i class="fas fa-envelope"></i>
-                        {{ websiteInfo()->isNotEmpty() ? websiteInfo()->first()->email : 'Company Email' }}
-                        <br>
-                        <i class="fas fa-phone"></i>
-                        {{ websiteInfo()->isNotEmpty() ? websiteInfo()->first()->phone : 'Company Phone' }}
-                    </p>
+                    <h4 class="main-header mb-3">Get In Touch</h4>
+              <div>  {{ websiteInfo()->isNotEmpty() ? websiteInfo()->first()->quote : 'Company Quote' }}</div>
+
+                      <div class="mt-1">  <i class="fas fa-map-marker-alt"></i>
+
+                          {{ websiteInfo()->isNotEmpty() ? websiteInfo()->first()->address : 'Company Address' }}</div>
+
+                      <div class="mt-1">
+                          <i class="fas fa-envelope"></i>
+                          {{ websiteInfo()->isNotEmpty() ? websiteInfo()->first()->email : 'Company Email' }}
+                      </div>
+
+                       <div class="mt-1">
+                           <i class="fas fa-phone"></i>
+                           {{ websiteInfo()->isNotEmpty() ? websiteInfo()->first()->phone : 'Company Phone' }}
+                       </div>
+
 
                     <div class="d-flex align-items-center justify-content-center justify-content-lg-start mt-3">
     <p class="text-white me-3 d-lg-none">Follow us:</p>
@@ -199,7 +229,7 @@
 
             <div class="col-md-4">
                 <div class="footer-card">
-                    <h3>Important Links</h3>
+                    <h4 class="main-header mb-3">Important Links</h4>
                     @php
                         $pages = getPages();
                     @endphp
@@ -215,7 +245,7 @@
 
             <div class="col-md-4">
                 <div class="footer-card">
-                    <h3>My Account</h3>
+                    <h4 class="main-header mb-3">My Account</h4>
                     <ul>
                         <li><a href="{{ route('account.login') }}" title="Sell"><i class="fas fa-sign-in-alt"></i> Login</a></li>
                         <li><a href="{{ route('account.register') }}" title="Advertise"><i class="fas fa-user-plus"></i> Register</a></li>

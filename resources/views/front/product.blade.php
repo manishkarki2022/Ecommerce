@@ -4,9 +4,9 @@
         <div class="container">
             <div class="light-font">
                 <ol class="breadcrumb primary-color mb-0">
-                    <li class="breadcrumb-item"><a class="white-text" href="{{route('front.home')}}">Home</a></li>
-                    <li class="breadcrumb-item"><a class="white-text" href="{{route('front.shop')}}">Shop</a></li>
-                    <li class="breadcrumb-item">{{ ucfirst($product->title) }}</li>
+                    <li class="breadcrumb-item"><a class="white-text authorname" href="{{route('front.home')}}">Home</a></li>
+                    <li class="breadcrumb-item"><a class="white-text authorname" href="{{route('front.shop')}}">Shop</a></li>
+                    <li class="breadcrumb-item authorname">{{ ucfirst($product->title) }}</li>
                 </ol>
             </div>
         </div>
@@ -331,7 +331,7 @@
                                             <strong class="d-block text-truncate">{{ $relatedProduct->title }}</strong>
                                         </a>
                                         <!-- Product Author -->
-                                        <p class="text-muted text-left mt-auto mb-0">By: {{ $relatedProduct->author->name }}</p>
+                                        <p class="text-muted text-left mt-auto mb-0">{{ $relatedProduct->author->name }}</p>
                                     </div>
                                 </div>
                             </div>

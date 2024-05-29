@@ -28,3 +28,22 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.b-secondary{
+    color: #f18701 !important;
+}
+/*.button{*/
+/*    background-color: ;*/
+/*    color:;*/
+/*}*/
+.main-header {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700; /* Bold */
+}
+.bookname {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400; /* Regular weight */
+}
+.authorname {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300; /* Light weight */
+}

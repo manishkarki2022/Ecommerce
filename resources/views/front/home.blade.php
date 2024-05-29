@@ -40,71 +40,72 @@
     </section>
     @endif
 {{--    Category Section--}}
-    @if(getCategories()->isNotEmpty())
-    <section class="bg-white section-3  p-5 pt-3">
-        <div class="container ">
-            <div class="section-title">
-                <h4>Book Categories</h4>
-            </div>
-            <div class="row pb-3">
-                @if(getCategories()->isNotEmpty())
-                    @foreach(getCategories() as $category)
-                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-3">
-                            <div class="cat-card">
-                                <div class="left">
-                                    @if($category->image =!'')
-                                        <img src="{{asset('dBook.png')}}" alt="{{$category->name}}" class="hoverCard " style="max-width: 80px;padding: 0.8rem">
-                                    @endif
-                                </div>
-                                <div class="right ">
-                                    <div class="">
-                                        <h6  ><a class="text-primary" href={{route('front.shop',$category->slug)}}  >{{$category->name}}</a></h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                @endif
-            </div>
-        </div>
-    </section>
-    @endif
-{{-- Featured Section --}}
+{{--    @if(getCategories()->isNotEmpty())--}}
+{{--    <section class="bg-white section-3  p-5 pt-3">--}}
+{{--        <div class="container ">--}}
+{{--            <div class="section-title">--}}
+{{--                <h4>Book Categories</h4>--}}
+{{--            </div>--}}
+{{--            <div class="row pb-3">--}}
+{{--                @if(getCategories()->isNotEmpty())--}}
+{{--                    @foreach(getCategories() as $category)--}}
+{{--                        <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-3">--}}
+{{--                            <div class="cat-card">--}}
+{{--                                <div class="left">--}}
+{{--                                    @if($category->image =!'')--}}
+{{--                                        <img src="{{asset('dBook.png')}}" alt="{{$category->name}}" class="hoverCard " style="max-width: 80px;padding: 0.8rem">--}}
+{{--                                    @endif--}}
+{{--                                </div>--}}
+{{--                                <div class="right ">--}}
+{{--                                    <div class="">--}}
+{{--                                        <h6  ><a class="text-primary" href={{route('front.shop',$category->slug)}}  >{{$category->name}}</a></h6>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    @endforeach--}}
+{{--                @endif--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </section>--}}
+{{--    @endif--}}
 {{-- Featured Section --}}
 @if($getFeatured->isNotEmpty())
     <section class="bg-white section-3 pt-3">
         <div class="container">
             <div class="section-title">
-                <h4>Featured Products</h4>
+                <h4 class="main-header">Featured Products</h4>
             </div>
             <div class="row pb-3 p-3 slider">
                 @foreach($getFeatured as $latestItem)
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-3">
-                        <div class=" h-100 position-relative p-1  d-flex flex-column">
-                            <!-- Wishlist Icon -->
-                            <div class="wishlist-icon position-absolute top-0 end-0 border-red">
-                                @if (getwishlist($latestItem->id))
-                                    <a href="javascript:void(0);" class="text-success"><i class="fas fa-heart"></i></a>
-                                @else
-                                    <a href="javascript:void(0);" onclick="addToWishList({{ $latestItem->id }})" class="text-muted"><i class="far fa-heart"></i></a>
-                                @endif
-                            </div>
-
+                        <div class="card h-100  position-relative">
                             <!-- Product Image -->
-                            <div class="product-images flex-grow-1">
+                            <div class="product-images">
                                 <a href="{{ route('front.product', $latestItem->slug) }}" class="product-img" title="{{ $latestItem->title }}">
-                                    <img class="card-img-top img-fluid h-100 hoverCard" src="{{ asset('products/' . $latestItem->images->first()->image) }}" alt="{{ $latestItem->title }}">
+                                    <img class="card-img-top pt-2  img-fluid hoverCard" src="{{ asset('products/' . $latestItem->images->first()->image) }}" alt="{{ $latestItem->title }}">
                                 </a>
+                                <!-- Wishlist Icon -->
+                                <div class="position-absolute top-0 start-0 mt-2 ms-2">
+                                    @if (getwishlist($latestItem->id))
+                                        <a href="javascript:void(0);" class="text-success"><i class="fas fa-heart b-secondary"></i></a>
+                                    @else
+                                        <a href="javascript:void(0);" onclick="addToWishList({{ $latestItem->id }})" class="text-muted"><i class="far fa-heart b-secondary"></i></a>
+                                    @endif
+                                </div>
+
                             </div>
 
                             <!-- Card Body -->
-                            <div class="card-body  p-1 d-flex flex-column text-center">
+                            <div class="card-body p-1 d-flex flex-column text-center">
                                 <!-- Product Title -->
                                 <a class="h6 link mt-0 product-title" href="{{ route('front.product', $latestItem->slug) }}" title="{{ $latestItem->title }}">
-                                    <strong>{{ $latestItem->title }}</strong>
+                                    <strong class="bookname">{{ $latestItem->title }}</strong>
                                 </a>
                                 <!-- Product Author -->
-                                <p class="text-muted text-center mt-auto">By: {{ $latestItem->author->name }}</p>
+                                <span class="card-text text-muted small authorname">{{ $latestItem->author->name }}</span>
+                                 <!-- Product Price -->
+                                <span class="text-primary small authorname ">Rs. {{ $latestItem->price }}</span>
                             </div>
                         </div>
                     </div>
@@ -112,6 +113,8 @@
             </div>
         </div>
     </section>
+
+
 @endif
 
 
@@ -120,36 +123,38 @@
         <section class="bg-white section-3 pt-3">
         <div class="container">
             <div class="section-title">
-                <h4>Latest Product</h4>
+                <h4 class="main-header">Latest Product</h4>
             </div>
             <div class="row pb-2 slider2">
                     @foreach($latest as $latestItem)
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-3">
-                        <div class=" h-100 position-relative p-1  d-flex flex-column">
-                            <!-- Wishlist Icon -->
-                            <div class="wishlist-icon position-absolute top-0 end-0 border-red">
-                                @if (getwishlist($latestItem->id))
-                                    <a href="javascript:void(0);" class="text-success"><i class="fas fa-heart"></i></a>
-                                @else
-                                    <a href="javascript:void(0);" onclick="addToWishList({{ $latestItem->id }})" class="text-muted"><i class="far fa-heart"></i></a>
-                                @endif
-                            </div>
-
+                        <div class="card h-100  position-relative">
                             <!-- Product Image -->
-                            <div class="product-images flex-grow-1">
+                            <div class="product-images">
                                 <a href="{{ route('front.product', $latestItem->slug) }}" class="product-img" title="{{ $latestItem->title }}">
-                                    <img class="card-img-top img-fluid h-100 hoverCard" src="{{ asset('products/' . $latestItem->images->first()->image) }}" alt="{{ $latestItem->title }}">
+                                    <img class="card-img-top pt-2  img-fluid hoverCard" src="{{ asset('products/' . $latestItem->images->first()->image) }}" alt="{{ $latestItem->title }}">
                                 </a>
+                                <!-- Wishlist Icon -->
+                                <div class="position-absolute top-0 start-0 mt-2 ms-2">
+                                    @if (getwishlist($latestItem->id))
+                                        <a href="javascript:void(0);" class="text-success"><i class="fas fa-heart b-secondary"></i></a>
+                                    @else
+                                        <a href="javascript:void(0);" onclick="addToWishList({{ $latestItem->id }})" class="text-muted"><i class="far fa-heart b-secondary"></i></a>
+                                    @endif
+                                </div>
+
                             </div>
 
                             <!-- Card Body -->
                             <div class="card-body p-1 d-flex flex-column text-center">
                                 <!-- Product Title -->
                                 <a class="h6 link mt-0 product-title" href="{{ route('front.product', $latestItem->slug) }}" title="{{ $latestItem->title }}">
-                                    <strong>{{ $latestItem->title }}</strong>
+                                    <strong class="bookname">{{ $latestItem->title }}</strong>
                                 </a>
                                 <!-- Product Author -->
-                                <p class="text-muted text-left mt-auto">By: {{ $latestItem->author->name }}</p>
+                                <span class="card-text text-muted small authorname">{{ $latestItem->author->name }}</span>
+                                <!-- Product Price -->
+                                <span class="text-primary small authorname ">Rs. {{ $latestItem->price }}</span>
                             </div>
                         </div>
                     </div>
@@ -171,37 +176,40 @@
             @foreach($categories as $category)
                 @if($category->products->isNotEmpty())
                     <div class="section-title d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="mb-0">{{ $category->name }}s</h4>
-                        <a href="{{ route('front.shop', $category->slug) }}" class="text-primary fw-bold">More &raquo;</a>
+                        <h4 class="mb-0 main-header">{{ $category->name }}s</h4>
+                        <a href="{{ route('front.shop', $category->slug) }}" class="text-primary authorname">More &raquo;</a>
                     </div>
                     <div class="row pb-2 mb-5">
-                        @foreach($category->products as $product)
+                        @foreach($category->products as $latestItem)
                             @if($loop->iteration <= 5)
                                 <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4">
-                                    <div class="h-100 position-relative p-1 shadow-sm rounded-3 d-flex flex-column hover-effect">
-                                        <!-- Wishlist Icon -->
-                                        <div class="wishlist-icon position-absolute top-0 end-0 p-2">
-                                            @if (getwishlist($product->id))
-                                                <a href="javascript:void(0);" class="text-primary"><i class="fas fa-heart"></i></a>
-                                            @else
-                                                <a href="javascript:void(0);" onclick="addToWishList({{ $product->id }})" class="text-muted"><i class="far fa-heart"></i></a>
-                                            @endif
+                                    <div class="card h-100  position-relative">
+                                        <!-- Product Image -->
+                                        <div class="product-images">
+                                            <a href="{{ route('front.product', $latestItem->slug) }}" class="product-img" title="{{ $latestItem->title }}">
+                                                <img class="card-img-top pt-2  img-fluid hoverCard" src="{{ asset('products/' . $latestItem->images->first()->image) }}" alt="{{ $latestItem->title }}">
+                                            </a>
+                                            <!-- Wishlist Icon -->
+                                            <div class="position-absolute top-0 start-0 mt-2 ms-2">
+                                                @if (getwishlist($latestItem->id))
+                                                    <a href="javascript:void(0);" class="text-success"><i class="fas fa-heart b-secondary"></i></a>
+                                                @else
+                                                    <a href="javascript:void(0);" onclick="addToWishList({{ $latestItem->id }})" class="text-muted"><i class="far fa-heart b-secondary"></i></a>
+                                                @endif
+                                            </div>
+
                                         </div>
 
-                                        <!-- Product Image -->
-                                        <div class="product-images flex-grow-1 d-flex align-items-center justify-content-center overflow-hidden rounded">
-                                            <a href="{{ route('front.product', $product->slug) }}" class="w-100 h-100 d-block hoverCardphp">
-                                                <img class="card-img-top img-fluid h-100 w-100" src="{{ asset('products/' . $product->images->first()->image) }}" alt="{{ $product->title }}" style="object-fit: cover;">
-                                            </a>
-                                        </div>
                                         <!-- Card Body -->
-                                        <div class="card-body  p-1 d-flex flex-column text-center">
+                                        <div class="card-body p-1 d-flex flex-column text-center">
                                             <!-- Product Title -->
-                                            <a class="h6 link mt-0 product-title text-dark text-decoration-none" href="{{ route('front.product', $product->slug) }}" title="{{ $product->title }}">
-                                                <strong class="d-block text-truncate">{{ $product->title }}</strong>
+                                            <a class="h6 link mt-0 product-title" href="{{ route('front.product', $latestItem->slug) }}" title="{{ $latestItem->title }}">
+                                                <strong class="bookname">{{ $latestItem->title }}</strong>
                                             </a>
                                             <!-- Product Author -->
-                                            <p class="text-muted text-left mt-auto mb-0">By: {{ $product->author->name }}</p>
+                                            <span class="card-text text-muted small authorname">{{ $latestItem->author->name }}</span>
+                                            <!-- Product Price -->
+                                            <span class="text-primary small authorname ">Rs. {{ $latestItem->price }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -223,22 +231,22 @@
 
 
 
-<section class=" section-3 pt-5 border-bottom">
+<section class=" section-3 pt-2 border-bottom">
     <div class="container">
         <div class="section-title d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">Our Recent Blogs</h4>
-            <a href="{{route('front.blog')}}" class="text-primary">View More &raquo;</a>
+            <h4 class="mb-0 main-header" >Our Recent Blogs</h4>
+            <a href="{{route('front.blog')}}" class="text-primary authorname">More &raquo;</a>
         </div>
         <div class="row pb-4 p-2">
             @if($blogs->isNotEmpty())
                 @foreach($blogs as $blog)
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3 mb-3">
-                        <div class="card h-100  p-2 shadow">
+                        <div class="card h-100 shadow overflow-hidden">
                             @if($blog->image)
-                                <img src="{{ asset('blogs/' . $blog->image) }}" class="card-img-top rounded-2 hoverCard" alt="{{ $blog->name }}" style="height: 150px; object-fit: cover;">
+                                <img src="{{ asset('blogs/' . $blog->image) }}" class="card-img-top p-2 rounded-3 hoverCard" alt="{{ $blog->name }}" style="height: 150px; object-fit: cover;">
                             @endif
                             <div class="card-body">
-                                <h6 class="card-title">{{ $blog->name }}</h6>
+                                <h6 class="card-title bookname">{{ $blog->name }}</h6>
                                 <p class="card-text text-muted small">Posted on {{ $blog->created_at->format('M d, Y') }}</p>
                                 <p class="card-text text-muted small">
                                     <i class="fas fa-thumbs-up"></i> {{ $blog->likes_count }} Likes
@@ -283,7 +291,7 @@
 {{--    </section>--}}
 <style>
     .product-images {
-        height: 225px;
+        height: 225px; /* Adjust this height as needed */
         width: 100%;
         overflow: hidden;
         display: flex;
@@ -292,10 +300,9 @@
     }
 
     .product-images img {
-        object-fit: contain;
+        object-fit: cover; /* Scale the image while preserving its aspect ratio */
         height: 100%;
         width: 100%;
-        aspect-ratio:3/1;
     }
     .product-title {
         white-space: nowrap;
@@ -305,9 +312,6 @@
 
     .product-title strong {
         font-size: clamp(0.875rem, 1vw + 0.5rem, 0.9rem); /* Responsive font size using clamp */
-    }
-    .wishlist-icon a:hover {
-        color: deeppink !important; /* Change to a nicer color on hover */
     }
 </style>
 @endsection

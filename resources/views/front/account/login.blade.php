@@ -30,11 +30,11 @@
                         @enderror
                     </div>
                     <div class="form-group small">
-                        <a href="{{route('front.forgotPassword')}}" class="forgot-link">Forgot Password?</a>
+                        <a href="{{route('front.forgotPassword')}}" class="forgot-link b-secondary">Forgot Password?</a>
                     </div>
-                    <input type="submit" class="btn btn-dark btn-block btn-lg" value="Login">
+                    <input type="submit" class="btn btn-primary btn-lg" value="Login">
                 </form>
-                <div class="text-center small">Don't have an account? <a href="{{route('account.register')}}">Sign up</a></div>
+                <div class="text-center small ">Don't have an account? <a href="{{route('account.register')}}" class="text-success">Sign up</a></div>
             </div>
         </div>
     </section>

@@ -99,7 +99,7 @@ class AuthController extends Controller
                         return redirect($intendedUrl);
                     }
                     session()->flash('success', 'User logged in successfully');
-                    return redirect()->route('account.profile');
+                    return redirect()->route('front.home');
                 } else {
                     Auth::logout();
                     session()->flash('error', 'Your email address is not verified. Please verify your email before logging in.');
