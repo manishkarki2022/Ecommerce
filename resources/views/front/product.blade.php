@@ -15,17 +15,45 @@
         <div class="container">
             <div class="row ">
                 <style>
-                    /* Set a fixed height for the carousel container */
+                    /* Base styles for the carousel container */
                     #product-carousel {
-                        max-height: 300px; /* Adjust this value to the desired height */
                         overflow: hidden; /* Ensure any overflow is hidden */
                     }
 
                     /* Ensure the images fit within the carousel container */
                     #product-carousel .carousel-item img {
-                        max-height: 300px; /* Match this value with the carousel height */
                         object-fit: contain; /* Ensure images are scaled appropriately */
+                        width: 100%; /* Ensure images take the full width of the container */
+                        height: auto; /* Maintain the aspect ratio */
                     }
+
+                    /* Media queries to adjust the carousel height based on the viewport size */
+                    @media (max-width: 600px) {
+                        #product-carousel {
+                            max-height: 300px; /* Adjust the height for small screens */
+                        }
+                        #product-carousel .carousel-item img {
+                            max-height: 300px; /* Match this value with the carousel height */
+                        }
+                    }
+
+                    @media (min-width: 601px) and (max-width: 900px) {
+                        #product-carousel {
+                            max-height: 500px; /* Adjust the height for medium screens */
+                        }
+                        #product-carousel .carousel-item img {
+                            max-height: 500px; /* Match this value with the carousel height */
+                        }
+                    }
+                    @media (min-width: 901px) {
+                        #product-carousel {
+                            max-height: 600px; /* Adjust the height for large screens */
+                        }
+                        #product-carousel .carousel-item img {
+                            max-height: 600px; /* Match this value with the carousel height */
+                        }
+                    }
+
                 </style>
 
                 <div class="col-md-3 col-sm-4">
@@ -72,7 +100,7 @@
                             </div>
                             <small class="pt-1">({{$product->ratings_count}} Reviews)</small>
                         </div>
-                        By <a href="{{route('front.author.show',$product->author->slug)}}" class="text-primary">{{$product->author->name}}</a>
+                        <a href="{{route('front.author.show',$product->author->slug)}}" class="text-primary">{{$product->author->name}}</a>
                         <div>
                             @if($product->isbn_number != null)
                                 <p>ISBN Number: {{$product->isbn_number}}</p>
@@ -85,62 +113,96 @@
 
                         {!! $product->short_description !!}
 
-                    <div class="container py-2">
-                        <div class="row g-4">
-                            @if($product->book_type_id != null)
-                                @if($product->book_type_id == 1 || $product->book_type_id == 3) <!-- Check if digital or both -->
-                                @if($product->ebook_price != null)
-                                    <div class="col-lg-6 col-md-12">
-                                        <div class="card border-0 shadow-sm h-100">
-                                            <div class="card-body d-flex flex-column">
-                                                <h5 class="card-title text-primary">Ebook</h5>
-                                                <div class="d-flex align-items-center mb-1">
-                                                    <span class="h5 me-2 fw-bold">Rs{{$product->ebook_price}}</span>
-                                                    @if($product->ebook_compare_price !== '')
-                                                        <span class="h6 text-muted text-decoration-line-through">Rs{{$product->ebook_compare_price}}</span>
-                                                    @endif
-                                                </div>
-                                                <a class="btn btn-outline-primary mt-auto" href="javascript:void(0);" onclick="addToCart({{$product->id}}, 'ebook')">
+                    <div class="row">
+                            @if ($product->book_type_id != null)
+                                @if ($product->book_type_id == 1 || $product->book_type_id == 3) <!-- Check if digital or both -->
+                                @if ($product->ebook_price != null)
+                                    <div class="col-md-10">
+                                            <p class="card-title text-primary">Ebook</p>
+                                            <div class="d-flex align-items-center mb-1">
+                                                <span class="h5 me-2 fw-bold">Rs{{$product->ebook_price}}</span>
+                                                @if ($product->ebook_compare_price !== '')
+                                                    <span class="h6 text-muted text-decoration-line-through">Rs{{$product->ebook_compare_price}}</span>
+                                                @endif
+                                            </div>
+                                            <div class="d-flex">
+                                                <a class="btn btn-outline-primary me-3 w-100" href="javascript:void(0);" onclick="addToCart({{ $product->id }}, 'ebook')">
                                                     <i class="fa fa-shopping-cart me-2"></i>Add To Cart
                                                 </a>
+                                                <a href="javascript:void(0)" class="btn @if (getwishlist($product->id)) btn-primary @else btn-outline-danger @endif wishlist-btns w-100" data-id="{{ $product->id }}">
+                                                    @if (getwishlist($product->id))
+                                                        <i class="fas fa-heart"></i> Favorite
+                                                    @else
+                                                        <i class="far fa-heart"></i> Add to Wishlist
+                                                    @endif
+                                                </a>
                                             </div>
-                                        </div>
                                     </div>
                                 @endif
                                 @endif
-                                @if($product->book_type_id == 2 || $product->book_type_id == 3) <!-- Check if paper or both -->
-                                @if($product->price != null)
-                                    <div class="col-lg-6 col-md-12">
-                                        <div class="card border-0 shadow-sm h-100">
-                                            <div class="card-body d-flex flex-column">
-                                                <h5 class="card-title text-primary">Paperback</h5>
-                                                <div class="d-flex align-items-center mb-1">
-                                                    <span class="h5 me-2 fw-bold">Rs{{$product->price}}</span>
-                                                    @if($product->compare_price !== '')
-                                                        <span class="h6 text-muted text-decoration-line-through">Rs{{$product->compare_price}}</span>
-                                                    @endif
-                                                </div>
-                                                @if($product->track_qty == 'Yes')
-                                                    @if($product->qty > 0)
-                                                        <a class="btn btn-outline-primary mt-auto" href="javascript:void(0);" onclick="addToCart({{$product->id}}, 'paperback')">
+                                @if ($product->book_type_id == 2 || $product->book_type_id == 3) <!-- Check if paper or both -->
+                                @if ($product->price != null)
+                                        <div class="col-md-10">
+                                            <p class="card-title text-primary">Paperback</p>
+                                            <div class="d-flex align-items-center mb-1">
+                                                <span class="h5 fw-bold me-2">Rs{{ $product->price }}</span>
+                                                @if ($product->compare_price !== '')
+                                                    <span class="text-muted text-decoration-line-through">Rs{{ $product->compare_price }}</span>
+                                                @endif
+                                            </div>
+                                            <div class="d-flex">
+                                                @if ($product->track_qty == 'Yes')
+                                                    @if ($product->qty > 0)
+                                                        <a class="btn btn-primary me-3 w-100" href="javascript:void(0);" onclick="addToCart({{ $product->id }}, 'paperback')">
                                                             <i class="fa fa-shopping-cart me-2"></i>Add To Cart
                                                         </a>
                                                     @else
-                                                        <span class="btn btn-outline-danger mt-auto disabled">
-                                            <i class="fas fa-exclamation-circle me-2"></i>Out Of Stock
-                                        </span>
+                                                        <span class="btn btn-danger disabled me-3 w-100">
+                                                            <i class="fas fa-exclamation-circle me-2"></i> Out Of Stock
+                                                        </span>
                                                     @endif
                                                 @else
-                                                    <a class="btn btn-outline-primary mt-auto" href="javascript:void(0);" onclick="addToCart({{$product->id}})">
+                                                    <a class="btn btn-primary me-3 w-100" href="javascript:void(0);" onclick="addToCart({{ $product->id }})">
                                                         <i class="fa fa-shopping-cart me-2"></i>Add To Cart
                                                     </a>
                                                 @endif
+                                                <a href="javascript:void(0)" class="btn @if (getwishlist($product->id)) btn-primary @else btn-outline-danger @endif wishlist-btns w-100" data-id="{{ $product->id }}">
+                                                    @if (getwishlist($product->id))
+                                                        <i class="fas fa-heart"></i> Favorite
+                                                    @else
+                                                        <i class="far fa-heart"></i> Add to Wishlist
+                                                    @endif
+                                                </a>
                                             </div>
                                         </div>
-                                    </div>
-                                @endif
+                                    @endif
                                 @endif
                             @endif
+
+                        </div>
+                    <div class="row mt-2">
+                        <hr>
+                        <div class="col-md-10">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p> <span class="text-primary">Publisher:</span>   {{$product->publisher_name}}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p> <span class="text-primary">Publication Year:</span> {{$product->published_year}}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p> <span class="text-primary">Language:</span> {{$product->language}}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p> <span class="text-primary">Edition:</span> {{$product->edition}}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p> <span class="text-primary">Numbers of Pages:</span> {{$product->pages}}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p> <span class="text-primary">Country:</span> {{$product->country}}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -304,34 +366,87 @@
                     $counter = 0;
                 @endphp
                 @if(!$relatedProducts==null)
-                    @foreach($relatedProducts as $relatedProduct)
+                    @foreach($relatedProducts as $latestItem)
                         @if($counter < 4)
                             <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 mb-4">
-                                <div class="h-100 position-relative p-2 shadow-sm rounded-3 d-flex flex-column hover-effect">
-                                    <!-- Wishlist Icon -->
-                                    <div class="wishlist-icon position-absolute top-0 end-0 p-2">
-                                        @if (getwishlist($product->id))
-                                            <a href="javascript:void(0);" class="text-primary"><i class="fas fa-heart"></i></a>
-                                        @else
-                                            <a href="javascript:void(0);" onclick="addToWishList({{ $relatedProduct->id }})" class="text-muted"><i class="far fa-heart"></i></a>
-                                        @endif
-                                    </div>
-
+                                <div class="card h-100">
                                     <!-- Product Image -->
-                                    <div class="product-image flex-grow-1 d-flex align-items-center justify-content-center overflow-hidden rounded">
-                                        <a href="{{ route('front.product', $relatedProduct->slug) }}" class="w-100 h-100 d-block hoverCard">
-                                            <img class="card-img-top img-fluid h-100 w-100" src="{{ asset('products/' . $relatedProduct->images->first()->image) }}" alt="{{ $relatedProduct->title }}" style="object-fit: cover;">
+                                    <div class="position-relative">
+                                        <a href="{{ route('front.product', $latestItem->slug) }}" class="d-block">
+                                            <img class="card-img-top img-fluid pt-0" src="{{ asset('products/' . $latestItem->images->first()->image) }}" alt="{{ $latestItem->title }}">
                                         </a>
                                     </div>
 
                                     <!-- Card Body -->
-                                    <div class="card-body mt-3 p-2 d-flex flex-column">
+                                    <div class="card-body text-left d-flex flex-column p-1">
                                         <!-- Product Title -->
-                                        <a class="h6 link mt-0 product-title text-dark text-decoration-none" href="{{ route('front.product', $relatedProduct->slug) }}" title="{{ $relatedProduct->title }}">
-                                            <strong class="d-block text-truncate">{{ $relatedProduct->title }}</strong>
+                                        <a class="h6 text-dark product-title p-0 m-0" href="{{ route('front.product', $latestItem->slug) }}" title="{{ $latestItem->title }}">
+                                            <strong class="bookname">{{ $latestItem->title }}</strong>
                                         </a>
                                         <!-- Product Author -->
-                                        <p class="text-muted text-left mt-auto mb-0">{{ $relatedProduct->author->name }}</p>
+                                        <span class="text-muted small p-0 m-0">{{ $latestItem->author->name }}</span>
+
+                                        <!-- Product Price and Wishlist Icon -->
+                                        <!-- Add to Cart or Out of Stock Button -->
+                                        @if($latestItem->book_type_id != null)
+                                            @if($latestItem->book_type_id == 1 || $latestItem->book_type_id == 3) <!-- Check if digital or both -->
+                                            @if($latestItem->ebook_price != null)
+                                                <p class="text-muted small p-0 m-0">Ebook</p>
+                                                <div class="d-flex justify-content-between align-items-center p-0 m-0">
+                                                    <strong>Rs{{ $latestItem->ebook_price }}</strong>
+                                                    <div class="ms-2">
+                                                        @if (getwishlist($latestItem->id))
+                                                            <a href="javascript:void(0);" class="text-success wishlist-btn" data-id="{{ $latestItem->id }}">
+                                                                <i class="fas fa-heart b-secondary"></i>
+                                                            </a>
+                                                        @else
+                                                            <a href="javascript:void(0);" class="text-muted wishlist-btn" data-id="{{ $latestItem->id }}">
+                                                                <i class="far fa-heart b-secondary"></i>
+                                                            </a>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <a class="btn btn-outline-primary w-100 mb-0" href="javascript:void(0);" onclick="addToCart({{ $latestItem->id }}, 'ebook')">
+                                                    <i class="fa fa-shopping-cart me-2"></i>Add To Cart
+                                                </a>
+                                            @endif
+                                            @endif
+
+                                            @if($latestItem->book_type_id == 2 || $latestItem->book_type_id == 3) <!-- Check if paper or both -->
+                                            @if($latestItem->price != null)
+                                                <p class="text-muted small p-0 m-0">Paperback</p>
+                                                <div class="d-flex justify-content-between align-items-center p-0 m-0">
+                                                    <strong>Rs{{ $latestItem->price }}</strong>
+                                                    <div class="ms-2">
+                                                        @if (getwishlist($latestItem->id))
+                                                            <a href="javascript:void(0);" class="text-success wishlist-btn" data-id="{{ $latestItem->id }}">
+                                                                <i class="fas fa-heart b-secondary"></i>
+                                                            </a>
+                                                        @else
+                                                            <a href="javascript:void(0);" class="text-muted wishlist-btn" data-id="{{ $latestItem->id }}">
+                                                                <i class="far fa-heart b-secondary"></i>
+                                                            </a>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                @if($latestItem->track_qty == 'Yes')
+                                                    @if($latestItem->qty > 0)
+                                                        <button class="btn btn-primary w-100 mb-0" onclick="addToCart({{ $latestItem->id }}, 'paperback')">
+                                                            <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                                                        </button>
+                                                    @else
+                                                        <span class="btn btn-outline-danger w-100 mb-0 disabled">
+                                <i class="fas fa-exclamation-circle me-2"></i>Out Of Stock
+                            </span>
+                                                    @endif
+                                                @else
+                                                    <button class="btn btn-primary w-100 mb-0" onclick="addToCart({{ $latestItem->id }}, 'paperback')">
+                                                        <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                                                    </button>
+                                                @endif
+                                            @endif
+                                            @endif
+                                        @endif
                                     </div>
                                 </div>
                             </div>

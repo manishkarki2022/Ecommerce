@@ -106,63 +106,123 @@
                         </div>
 
                         <div class="sub-title mt-2">
-                            <h4>Price</h4>
+                            <h4 class="main-header">Price</h4>
                         </div>
                         <div class="card">
                             <div class="card-body">
-                                <input type="text" class="js-range-slider text-success authorname" name="my_range" value="" />
+                                <input type="text" class="js-price-slider text-success authorname" name="my_range" value="" />
                             </div>
                         </div>
                     </div>
 
                     <div class="row pb-3">
-                        <div class="row align-items-center">
-                            <div class="col-md-5">
-                                <div class="text-start">
+                        @php
+                            $filtersApplied = request()->has('price_min') || request()->has('price_max') || request()->has('sort') || request()->segment(2);
+                        @endphp
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                @if($filtersApplied)
                                     <a href="{{ route('front.shop') }}" class="btn btn-primary mt-1">
                                         Clear Filter  <i class="fas fa-times-circle"></i>
                                     </a>
-                                </div>
+                                @endif
                             </div>
-                            <div class="col-md-5">
-                                <div class="text-end">
-                                    <label for="sort"></label>
-                                    <select name="sort" id="sort" class="form-control">
-                                        <option value="latest" {{ ($sortOption == 'latest') ? 'selected' : '' }}>Latest</option>
-                                        <option value="price_desc" {{ ($sortOption == 'price_desc') ? 'selected' : '' }}>Price High</option>
-                                        <option value="price_asc" {{ ($sortOption == 'price_asc') ? 'selected' : '' }}>Price Low</option>
-                                    </select>
-                                </div>
+                            <div class="d-flex align-items-center">
+                                <select name="sort" id="sort" class="form-select">
+                                    <option value="latest" {{ ($sortOption == 'latest') ? 'selected' : '' }}>
+                                        Latest <i class="fas fa-clock"></i>
+                                    </option>
+                                    <option value="price_desc" {{ ($sortOption == 'price_desc') ? 'selected' : '' }}>
+                                        Price High <i class="fas fa-sort-amount-down"></i>
+                                    </option>
+                                    <option value="price_asc" {{ ($sortOption == 'price_asc') ? 'selected' : '' }}>
+                                        Price Low <i class="fas fa-sort-amount-up"></i>
+                                    </option>
+                                </select>
                             </div>
                         </div>
                         @if($products->isNotEmpty())
-                            @foreach($products as $product)
+                            @foreach($products as $latestItem)
                                 <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-3 mb-4">
-                                    <div class="h-100 position-relative p-1 shadow-sm rounded-3 d-flex flex-column hover-effect">
+                                    <div class="card h-100">
                                         <!-- Product Image -->
-                                        <div class="product-images flex-grow-1 d-flex align-items-center justify-content-center overflow-hidden rounded">
-                                            <a href="{{ route('front.product', $product->slug) }}" class="w-100 h-100 d-block hoverCardphp">
-                                                <img class="card-img-top img-fluid h-100 w-100 hoverCard" src="{{ asset('products/' . $product->images->first()->image) }}" alt="{{ $product->title }}" style="object-fit: cover;">
+                                        <div class="position-relative">
+                                            <a href="{{ route('front.product', $latestItem->slug) }}" class="d-block">
+                                                <img class="card-img-top img-fluid pt-0" src="{{ asset('products/' . $latestItem->images->first()->image) }}" alt="{{ $latestItem->title }}">
                                             </a>
                                         </div>
-                                        <!-- Wishlist Icon -->
-                                        <div class="wishlist-icon position-absolute top-0  p-2">
-                                            @if (getwishlist($product->id))
-                                                <a href="javascript:void(0);" class="text-primary"> <i class="fas fa-heart b-secondary"></i></a>
-                                            @else
-                                                <a href="javascript:void(0);" onclick="addToWishList({{ $product->id }})" class="text-muted"><i class="far fa-heart b-secondary authorname"></i></a>
-                                            @endif
-                                        </div>
-
 
                                         <!-- Card Body -->
-                                        <div class="card-body  p-1 d-flex flex-column text-center">
+                                        <div class="card-body text-left d-flex flex-column p-1">
                                             <!-- Product Title -->
-                                            <a class="h6 link mt-0 product-title text-dark text-decoration-none" href="{{ route('front.product', $product->slug) }}" title="{{ $product->title }}">
-                                                <strong class="d-block text-truncate bookname">{{ $product->title }}</strong>
+                                            <a class="h6 text-dark product-title p-0 m-0" href="{{ route('front.product', $latestItem->slug) }}" title="{{ $latestItem->title }}">
+                                                <strong class="bookname">{{ $latestItem->title }}</strong>
                                             </a>
                                             <!-- Product Author -->
-                                            <p class="card-text text-muted small authorname">{{ $product->author->name }}</p>
+                                            <span class="text-muted small p-0 m-0">{{ $latestItem->author->name }}</span>
+
+                                            <!-- Product Price and Wishlist Icon -->
+                                            <!-- Add to Cart or Out of Stock Button -->
+                                            @if($latestItem->book_type_id != null)
+                                                @if($latestItem->book_type_id == 1 || $latestItem->book_type_id == 3) <!-- Check if digital or both -->
+                                                @if($latestItem->ebook_price != null)
+                                                    <p class="text-muted small p-0 m-0">Ebook</p>
+                                                    <div class="d-flex justify-content-between align-items-center p-0 m-0">
+                                                        <strong>Rs{{ $latestItem->ebook_price }}</strong>
+                                                        <div class="ms-2">
+                                                            @if (getwishlist($latestItem->id))
+                                                                <a href="javascript:void(0);" class="text-success wishlist-btn" data-id="{{ $latestItem->id }}">
+                                                                    <i class="fas fa-heart b-secondary"></i>
+                                                                </a>
+                                                            @else
+                                                                <a href="javascript:void(0);" class="text-muted wishlist-btn" data-id="{{ $latestItem->id }}">
+                                                                    <i class="far fa-heart b-secondary"></i>
+                                                                </a>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    <a class="btn btn-outline-primary w-100 mb-0" href="javascript:void(0);" onclick="addToCart({{ $latestItem->id }}, 'ebook')">
+                                                        <i class="fa fa-shopping-cart me-2"></i>Add To Cart
+                                                    </a>
+                                                @endif
+                                                @endif
+
+                                                @if($latestItem->book_type_id == 2 || $latestItem->book_type_id == 3) <!-- Check if paper or both -->
+                                                @if($latestItem->price != null)
+                                                    <p class="text-muted small p-0 m-0">Paperback</p>
+                                                    <div class="d-flex justify-content-between align-items-center p-0 m-0">
+                                                        <strong>Rs{{ $latestItem->price }}</strong>
+                                                        <div class="ms-2">
+                                                            @if (getwishlist($latestItem->id))
+                                                                <a href="javascript:void(0);" class="text-success wishlist-btn" data-id="{{ $latestItem->id }}">
+                                                                    <i class="fas fa-heart b-secondary"></i>
+                                                                </a>
+                                                            @else
+                                                                <a href="javascript:void(0);" class="text-muted wishlist-btn" data-id="{{ $latestItem->id }}">
+                                                                    <i class="far fa-heart b-secondary"></i>
+                                                                </a>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    @if($latestItem->track_qty == 'Yes')
+                                                        @if($latestItem->qty > 0)
+                                                            <button class="btn btn-primary w-100 mb-0" onclick="addToCart({{ $latestItem->id }}, 'paperback')">
+                                                                <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                                                            </button>
+                                                        @else
+                                                            <span class="btn btn-outline-danger w-100 mb-0 disabled">
+                                <i class="fas fa-exclamation-circle me-2"></i>Out Of Stock
+                            </span>
+                                                        @endif
+                                                    @else
+                                                        <button class="btn btn-primary w-100 mb-0" onclick="addToCart({{ $latestItem->id }}, 'paperback')">
+                                                            <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                                                        </button>
+                                                    @endif
+                                                @endif
+                                                @endif
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -202,9 +262,26 @@
                 apply_filters(data);
             }
         });
+        // Initialize Ion.RangeSlider
+        var rangeSlider = $(".js-price-slider").ionRangeSlider({
+            type: "double",
+            min: 0,
+            max: 2000,
+            from: {{request()->price_min ?? 0}},
+            step: 5,
+            to: {{request()->price_max ?? 2000}},
+            skin: "round",
+            max_postfix: "+",
+            prefix: "Rs",
+            onFinish: function (data) {
+                apply_filters(data);
+            }
+        })
 
         // Saving its instance to var
         var slider = $(".js-range-slider").data("ionRangeSlider");
+        // Saving its instance to var
+        var sliders = $(".js-price-slider").data("ionRangeSlider");
 
         $('#sort').on('change', function () {
             apply_filters()
@@ -216,6 +293,10 @@
             if (slider.result.from !== slider.result.min || slider.result.to !== slider.result.max) {
                 url += '&price_min=' + slider.result.from + '&price_max=' + slider.result.to;
             }
+            // Price range filter
+            if (sliders.result.from !== sliders.result.min || sliders.result.to !== sliders.result.max) {
+                url += '&price_min=' + sliders.result.from + '&price_max=' + sliders.result.to;
+            }
             // Sorting filter
             var selectedSortOption = $('#sort').val();
             if (selectedSortOption !== '') {
@@ -224,6 +305,16 @@
             // Redirect to the filtered URL
             window.location.href = url;
         }
+
+        // Show mobile filter sidebar only on mobile devices
+        $(document).ready(function() {
+            if ($(window).width() < 768) {
+                var filtersApplied = {{ $filtersApplied ? 'true' : 'false' }};
+                if (filtersApplied) {
+                    $('#mobile-filter-sidebar').removeClass('d-none');
+                }
+            }
+        });
 
         // Mobile filter toggle
         $('#mobile-filter-toggle').on('click', function() {

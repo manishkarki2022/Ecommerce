@@ -36,14 +36,87 @@
 /*    color:;*/
 /*}*/
 .main-header {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 700; /* Bold */
 }
+.categoryname{
+    font-family: 'Inter', sans-serif;
+    font-weight: 400; /* Bold */
+}
 .bookname {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400; /* Regular weight */
+    font-family: 'Inter', sans-serif;
+    font-weight: 600; /* Regular weight */
+    font-size:24px
 }
 .authorname {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 300; /* Light weight */
+    font-family: 'Inter', sans-serif;
+    font-weight: 400; /* Light weight */
+    font-size: 16px;
+}
+.bookprice{
+    font-family: 'Inter', sans-serif;
+    font-weight: 600; /* Regular weight */
+    font-size: 20px;
+}
+
+.mobile-logos {
+    display: none;
+}
+.footer-head{
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    text-align: left;
+}
+.footer-body{
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    text-align: left;
+
+}
+
+@media (max-width: 768px) {
+    .section-1 .carousel .carousel-item {
+        height: auto;
+    }
+
+    .mobile-logos {
+        display: block;
+        position: absolute;
+        left: 50px;
+        top: 10px;
+    }
+}
+.product-images {
+    height: 225px; /* Adjust this height as needed */
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-images img {
+    object-fit: cover; /* Scale the image while preserving its aspect ratio */
+    height: 100%;
+    width: 100%;
+}
+.product-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-title strong {
+    font-size: clamp(0.875rem, 1vw + 0.5rem, 0.9rem); /* Responsive font size using clamp */
+}
+.card-img-top {
+    height: 250px; /* Fixed height for all images */
+    object-fit: cover; /* Ensure the image covers the element's box */
+}
+.wishlist-btn i {
+    font-size: 1.2rem;
 }

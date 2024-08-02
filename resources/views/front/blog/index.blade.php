@@ -14,24 +14,22 @@
     <section class="py-1">
         <div class="container">
             <div class="row">
-                <div class="row pb-4 p-2">
+                <div class="row pb-4">
                     @if($blogs->isNotEmpty())
                         @foreach($blogs as $blog)
-                            <div class="col-md-3 mb-4">
-                                <div class="card h-100 hoverCard p-2 shadow">
+                            <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-3 mb-3">
+                                <div class="card h-100 shadow overflow-hidden">
                                     @if($blog->image)
-                                        <img src="{{ asset('blogs/' . $blog->image) }}" class="card-img-top rounded-2" alt="{{ $blog->name }}" style="height: 150px; object-fit: cover;">
+                                        <img src="{{ asset('blogs/' . $blog->image) }}" class="card-img-top p-2 rounded-3 hoverCard" alt="{{ $blog->name }}" style="height: 150px; object-fit: cover;">
                                     @endif
-                                    <div class="card-body">
-                                        <h6 class="card-title">{{ $blog->name }}</h6>
-                                        <p class="card-text text-muted small">Posted on {{ $blog->created_at->format('M d, Y') }}</p>
-                                        <p class="card-text text-muted small">
-                                            <i class="fas fa-thumbs-up"></i> {{ $blog->likes_count }} Likes
-                                            <i class="fas fa-comments"></i> {{ $blog->comments->count() }} Comments
+                                    <div class="p-1">
+                                        <p class="card-title">{{ $blog->name }}</p>
+                                        <p class="text-muted small">Posted on {{ $blog->created_at->format('M d, Y') }}</p>
+                                        <p class="text-muted small d-flex justify-content-between">
+                                            <i class="fas fa-thumbs-up me-1"> {{ $blog->likes_count }} Likes</i>
+                                            <i class="fas fa-comments me-1"> {{ $blog->comments->count() }} Comments</i>
                                         </p>
-                                    </div>
-                                    <div class="card-footer">
-                                        <a href="{{ route('front.blog.show', $blog->slug) }}" class="btn btn-primary btn-sm">Read More</a>
+                                        <a href="{{ route('front.blog.show', $blog->slug) }}" class="btn btn-primary btn-sm w-100">Read More</a>
                                     </div>
                                 </div>
                             </div>
